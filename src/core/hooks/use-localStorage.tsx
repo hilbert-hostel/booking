@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import { LocalStorage } from "../repository/localStorage";
+import { useState, useEffect } from 'react';
+import { LocalStorage } from '../repository/localStorage';
 
 export const useLocalStorage = function<T>(
   key: string,
@@ -15,14 +15,14 @@ export const useLocalStorage = function<T>(
 
   const updateValue = (key: string) => (storageEvent: StorageEvent) => {
     if (storageEvent.key === key) {
-      setData(JSON.parse(storageEvent.newValue || ""));
+      setData(JSON.parse(storageEvent.newValue || ''));
     }
   };
 
   useEffect(() => {
-    window.addEventListener("storage", updateValue(key));
+    window.addEventListener('storage', updateValue(key));
     return () => {
-      window.removeEventListener("storage", updateValue(key));
+      window.removeEventListener('storage', updateValue(key));
     };
   }, [key]);
 

@@ -6,7 +6,7 @@ COPY ./package.json ./yarn.lock ./tsconfig.json ./
 
 RUN yarn
 
-ADD src .s
+ADD src ./src
 
 ENV PATH /app/node_modules/.bin:$PATH
 

@@ -14,9 +14,9 @@ export function createTestStore() {
     get uppercased(): ITest[] {
       return this.messages.map(e => ({
         ...e,
-        message: e.message.toUpperCase()
+        message: e.message.toUpperCase(),
       }));
-    }
+    },
   };
 }
 

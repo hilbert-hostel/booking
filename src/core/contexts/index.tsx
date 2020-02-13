@@ -1,2 +1,2 @@
-import { storesContext } from "./storesContext";
+import { storesContext } from './storesContext';
 export { storesContext };

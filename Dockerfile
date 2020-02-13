@@ -2,11 +2,11 @@ FROM node:alpine as build
 
 WORKDIR /app
 
-COPY ./package.json ./yarn.lock ./tsconfig.json /app/
+COPY ./package.json ./yarn.lock ./tsconfig.json ./
 
 RUN yarn
 
-COPY ./src /app
+COPY . .
 
 ENV PATH /app/node_modules/.bin:$PATH
 

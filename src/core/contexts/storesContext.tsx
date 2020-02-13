@@ -1,10 +1,10 @@
 // src/contexts/index.tsx
-import React from "react";
-import { createTestStore } from "../stores";
-import { useLocalStore } from "mobx-react-lite";
+import React from 'react';
+import { createTestStore } from '../stores';
+import { useLocalStore } from 'mobx-react-lite';
 
 export const storesContext = React.createContext({
-  testStore: createTestStore()
+  testStore: createTestStore(),
 });
 
 export const StoreProvider: React.FC = ({ children }) => {
