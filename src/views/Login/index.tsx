@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { observer } from 'mobx-react-lite';
 import { useStores } from '../../core/hooks/use-stores';
-import { Link } from 'react-router-dom';
 import {
   createStyles,
   makeStyles,
@@ -65,12 +64,11 @@ export const Login: React.FC = observer(() => {
         >
           Login
         </Button>
-        <p>
-          {testStore.uppercased
-            .map(e => e.sender + ' : ' + e.message)
-            .join('\n')}
-        </p>
-        <Link to="/login">Go to login</Link>
+        <ul>
+          {testStore.uppercased.map(e => (
+            <li>{e.sender + ' : ' + e.message}</li>
+          ))}
+        </ul>
       </Paper>
     </Container>
   );

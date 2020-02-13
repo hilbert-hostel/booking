@@ -1,7 +1,7 @@
 import React from 'react';
 import { observer } from 'mobx-react-lite';
 import { useStores } from '../../core/hooks/use-stores';
-import { Link } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import {
   Container,
   Paper,
@@ -9,8 +9,8 @@ import {
   makeStyles,
   Theme,
   createStyles,
+  Button,
 } from '@material-ui/core';
-import classes from '*.module.css';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -20,12 +20,17 @@ const useStyles = makeStyles((theme: Theme) =>
     paper: {
       padding: theme.spacing(3),
     },
+    button: {
+      marginRight: theme.spacing(1),
+    },
   })
 );
 
 export const Home: React.FC = observer(() => {
   const { testStore } = useStores();
   const classes = useStyles();
+  const history = useHistory();
+
   const addMessage = () => {
     testStore.addMessage({ message: 'hello n.', sender: 'jay' });
   };
@@ -36,13 +41,27 @@ export const Home: React.FC = observer(() => {
         <Typography variant="h3" gutterBottom>
           This is home
         </Typography>
-        <p>
-          {testStore.uppercased
-            .map(e => e.sender + ' : ' + e.message)
-            .join('\n')}
-        </p>
-        <button onClick={() => addMessage()}>Add Message</button>
-        <Link to="/login">Go to login</Link>
+        <ul>
+          {testStore.uppercased.map(e => (
+            <li>{e.sender + ' : ' + e.message}</li>
+          ))}
+        </ul>
+        <Button
+          variant="contained"
+          className={classes.button}
+          onClick={() => addMessage()}
+          color="primary"
+        >
+          Add Message
+        </Button>
+        <Button
+          variant="contained"
+          className={classes.button}
+          onClick={() => history.push('/login')}
+          color="default"
+        >
+          Go to Login
+        </Button>
       </Paper>
     </Container>
   );
