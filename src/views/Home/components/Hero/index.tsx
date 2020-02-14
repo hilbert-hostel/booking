@@ -15,7 +15,6 @@ const useStyles = makeStyles((theme: Theme) =>
       backgroundPosition: 'center',
       minHeight: '300px',
       position: 'relative',
-      display: 'flex',
     },
     filter: {
       backdropFilter: 'blur(2px) brightness(1.1)',
@@ -24,10 +23,21 @@ const useStyles = makeStyles((theme: Theme) =>
       width: '100%',
       backgroundColor: ' rgba(255,255,255,0.4)',
     },
-    text: {
-      position: 'relative',
+    textWrapper: {
+      position: 'absolute',
+      width: '100%',
+      height: '100%',
       zIndex: 2,
-      margin: 'auto 0',
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'center',
+    },
+    text: {
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'center',
+      alignItems: 'center',
+      height: '100%',
     },
   })
 );
@@ -44,18 +54,20 @@ export const Hero: React.FC<HeroProps> = () => {
       disableGutters
       color="inherit"
     >
-      <Container className={classes.filter}>
+      <Container maxWidth="xl" className={classes.filter}>
         <></>
       </Container>
-      <Container className={classes.text} maxWidth="lg">
-        <Typography variant="h2">W-Hotel</Typography>
-        <Typography variant="h4" gutterBottom>
-          Power your stay with technology
-        </Typography>
-        <Button variant="contained" color="secondary">
-          Book A Room
-        </Button>
-      </Container>
+      <div className={classes.textWrapper}>
+        <Container maxWidth="lg">
+          <Typography variant="h2">W-Hotel</Typography>
+          <Typography variant="h4" gutterBottom>
+            Power your stay with technology
+          </Typography>
+          <Button variant="contained" color="secondary">
+            Book A Room
+          </Button>
+        </Container>
+      </div>
     </Container>
   );
 };
