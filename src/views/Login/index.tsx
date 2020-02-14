@@ -34,9 +34,10 @@ export const Login: React.FC = observer(() => {
   const classes = useStyles();
   const { testStore } = useStores();
   const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
 
   const addMessage = (username: string) => {
-    testStore.addMessage({ message: 'hello n.', sender: username });
+    testStore.addMessage({ message: 'Hi', sender: username });
   };
 
   return (
@@ -47,7 +48,6 @@ export const Login: React.FC = observer(() => {
         </Typography>
         <FormControl className={classes.inputField} fullWidth>
           <TextField
-            id="standard-basic"
             label="Email"
             placeholder="john@doe.com"
             onChange={e => setUsername(e.target.value)}
@@ -55,7 +55,12 @@ export const Login: React.FC = observer(() => {
           />
         </FormControl>
         <FormControl className={classes.inputField} fullWidth>
-          <TextField id="standard-basic" label="Password" type="password" />
+          <TextField
+            label="Password"
+            type="password"
+            onChange={e => setPassword(e.target.value)}
+            value={password}
+          />
         </FormControl>
         <Button
           variant="contained"

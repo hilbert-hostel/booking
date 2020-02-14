@@ -1,11 +1,9 @@
-import { createMuiTheme, responsiveFontSizes } from '@material-ui/core/styles';
+import { ThemeOptions } from '@material-ui/core/styles/createMuiTheme';
 import { indigo, amber } from '@material-ui/core/colors';
 
-export const theme = responsiveFontSizes(
-  createMuiTheme({
-    palette: {
-      primary: indigo,
-      secondary: amber,
-    },
-  })
-);
+export const themeConfig: ThemeOptions = {
+  palette: {
+    primary: indigo,
+    secondary: amber,
+  },
+};

@@ -2,18 +2,14 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import * as serviceWorker from './serviceWorker';
+import { App } from './App';
 import { StoreProvider } from './core/contexts/storesContext';
-import { AppRouter } from './core/router';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import { ThemeProvider } from '@material-ui/core/styles';
-import { theme } from './core/theme';
+import { CssBaseline } from '@material-ui/core';
 
 ReactDOM.render(
   <StoreProvider>
     <CssBaseline />
-    <ThemeProvider theme={theme}>
-      <AppRouter />
-    </ThemeProvider>
+    <App />
   </StoreProvider>,
   document.getElementById('root')
 );
