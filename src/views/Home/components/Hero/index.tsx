@@ -15,6 +15,7 @@ const useStyles = makeStyles((theme: Theme) =>
       backgroundPosition: 'center',
       minHeight: '300px',
       position: 'relative',
+      display: 'flex',
     },
     filter: {
       backdropFilter: 'blur(2px) brightness(1.1)',
@@ -24,9 +25,9 @@ const useStyles = makeStyles((theme: Theme) =>
       backgroundColor: ' rgba(255,255,255,0.4)',
     },
     text: {
-      paddingTop: theme.spacing(4),
       position: 'relative',
       zIndex: 2,
+      margin: 'auto 0',
     },
   })
 );
@@ -41,9 +42,12 @@ export const Hero: React.FC<HeroProps> = () => {
       className={classes.hero}
       maxWidth="xl"
       disableGutters
+      color="inherit"
     >
-      <Container className={classes.filter}></Container>
-      <Container className={classes.text} maxWidth="md">
+      <Container className={classes.filter}>
+        <></>
+      </Container>
+      <Container className={classes.text} maxWidth="lg">
         <Typography variant="h2">W-Hotel</Typography>
         <Typography variant="h4" gutterBottom>
           Power your stay with technology

@@ -39,7 +39,7 @@ export const Home: React.FC = observer(() => {
   return (
     <>
       <Hero />
-      <Container maxWidth="md" className={classes.root}>
+      <Container maxWidth="lg" className={classes.root}>
         <Paper elevation={3} className={classes.paper}>
           <Typography variant="h3" gutterBottom>
             This is home
