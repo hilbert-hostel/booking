@@ -46,6 +46,7 @@
       "last 1 safari version"
     ]
   },
+  "proxy": "http://himkwtn.me:4000",
   "devDependencies": {
     "@types/jest": "^24.9.1",
     "@types/node": "^12.12.26",

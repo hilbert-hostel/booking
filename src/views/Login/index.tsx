@@ -12,6 +12,7 @@ import {
   FormControl,
   Button,
 } from '@material-ui/core';
+import { BackendAPI } from '../../core/repository/api/backend';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -32,12 +33,23 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export const Login: React.FC = observer(() => {
   const classes = useStyles();
-  const { testStore } = useStores();
+  const { testStore, authStore } = useStores();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
-  const addMessage = (username: string) => {
-    testStore.addMessage({ message: 'Hi', sender: username });
+  const addMessage = (username: string, message: string = 'hi') => {
+    testStore.addMessage({ message, sender: username });
+  };
+
+  const login = async (email: string, password: string) => {
+    try {
+      const { data } = await BackendAPI.login({ email, password });
+      const { token } = data;
+      authStore.setToken(token);
+      addMessage(username, token);
+    } catch (error) {
+      addMessage(username, 'login failed');
+    }
   };
 
   return (
@@ -64,7 +76,7 @@ export const Login: React.FC = observer(() => {
         </FormControl>
         <Button
           variant="contained"
-          onClick={() => addMessage(username)}
+          onClick={() => login(username, password)}
           color="primary"
         >
           Login

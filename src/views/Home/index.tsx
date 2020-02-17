@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { observer } from 'mobx-react-lite';
 import { useStores } from '../../core/hooks/use-stores';
 import { useHistory } from 'react-router-dom';
@@ -12,6 +12,8 @@ import {
   Button,
 } from '@material-ui/core';
 import { Hero } from './components/Hero';
+import { BackendAPI } from '../../core/repository/api/backend';
+import { User } from '../../core/models/user';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -28,9 +30,23 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 export const Home: React.FC = observer(() => {
-  const { testStore, themeStore } = useStores();
+  const { testStore, themeStore, authStore } = useStores();
   const classes = useStyles();
   const history = useHistory();
+  const [message, setMessage] = useState();
+  const [user, setUser] = useState<User>();
+
+  useEffect(() => {
+    BackendAPI.ping().then(({ data }) => {
+      setMessage(data.message);
+    });
+
+    authStore.fetchUserData().then(() => {
+      const { user } = authStore;
+      setUser(user);
+      console.log(user);
+    });
+  });
 
   const addMessage = () => {
     testStore.addMessage({ message: 'Hi', sender: 'jay' });
@@ -43,6 +59,10 @@ export const Home: React.FC = observer(() => {
         <Paper elevation={3} className={classes.paper}>
           <Typography variant="h3" gutterBottom>
             This is home
+          </Typography>
+          <Typography variant="h6" gutterBottom>
+            pong? : {message || 'Waiting...'}
+            {user && ` ${user}`}
           </Typography>
           <ul>
             {testStore.uppercased.map(e => (
