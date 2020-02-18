@@ -4,6 +4,8 @@ import { ThemeProvider } from '@material-ui/core/styles';
 import { useMediaQuery } from '@material-ui/core';
 import { useStores } from './core/hooks/use-stores';
 import { observer } from 'mobx-react-lite';
+import MomentUtils from '@date-io/moment';
+import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 
 export const App: React.FC<AppProps> = observer(() => {
   const { themeStore } = useStores();
@@ -14,9 +16,11 @@ export const App: React.FC<AppProps> = observer(() => {
   }, [prefersDarkMode, themeStore]);
 
   return (
-    <ThemeProvider theme={themeStore.theme}>
-      <AppRouter />
-    </ThemeProvider>
+    <MuiPickersUtilsProvider utils={MomentUtils}>
+      <ThemeProvider theme={themeStore.theme}>
+        <AppRouter />
+      </ThemeProvider>
+    </MuiPickersUtilsProvider>
   );
 });
 

@@ -41,9 +41,9 @@ export const Login: React.FC = observer(() => {
     testStore.addMessage({ message, sender: username });
   };
 
-  const login = async (email: string, password: string) => {
+  const login = async (username: string, password: string) => {
     try {
-      const { data } = await BackendAPI.login({ email, password });
+      const { data } = await BackendAPI.login({ username, password });
       const { token } = data;
       authStore.setToken(token);
       addMessage(username, token);

@@ -44,9 +44,8 @@ export const Home: React.FC = observer(() => {
     authStore.fetchUserData().then(() => {
       const { user } = authStore;
       setUser(user);
-      console.log(user);
     });
-  });
+  }, [authStore]);
 
   const addMessage = () => {
     testStore.addMessage({ message: 'Hi', sender: 'jay' });
@@ -62,7 +61,7 @@ export const Home: React.FC = observer(() => {
           </Typography>
           <Typography variant="h6" gutterBottom>
             pong? : {message || 'Waiting...'}
-            {user && ` ${user}`}
+            {user && ` ${user.firstname}`}
           </Typography>
           <ul>
             {testStore.uppercased.map(e => (

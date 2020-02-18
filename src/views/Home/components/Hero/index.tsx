@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Container from '@material-ui/core/Container';
 import {
   Typography,
@@ -6,44 +6,73 @@ import {
   makeStyles,
   Theme,
   Button,
+  Paper,
+  TextField,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
+  FormHelperText,
+  Box,
 } from '@material-ui/core';
+import { DatePicker } from '@material-ui/pickers';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     hero: {
       backgroundSize: 'cover',
       backgroundPosition: 'center',
-      minHeight: '300px',
       position: 'relative',
     },
     filter: {
-      backdropFilter: 'blur(2px) brightness(1.1)',
+      backdropFilter: 'blur(2px) brightness(0.7)',
       position: 'absolute',
       height: '100%',
       width: '100%',
       backgroundColor: ' rgba(255,255,255,0.4)',
     },
     textWrapper: {
-      position: 'absolute',
+      position: 'relative',
       width: '100%',
       height: '100%',
       zIndex: 2,
       display: 'flex',
       flexDirection: 'column',
-      justifyContent: 'center',
+      justifyContent: 'flex-end',
+      color: 'white',
+      minHeight: '250px',
     },
     text: {
       display: 'flex',
       flexDirection: 'column',
-      justifyContent: 'center',
+      // justifyContent: 'center',
       alignItems: 'center',
       height: '100%',
+    },
+    paper: {
+      position: 'relative',
+      width: '100%',
+      borderRadius: '10px 10px 0 0',
+      zIndex: 2,
+      paddingTop: theme.spacing(1),
+      paddingBottom: theme.spacing(2),
+    },
+    bigButton: {
+      marginTop: theme.spacing(1),
+      padding: theme.spacing(2),
+    },
+    formItem: {
+      marginBottom: theme.spacing(1),
+    },
+    marginTop: {
+      marginTop: theme.spacing(1),
     },
   })
 );
 
 export const Hero: React.FC<HeroProps> = () => {
   const classes = useStyles();
+  const [date, setDate] = useState<Date>();
   return (
     <Container
       style={{
@@ -59,15 +88,42 @@ export const Hero: React.FC<HeroProps> = () => {
       </Container>
       <div className={classes.textWrapper}>
         <Container maxWidth="lg">
-          <Typography variant="h2">W-Hotel</Typography>
-          <Typography variant="h4" gutterBottom>
-            Power your stay with technology
+          <Typography variant="h2" gutterBottom>
+            Find a perfect place to stay
           </Typography>
-          <Button variant="contained" color="secondary">
-            Book A Room
-          </Button>
         </Container>
       </div>
+      <Paper elevation={1} className={classes.paper}>
+        <Container maxWidth="xl">
+          <Box
+            display="flex"
+            flexDirection="column"
+            alignItems="stretch"
+            maxWidth="xl"
+          >
+            <DatePicker
+              label="From"
+              value={date}
+              className={`${classes.formItem} ${classes.marginTop}`}
+              onChange={date => setDate(date?.toDate())}
+            />
+            <DatePicker
+              label="To"
+              value={date}
+              className={classes.formItem}
+              onChange={date => setDate(date?.toDate())}
+            />
+            <TextField label="Guests" type="number" />
+            <Button
+              variant="contained"
+              color="primary"
+              className={classes.bigButton}
+            >
+              Search
+            </Button>
+          </Box>
+        </Container>
+      </Paper>
     </Container>
   );
 };

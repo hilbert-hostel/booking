@@ -29,6 +29,9 @@ export function createAuthStore() {
         },
       });
     },
+    get isAuthenticated() {
+      return !!this.token;
+    },
   };
 }
 

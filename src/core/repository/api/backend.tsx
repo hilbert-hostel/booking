@@ -16,7 +16,7 @@ export class BackendAPI {
   static authPing() {
     return client.get<{ token: string; user: User }>('/auth/ping');
   }
-  static login(data: { email: string; password: string }) {
+  static login(data: { username: string; password: string }) {
     return client.post<{ token: string; user: User }>('/auth/login', data);
   }
   static register(data: {

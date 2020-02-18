@@ -1,10 +1,9 @@
 import React from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import { Home } from '../views/Home';
-import { Navigation } from './components/Navigation';
 import { Login } from '../views/Login';
 import { makeStyles, Theme, createStyles } from '@material-ui/core';
-import { Footer } from './components/Footer';
+import { BottomNav } from './components/BottomNavigation';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -17,6 +16,7 @@ const useStyles = makeStyles((theme: Theme) =>
     content: {
       flexGrow: 1,
       height: '100%',
+      marginBottom: '64px',
     },
   })
 );
@@ -26,7 +26,7 @@ export const AppRouter: React.FC = () => {
   return (
     <Router>
       <div className={classes.root}>
-        <Navigation />
+        {/* <Navigation /> */}
         <div className={classes.content}>
           <Switch>
             <Route path="/login">
@@ -37,7 +37,8 @@ export const AppRouter: React.FC = () => {
             </Route>
           </Switch>
         </div>
-        <Footer />
+        <BottomNav />
+        {/* <Footer /> */}
       </div>
     </Router>
   );
