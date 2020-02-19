@@ -29,6 +29,9 @@ export function createAuthStore() {
         },
       });
     },
+    logout() {
+      this.token = null;
+    },
     get isAuthenticated() {
       return !!this.token;
     },

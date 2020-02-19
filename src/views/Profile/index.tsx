@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect } from 'react';
 import { observer } from 'mobx-react-lite';
 import { useStores } from '../../core/hooks/use-stores';
 import {
@@ -8,7 +8,12 @@ import {
   Container,
   Paper,
   Typography,
+  Button,
+  Avatar,
+  Box,
 } from '@material-ui/core';
+import { useHistory } from 'react-router-dom';
+import { yellow } from '@material-ui/core/colors';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -16,7 +21,16 @@ const useStyles = makeStyles((theme: Theme) =>
       marginTop: theme.spacing(4),
     },
     paper: {
-      padding: theme.spacing(3),
+      padding: theme.spacing(2),
+    },
+    yellow: {
+      color: theme.palette.getContrastText(yellow[500]),
+      backgroundColor: yellow[500],
+      height: '60px',
+      width: '60px',
+      marginRight: theme.spacing(2),
+      paddingTop: theme.spacing(4),
+      paddingBottom: theme.spacing(4),
     },
   })
 );
@@ -24,14 +38,38 @@ const useStyles = makeStyles((theme: Theme) =>
 export const Profile: React.FC = observer(() => {
   const classes = useStyles();
   const { testStore, authStore } = useStores();
+  const history = useHistory();
+  const user = authStore.user;
+
+  useEffect(() => {
+    authStore.fetchUserData();
+  });
+  const logout = () => {
+    authStore.logout();
+    history.push('/');
+  };
 
   return (
-    <Container maxWidth="md" className={classes.root}>
+    <>
       <Paper elevation={3} className={classes.paper}>
+        <Box display="flex" alignItems="center">
+          <Avatar className={classes.yellow}>
+            {user?.firstname[0]}
+            {user?.lastname[0]}
+          </Avatar>
+          <Typography variant="h4">
+            {user && `Hi, ${user?.firstname} ${user?.lastname}`}
+          </Typography>
+        </Box>
+      </Paper>
+      <Container maxWidth="md" className={classes.root}>
         <Typography variant="h3" gutterBottom>
           Profile
         </Typography>
-      </Paper>
-    </Container>
+        <Button color="primary" variant="contained" onClick={() => logout()}>
+          Logout
+        </Button>
+      </Container>
+    </>
   );
 });

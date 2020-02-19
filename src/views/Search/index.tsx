@@ -8,7 +8,16 @@ import {
   Container,
   Paper,
   Typography,
+  ExpansionPanel,
+  ExpansionPanelSummary,
+  ExpansionPanelDetails,
+  Divider,
+  Box,
+  Button,
 } from '@material-ui/core';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import FilterIcon from '@material-ui/icons/FilterList';
+import SortIcon from '@material-ui/icons/Sort';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -18,6 +27,17 @@ const useStyles = makeStyles((theme: Theme) =>
     paper: {
       padding: theme.spacing(3),
     },
+    text: {
+      color: theme.palette.text.primary,
+    },
+    heading: {
+      fontSize: theme.typography.pxToRem(15),
+      fontWeight: theme.typography.fontWeightRegular,
+    },
+    menu: {
+      paddingTop: theme.spacing(1),
+      paddingBottom: theme.spacing(1),
+    },
   })
 );
 
@@ -26,12 +46,39 @@ export const Search: React.FC = observer(() => {
   const { testStore, authStore } = useStores();
 
   return (
-    <Container maxWidth="md" className={classes.root}>
-      <Paper elevation={3} className={classes.paper}>
-        <Typography variant="h3" gutterBottom>
+    <>
+      <ExpansionPanel expanded={true}>
+        <ExpansionPanelSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls="panel1a-content"
+          id="panel1a-header"
+        >
+          <Typography className={classes.heading}>Expansion Panel 1</Typography>
+        </ExpansionPanelSummary>
+        <ExpansionPanelDetails>
+          <Typography>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
+            malesuada lacus ex, sit amet blandit leo lobortis eget.
+          </Typography>
+        </ExpansionPanelDetails>
+      </ExpansionPanel>
+      <Container maxWidth="xl" className={classes.menu}>
+        <Box display="flex" justifyContent="space-between">
+          <Button>
+            Sort　
+            <SortIcon />
+          </Button>
+          <Button>
+            Filter <FilterIcon />
+          </Button>
+        </Box>
+      </Container>
+      <Divider />
+      <Container maxWidth="md" className={classes.root}>
+        <Typography variant="h3" gutterBottom className={classes.text}>
           Search
         </Typography>
-      </Paper>
-    </Container>
+      </Container>
+    </>
   );
 });

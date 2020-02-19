@@ -8,6 +8,11 @@ import {
   Button,
   Paper,
   TextField,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
+  FormHelperText,
   Box,
 } from '@material-ui/core';
 import { DatePicker } from '@material-ui/pickers';
@@ -67,7 +72,6 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export const Hero: React.FC<HeroProps> = () => {
   const classes = useStyles();
-  const [date, setDate] = useState<Date>();
   return (
     <Container
       style={{
@@ -84,41 +88,10 @@ export const Hero: React.FC<HeroProps> = () => {
       <div className={classes.textWrapper}>
         <Container maxWidth="lg">
           <Typography variant="h2" gutterBottom>
-            Find a perfect place to stay
+            Hilbert
           </Typography>
         </Container>
       </div>
-      <Paper elevation={1} className={classes.paper}>
-        <Container maxWidth="xl">
-          <Box
-            display="flex"
-            flexDirection="column"
-            alignItems="stretch"
-            maxWidth="xl"
-          >
-            <DatePicker
-              label="From"
-              value={date}
-              className={`${classes.formItem} ${classes.marginTop}`}
-              onChange={date => setDate(date?.toDate())}
-            />
-            <DatePicker
-              label="To"
-              value={date}
-              className={classes.formItem}
-              onChange={date => setDate(date?.toDate())}
-            />
-            <TextField label="Guests" type="number" />
-            <Button
-              variant="contained"
-              color="primary"
-              className={classes.bigButton}
-            >
-              Search
-            </Button>
-          </Box>
-        </Container>
-      </Paper>
     </Container>
   );
 };
