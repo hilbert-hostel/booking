@@ -1,12 +1,13 @@
 import { AxiosClient } from './axios';
-import { User } from '../../models/user';
+import { RegistrationModel } from '../../models/registration';
+import { AuthPayload, LoginModel } from '../../models/auth';
 
 export let client: AxiosClient;
 
 if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
   client = new AxiosClient('/');
 } else {
-  client = new AxiosClient('https://himkwtn.me:4000/');
+  client = new AxiosClient('http://himkwtn.me:4000/');
 }
 
 export class BackendAPI {
@@ -14,19 +15,12 @@ export class BackendAPI {
     return client.get<{ message: string }>('/ping');
   }
   static authPing() {
-    return client.get<{ token: string; user: User }>('/auth/ping');
+    return client.get<AuthPayload>('/auth/ping');
   }
-  static login(data: { username: string; password: string }) {
-    return client.post<{ token: string; user: User }>('/auth/login', data);
+  static login(data: LoginModel) {
+    return client.post<AuthPayload>('/auth/login', data);
   }
-  static register(data: {
-    email: string;
-    password: string;
-    firstname: string;
-    lastname: string;
-    phone: string;
-    address: string;
-  }) {
-    return client.post<{ token: string; user: User }>('/auth/register', data);
+  static register(data: RegistrationModel) {
+    return client.post<AuthPayload>('/auth/register', data);
   }
 }

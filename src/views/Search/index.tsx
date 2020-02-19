@@ -1,12 +1,11 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { observer } from 'mobx-react-lite';
-import { useStores } from '../../core/hooks/use-stores';
+// import { useStores } from '../../core/hooks/use-stores';
 import {
   createStyles,
   makeStyles,
   Theme,
   Container,
-  Paper,
   Typography,
   ExpansionPanel,
   ExpansionPanelSummary,
@@ -43,7 +42,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export const Search: React.FC = observer(() => {
   const classes = useStyles();
-  const { testStore, authStore } = useStores();
+  //   const { testStore, authStore } = useStores();
 
   return (
     <>

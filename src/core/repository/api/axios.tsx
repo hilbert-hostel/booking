@@ -6,12 +6,24 @@ export class AxiosClient implements HttpClient {
   instance: AxiosInstance;
 
   constructor(baseUrl: string = '') {
+    const token = new LocalStorage<string>('token').value;
     this.instance = axios.create({
       baseURL: baseUrl,
       headers: {
-        Authorization: `Bearer ${new LocalStorage<string>('token').value}`,
+        Authorization: token ? `Bearer ${token}` : undefined,
       },
     });
+
+    this.instance.interceptors.request.use(
+      function(config) {
+        const token = new LocalStorage<string>('token').value;
+        if (token) config.headers.Authorization = `Bearer ${token}`;
+        return config;
+      },
+      function(error) {
+        return Promise.reject(error);
+      }
+    );
   }
 
   get<T>(resource: string, options?: any) {
@@ -32,6 +44,5 @@ export class AxiosClient implements HttpClient {
 
   config(config: Partial<AxiosRequestConfig>) {
     this.instance.defaults = { ...this.instance.defaults, ...config };
-    console.log(this.instance.defaults);
   }
 }

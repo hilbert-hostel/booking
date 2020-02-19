@@ -1,64 +1,59 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { observer } from 'mobx-react-lite';
-import { useStores } from '../../core/hooks/use-stores';
 import {
   createStyles,
   makeStyles,
   Theme,
   Container,
   Typography,
-  Button,
-  Divider,
   Box,
+  Button,
 } from '@material-ui/core';
-import { BackendAPI } from '../../core/repository/api/backend';
+import { useFormik } from 'formik';
 import { useHistory } from 'react-router-dom';
 import { Hero } from './components/Hero';
-import { useFormik } from 'formik';
+import { RegistrationModel } from '../../core/models/registration';
+import { registrationSchema } from './schema';
 import { FormText } from '../../core/components/Forms/FormText';
-import { LoginModel } from '../../core/models/auth';
-import { loginSchema } from './schema';
+import { BackendAPI } from '../../core/repository/api/backend';
+import { useStores } from '../../core/hooks/use-stores';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
-      marginTop: theme.spacing(4),
-    },
-    paper: {
-      padding: theme.spacing(3),
-    },
-    inputField: {
-      marginBottom: theme.spacing(2),
-    },
-    text: {
+      marginTop: theme.spacing(3),
       color: theme.palette.text.primary,
     },
-    title: {
-      flexGrow: 1,
-    },
-    divider: {
+    text: {
       marginBottom: theme.spacing(2),
     },
-    button: {
+    paper: {
       padding: theme.spacing(2),
+    },
+    button: {
+      paddingTop: theme.spacing(2),
+      paddingBottom: theme.spacing(2),
+      width: '100%',
     },
   })
 );
 
-export const Login: React.FC = observer(() => {
+export const Register: React.FC = observer(() => {
   const classes = useStyles();
-  const { testStore, authStore } = useStores();
   const history = useHistory();
-
-  const form = useFormik<LoginModel>({
-    validationSchema: loginSchema,
+  const { authStore } = useStores();
+  const form = useFormik<RegistrationModel>({
+    validationSchema: registrationSchema,
     initialValues: {
       username: '',
       password: '',
+      email: '',
+      firstname: '',
+      lastname: '',
     },
     onSubmit: async values => {
       try {
-        const res = await BackendAPI.login(values);
+        const res = await BackendAPI.register(values);
         authStore.setToken(res.data.token);
         history.push('/');
       } catch (error) {}
@@ -70,23 +65,15 @@ export const Login: React.FC = observer(() => {
       <Hero />
       <Container maxWidth="md" className={classes.root}>
         <Typography
-          variant="h3"
+          variant="h4"
+          align="left"
           className={classes.text}
-          align="center"
           gutterBottom
         >
-          Login
-        </Typography>
-        <Typography
-          variant="subtitle1"
-          className={classes.text}
-          align="center"
-          gutterBottom
-        >
-          Please enter your Username and Password
+          Register
         </Typography>
         <form onSubmit={form.handleSubmit}>
-          <Box alignItems="stretch" flexDirection="column" display="flex">
+          <Box display="flex" alignItems="center" flexDirection="column">
             <FormText
               id="username"
               label="Username"
@@ -105,18 +92,35 @@ export const Login: React.FC = observer(() => {
               onChange={form.handleChange}
               value={form.values.password}
             />
+            <FormText
+              id="email"
+              label="E-mail"
+              name="email"
+              error={form.touched && form.errors['email']}
+              onChange={form.handleChange}
+              value={form.values.email}
+            />
+            <FormText
+              id="firstname"
+              label="First name"
+              name="firstname"
+              autoComplete="fname"
+              error={form.touched && form.errors['firstname']}
+              onChange={form.handleChange}
+              value={form.values.firstname}
+            />
+            <FormText
+              id="lastname"
+              label="Last name"
+              name="lastname"
+              autoComplete="lname"
+              error={form.touched && form.errors['lastname']}
+              onChange={form.handleChange}
+              value={form.values.lastname}
+            />
             <Button
               variant="contained"
-              onClick={() => form.submitForm()}
-              color="primary"
-              className={classes.button}
-            >
-              Login
-            </Button>
-            <Divider className={classes.divider} />
-            <Button
-              variant="contained"
-              onClick={() => history.push('/register')}
+              onClick={() => form.handleSubmit()}
               color="primary"
               className={classes.button}
             >

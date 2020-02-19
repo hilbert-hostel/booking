@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import BottomNavigationAction from '@material-ui/core/BottomNavigationAction';
 import BottomNavigation from '@material-ui/core/BottomNavigation';
 import HomeIcon from '@material-ui/icons/Home';
@@ -21,7 +21,7 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-export const BottomNav: React.FC<BottomNavProps> = observer(({}) => {
+export const BottomNav: React.FC<BottomNavProps> = observer(() => {
   const classes = useStyles();
   const history = useHistory();
   const { authStore } = useStores();

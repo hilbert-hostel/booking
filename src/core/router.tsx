@@ -6,6 +6,7 @@ import { makeStyles, Theme, createStyles } from '@material-ui/core';
 import { BottomNav } from './components/BottomNavigation';
 import { Search } from '../views/Search';
 import { Profile } from '../views/Profile';
+import { Register } from '../views/Register';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -31,6 +32,9 @@ export const AppRouter: React.FC = () => {
         {/* <Navigation /> */}
         <div className={classes.content}>
           <Switch>
+            <Route path="/register">
+              <Register />
+            </Route>
             <Route path="/profile">
               <Profile />
             </Route>

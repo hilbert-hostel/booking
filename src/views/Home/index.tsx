@@ -34,18 +34,14 @@ export const Home: React.FC = observer(() => {
   const classes = useStyles();
   const history = useHistory();
   const [message, setMessage] = useState();
-  const [user, setUser] = useState<User>();
 
   useEffect(() => {
     BackendAPI.ping().then(({ data }) => {
       setMessage(data.message);
     });
 
-    authStore.fetchUserData().then(() => {
-      const { user } = authStore;
-      setUser(user);
-    });
-  }, [authStore]);
+    authStore.fetchUserData();
+  }, []);
 
   const addMessage = () => {
     testStore.addMessage({ message: 'Hi', sender: 'jay' });
@@ -61,7 +57,7 @@ export const Home: React.FC = observer(() => {
           </Typography>
           <Typography variant="h6" gutterBottom>
             pong? : {message || 'Waiting...'}
-            {user && ` ${user.firstname}`}
+            {authStore.user && ` ${authStore.user.firstname}`}
           </Typography>
           <ul>
             {testStore.uppercased.map(e => (

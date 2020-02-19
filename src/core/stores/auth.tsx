@@ -19,18 +19,11 @@ export function createAuthStore() {
     setToken(token: string) {
       this.token = token;
       new LocalStorage<string>('token').value = token;
-      client.config({
-        headers: {
-          ...client.instance.defaults.headers,
-          common: {
-            ...client.instance.defaults.headers.common,
-            Authorization: `Bearer ${this.token}`,
-          },
-        },
-      });
     },
     logout() {
       this.token = null;
+      this.user = undefined;
+      new LocalStorage('token').clear();
     },
     get isAuthenticated() {
       return !!this.token;

@@ -13,7 +13,7 @@ import {
   Box,
 } from '@material-ui/core';
 import { useHistory } from 'react-router-dom';
-import { yellow } from '@material-ui/core/colors';
+import { orange } from '@material-ui/core/colors';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -24,8 +24,8 @@ const useStyles = makeStyles((theme: Theme) =>
       padding: theme.spacing(2),
     },
     yellow: {
-      color: theme.palette.getContrastText(yellow[500]),
-      backgroundColor: yellow[500],
+      color: theme.palette.getContrastText(orange[500]),
+      backgroundColor: orange[500],
       height: '60px',
       width: '60px',
       marginRight: theme.spacing(2),
@@ -37,13 +37,13 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export const Profile: React.FC = observer(() => {
   const classes = useStyles();
-  const { testStore, authStore } = useStores();
+  const { authStore } = useStores();
   const history = useHistory();
   const user = authStore.user;
 
   useEffect(() => {
     authStore.fetchUserData();
-  });
+  }, []);
   const logout = () => {
     authStore.logout();
     history.push('/');
