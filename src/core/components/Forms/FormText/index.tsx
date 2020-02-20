@@ -1,5 +1,11 @@
-import React, { ChangeEvent } from 'react';
-import { TextField, makeStyles, Theme, createStyles } from '@material-ui/core';
+import React, { ChangeEvent, ReactNode } from 'react';
+import {
+  TextField,
+  makeStyles,
+  Theme,
+  createStyles,
+  TextFieldProps,
+} from '@material-ui/core';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -15,7 +21,8 @@ export const FormText: React.FC<FormTextProps> = ({
   label,
   type = 'text',
   placeholder = label,
-  error,
+  errorText,
+  error = !!errorText,
   onChange,
   autoComplete = name,
   helperText,
@@ -29,8 +36,8 @@ export const FormText: React.FC<FormTextProps> = ({
       name={name}
       type={type}
       error={!!error}
-      placeholder={placeholder}
-      helperText={error ? error : helperText}
+      //   placeholder={}
+      helperText={error ? errorText : helperText}
       onChange={onChange}
       value={value}
       variant="filled"
@@ -41,15 +48,16 @@ export const FormText: React.FC<FormTextProps> = ({
   );
 };
 
-export interface FormTextProps {
-  id: string;
-  name: string;
+export type FormTextProps = TextFieldProps & {
+  id?: string;
+  name?: string;
   type?: string;
-  helperText?: string;
-  label: string;
+  helperText?: string | ReactNode;
+  label?: string | ReactNode;
   placeholder?: string;
   autoComplete?: string;
-  error?: string;
-  onChange: (e: ChangeEvent<HTMLInputElement>) => void;
-  value: string | number;
-}
+  error?: boolean;
+  errorText?: string;
+  onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
+  value?: string | number | unknown;
+};

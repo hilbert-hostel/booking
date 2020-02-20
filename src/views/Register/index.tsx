@@ -78,7 +78,7 @@ export const Register: React.FC = observer(() => {
               id="username"
               label="Username"
               name="username"
-              error={form.touched && form.errors['username']}
+              errorText={form.touched && form.errors['username']}
               onChange={form.handleChange}
               value={form.values.username}
             />
@@ -88,7 +88,7 @@ export const Register: React.FC = observer(() => {
               name="password"
               type="password"
               autoComplete="new-password"
-              error={form.touched && form.errors['password']}
+              errorText={form.touched && form.errors['password']}
               onChange={form.handleChange}
               value={form.values.password}
             />
@@ -96,7 +96,7 @@ export const Register: React.FC = observer(() => {
               id="email"
               label="E-mail"
               name="email"
-              error={form.touched && form.errors['email']}
+              errorText={form.touched && form.errors['email']}
               onChange={form.handleChange}
               value={form.values.email}
             />
@@ -105,7 +105,7 @@ export const Register: React.FC = observer(() => {
               label="First name"
               name="firstname"
               autoComplete="fname"
-              error={form.touched && form.errors['firstname']}
+              errorText={form.touched && form.errors['firstname']}
               onChange={form.handleChange}
               value={form.values.firstname}
             />
@@ -114,7 +114,7 @@ export const Register: React.FC = observer(() => {
               label="Last name"
               name="lastname"
               autoComplete="lname"
-              error={form.touched && form.errors['lastname']}
+              errorText={form.touched && form.errors['lastname']}
               onChange={form.handleChange}
               value={form.values.lastname}
             />

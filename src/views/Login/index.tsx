@@ -91,7 +91,7 @@ export const Login: React.FC = observer(() => {
               id="username"
               label="Username"
               name="username"
-              error={form.touched && form.errors['username']}
+              errorText={form.touched && form.errors['username']}
               onChange={form.handleChange}
               value={form.values.username}
             />
@@ -101,7 +101,7 @@ export const Login: React.FC = observer(() => {
               name="password"
               type="password"
               autoComplete="current-password"
-              error={form.touched && form.errors['password']}
+              errorText={form.touched && form.errors['password']}
               onChange={form.handleChange}
               value={form.values.password}
             />

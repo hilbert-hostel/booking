@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Container from '@material-ui/core/Container';
 import {
   Typography,
@@ -7,10 +7,14 @@ import {
   Theme,
   Button,
   Paper,
-  TextField,
   Box,
 } from '@material-ui/core';
 import { DatePicker } from '@material-ui/pickers';
+import { useFormik } from 'formik';
+import { RoomSearchForm } from '../../../../core/models/search';
+import { roomSearchFormSchema } from './schema';
+import { FormText } from '../../../../core/components/Forms/FormText';
+import moment from 'moment';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -49,11 +53,11 @@ const useStyles = makeStyles((theme: Theme) =>
       width: '100%',
       borderRadius: '10px 10px 0 0',
       zIndex: 2,
-      paddingTop: theme.spacing(1),
+      paddingTop: theme.spacing(2),
       paddingBottom: theme.spacing(2),
     },
     bigButton: {
-      marginTop: theme.spacing(1),
+      // marginTop: theme.spacing(1),
       padding: theme.spacing(2),
     },
     formItem: {
@@ -67,7 +71,23 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export const Hero: React.FC<HeroProps> = () => {
   const classes = useStyles();
-  const [date, setDate] = useState<Date>();
+  const form = useFormik<RoomSearchForm>({
+    validationSchema: roomSearchFormSchema,
+    initialValues: {
+      from: new Date(),
+      to: moment()
+        .add(1, 'day')
+        .toDate(),
+      guests: 1,
+    },
+    onSubmit: async values => {
+      try {
+        // const res = await BackendAPI.login(values);
+        // authStore.setToken(res.data.token);
+        // history.push('/');
+      } catch (error) {}
+    },
+  });
   return (
     <Container
       style={{
@@ -90,33 +110,49 @@ export const Hero: React.FC<HeroProps> = () => {
       </div>
       <Paper elevation={1} className={classes.paper}>
         <Container maxWidth="xl">
-          <Box
-            display="flex"
-            flexDirection="column"
-            alignItems="stretch"
-            maxWidth="xl"
-          >
-            <DatePicker
-              label="From"
-              value={date}
-              className={`${classes.formItem} ${classes.marginTop}`}
-              onChange={date => setDate(date?.toDate())}
-            />
-            <DatePicker
-              label="To"
-              value={date}
-              className={classes.formItem}
-              onChange={date => setDate(date?.toDate())}
-            />
-            <TextField label="Guests" type="number" />
-            <Button
-              variant="contained"
-              color="primary"
-              className={classes.bigButton}
+          <form onSubmit={form.handleSubmit}>
+            <Box
+              display="flex"
+              flexDirection="column"
+              alignItems="stretch"
+              maxWidth="xl"
             >
-              Search
-            </Button>
-          </Box>
+              <DatePicker
+                label="From"
+                name="from"
+                value={form.values.from}
+                minDate={new Date()}
+                TextFieldComponent={FormText}
+                className={`${classes.formItem} ${classes.marginTop}`}
+                onChange={date => form.setFieldValue('from', date?.toDate())}
+              />
+              <DatePicker
+                label="To"
+                name="to"
+                value={form.values.to}
+                minDate={form.values.from}
+                TextFieldComponent={FormText}
+                className={classes.formItem}
+                onChange={date => form.setFieldValue('to', date?.toDate())}
+              />
+              <FormText
+                id="guests"
+                label="Guests"
+                type="number"
+                name="guests"
+                value={form.values.guests}
+                onChange={form.handleChange}
+              />
+              <Button
+                variant="contained"
+                color="primary"
+                className={classes.bigButton}
+                onClick={() => form.submitForm()}
+              >
+                Search
+              </Button>
+            </Box>
+          </form>
         </Container>
       </Paper>
     </Container>
