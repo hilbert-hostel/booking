@@ -9,7 +9,7 @@ export let client: AxiosClient;
 if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
   client = new AxiosClient('/');
 } else {
-  client = new AxiosClient('http://himkwtn.me:4000/');
+  client = new AxiosClient('https://hilbert.himkwtn.me/');
 }
 
 export class BackendAPI {
