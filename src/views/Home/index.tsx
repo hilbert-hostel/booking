@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { observer } from 'mobx-react-lite';
 import { useStores } from '../../core/hooks/use-stores';
-import { useHistory } from 'react-router-dom';
 import {
   Container,
   Paper,
@@ -31,7 +30,6 @@ const useStyles = makeStyles((theme: Theme) =>
 export const Home: React.FC = observer(() => {
   const { testStore, themeStore, authStore } = useStores();
   const classes = useStyles();
-  const history = useHistory();
   const [message, setMessage] = useState();
 
   useEffect(() => {

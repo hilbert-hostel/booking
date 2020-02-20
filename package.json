@@ -23,11 +23,13 @@
     "react-dom": "^16.12.0",
     "react-router-dom": "^5.1.2",
     "react-scripts": "3.3.1",
+    "source-map-explorer": "^2.3.0",
     "yup": "^0.28.1"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
+    "analyze": "source-map-explorer 'build/static/js/*.js'",
     "test:local": "react-scripts test",
     "test": "CI=True react-scripts test --no-watch --coverage",
     "eject": "react-scripts eject",
