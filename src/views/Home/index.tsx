@@ -74,14 +74,6 @@ export const Home: React.FC = observer(() => {
           <Button
             variant="contained"
             className={classes.button}
-            onClick={() => history.push('/login')}
-            color="default"
-          >
-            Go to Login
-          </Button>
-          <Button
-            variant="contained"
-            className={classes.button}
             onClick={() => themeStore.setDarkMode(!themeStore.dark)}
             color="default"
           >

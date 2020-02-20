@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useRef } from 'react';
 import { observer } from 'mobx-react-lite';
 // import { useStores } from '../../core/hooks/use-stores';
 import {
@@ -17,14 +17,17 @@ import {
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import FilterIcon from '@material-ui/icons/FilterList';
 import SortIcon from '@material-ui/icons/Sort';
+import { RoomSearchForm } from '../../core/components/RoomSearchForm';
+import { RoomSearchFormInput } from '../../core/models/search';
+import moment from 'moment';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       marginTop: theme.spacing(4),
     },
-    paper: {
-      padding: theme.spacing(3),
+    expansionPanel: {
+      margin: 0,
     },
     text: {
       color: theme.palette.text.primary,
@@ -37,28 +40,47 @@ const useStyles = makeStyles((theme: Theme) =>
       paddingTop: theme.spacing(1),
       paddingBottom: theme.spacing(1),
     },
+    panel: {
+      paddingBottom: theme.spacing(1),
+    },
   })
 );
 
 export const Search: React.FC = observer(() => {
   const classes = useStyles();
+  const [isExpanded, setExpanded] = useState(true);
+  const ref = useRef();
+  const [title, setTitle] = useState('Please select you stay');
   //   const { testStore, authStore } = useStores();
 
+  const updateTitle = (values: RoomSearchFormInput) => {
+    setTitle(
+      `${moment(values.from).format('MMM Do')} - ${moment(values.to).format(
+        'MMM Do'
+      )} , ${values.guests} guest(s)`
+    );
+  };
   return (
     <>
-      <ExpansionPanel expanded={true}>
+      <ExpansionPanel
+        className={classes.expansionPanel}
+        expanded={isExpanded}
+        onChange={(_, expanded) => setExpanded(expanded)}
+      >
         <ExpansionPanelSummary
           expandIcon={<ExpandMoreIcon />}
           aria-controls="panel1a-content"
           id="panel1a-header"
         >
-          <Typography className={classes.heading}>Expansion Panel 1</Typography>
+          <Typography className={classes.heading}>{title}</Typography>
         </ExpansionPanelSummary>
-        <ExpansionPanelDetails>
-          <Typography>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
-            malesuada lacus ex, sit amet blandit leo lobortis eget.
-          </Typography>
+        <ExpansionPanelDetails className={classes.panel}>
+          <RoomSearchForm
+            ref={ref}
+            onSubmit={console.log}
+            searchButton={false}
+            onChange={updateTitle}
+          />
         </ExpansionPanelDetails>
       </ExpansionPanel>
       <Container maxWidth="xl" className={classes.menu}>

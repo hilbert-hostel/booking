@@ -1,4 +1,4 @@
-export interface RoomSearchForm {
+export interface RoomSearchFormInput {
   from: Date;
   to: Date;
   guests: number;

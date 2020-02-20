@@ -27,6 +27,8 @@ export const FormText: React.FC<FormTextProps> = ({
   autoComplete = name,
   helperText,
   value,
+  variant,
+  ...rest
 }) => {
   const classes = useStyles();
   return (
@@ -44,6 +46,7 @@ export const FormText: React.FC<FormTextProps> = ({
       fullWidth
       autoComplete={autoComplete}
       className={classes.root}
+      {...rest}
     />
   );
 };

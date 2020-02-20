@@ -5,16 +5,9 @@ import {
   createStyles,
   makeStyles,
   Theme,
-  Button,
   Paper,
-  Box,
 } from '@material-ui/core';
-import { DatePicker } from '@material-ui/pickers';
-import { useFormik } from 'formik';
-import { RoomSearchForm } from '../../../../core/models/search';
-import { roomSearchFormSchema } from './schema';
-import { FormText } from '../../../../core/components/Forms/FormText';
-import moment from 'moment';
+import { RoomSearchForm } from '../../../../core/components/RoomSearchForm';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -71,23 +64,6 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export const Hero: React.FC<HeroProps> = () => {
   const classes = useStyles();
-  const form = useFormik<RoomSearchForm>({
-    validationSchema: roomSearchFormSchema,
-    initialValues: {
-      from: new Date(),
-      to: moment()
-        .add(1, 'day')
-        .toDate(),
-      guests: 1,
-    },
-    onSubmit: async values => {
-      try {
-        // const res = await BackendAPI.login(values);
-        // authStore.setToken(res.data.token);
-        // history.push('/');
-      } catch (error) {}
-    },
-  });
   return (
     <Container
       style={{
@@ -110,49 +86,7 @@ export const Hero: React.FC<HeroProps> = () => {
       </div>
       <Paper elevation={1} className={classes.paper}>
         <Container maxWidth="xl">
-          <form onSubmit={form.handleSubmit}>
-            <Box
-              display="flex"
-              flexDirection="column"
-              alignItems="stretch"
-              maxWidth="xl"
-            >
-              <DatePicker
-                label="From"
-                name="from"
-                value={form.values.from}
-                minDate={new Date()}
-                TextFieldComponent={FormText}
-                className={`${classes.formItem} ${classes.marginTop}`}
-                onChange={date => form.setFieldValue('from', date?.toDate())}
-              />
-              <DatePicker
-                label="To"
-                name="to"
-                value={form.values.to}
-                minDate={form.values.from}
-                TextFieldComponent={FormText}
-                className={classes.formItem}
-                onChange={date => form.setFieldValue('to', date?.toDate())}
-              />
-              <FormText
-                id="guests"
-                label="Guests"
-                type="number"
-                name="guests"
-                value={form.values.guests}
-                onChange={form.handleChange}
-              />
-              <Button
-                variant="contained"
-                color="primary"
-                className={classes.bigButton}
-                onClick={() => form.submitForm()}
-              >
-                Search
-              </Button>
-            </Box>
-          </form>
+          <RoomSearchForm onSubmit={console.log} />
         </Container>
       </Paper>
     </Container>

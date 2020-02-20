@@ -1,7 +1,7 @@
 import * as Yup from 'yup';
-import { RoomSearchForm } from '../../../../core/models/search';
+import { RoomSearchFormInput } from '../../models/search';
 
-export const roomSearchFormSchema = Yup.object<RoomSearchForm>({
+export const roomSearchFormSchema = Yup.object<RoomSearchFormInput>({
   from: Yup.date().required(),
   to: Yup.date().required(),
   guests: Yup.number()
