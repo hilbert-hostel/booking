@@ -43,7 +43,8 @@ export const Profile: React.FC = observer(() => {
 
   useEffect(() => {
     authStore.fetchUserData();
-  }, []);
+  }, [authStore]);
+
   const logout = () => {
     authStore.logout();
     history.push('/');

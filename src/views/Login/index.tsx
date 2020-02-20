@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { observer } from 'mobx-react-lite';
 import { useStores } from '../../core/hooks/use-stores';
 import {
@@ -47,7 +47,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export const Login: React.FC = observer(() => {
   const classes = useStyles();
-  const { testStore, authStore } = useStores();
+  const { authStore } = useStores();
   const history = useHistory();
 
   const form = useFormik<LoginModel>({
@@ -100,7 +100,7 @@ export const Login: React.FC = observer(() => {
               label="Password"
               name="password"
               type="password"
-              autoComplete="new-password"
+              autoComplete="current-password"
               error={form.touched && form.errors['password']}
               onChange={form.handleChange}
               value={form.values.password}

@@ -13,7 +13,6 @@ import {
 } from '@material-ui/core';
 import { Hero } from './components/Hero';
 import { BackendAPI } from '../../core/repository/api/backend';
-import { User } from '../../core/models/user';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -41,7 +40,7 @@ export const Home: React.FC = observer(() => {
     });
 
     authStore.fetchUserData();
-  }, []);
+  }, [authStore]);
 
   const addMessage = () => {
     testStore.addMessage({ message: 'Hi', sender: 'jay' });

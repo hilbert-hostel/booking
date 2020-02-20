@@ -1,5 +1,5 @@
 import { LocalStorage } from '../repository/localStorage';
-import { BackendAPI, client } from '../repository/api/backend';
+import { BackendAPI } from '../repository/api/backend';
 import { User } from '../models/user';
 
 export function createAuthStore() {
