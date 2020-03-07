@@ -8,6 +8,8 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     formItem: {
       marginBottom: theme.spacing(2),
+      paddingLeft: theme.spacing(1),
+      paddingRight: theme.spacing(1),
     },
   })
 );

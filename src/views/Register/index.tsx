@@ -28,7 +28,7 @@ const useStyles = makeStyles((theme: Theme) =>
       marginBottom: theme.spacing(2),
     },
     paper: {
-      padding: theme.spacing(2),
+      padding: theme.spacing(1),
     },
     button: {
       paddingTop: theme.spacing(2),
@@ -45,11 +45,13 @@ export const Register: React.FC = observer(() => {
   const form = useFormik<RegistrationModel>({
     validationSchema: registrationSchema,
     initialValues: {
-      username: '',
       password: '',
       email: '',
       firstname: '',
       lastname: '',
+      address: '',
+      nationalID: '',
+      phone: '',
     },
     onSubmit: async values => {
       try {
@@ -75,12 +77,12 @@ export const Register: React.FC = observer(() => {
         <form onSubmit={form.handleSubmit}>
           <Box display="flex" alignItems="center" flexDirection="column">
             <FormText
-              id="username"
-              label="Username"
-              name="username"
-              errorText={form.touched && form.errors['username']}
+              id="email"
+              label="E-mail"
+              name="email"
+              errorText={form.touched && form.errors['email']}
               onChange={form.handleChange}
-              value={form.values.username}
+              value={form.values.email}
             />
             <FormText
               id="password"
@@ -92,31 +94,58 @@ export const Register: React.FC = observer(() => {
               onChange={form.handleChange}
               value={form.values.password}
             />
+            <Box
+              display="flex"
+              alignItems="center"
+              flexDirection="row"
+              width="100%"
+            >
+              <FormText
+                id="firstname"
+                label="First name"
+                name="firstname"
+                autoComplete="fname"
+                errorText={form.touched && form.errors['firstname']}
+                onChange={form.handleChange}
+                value={form.values.firstname}
+              />
+              <FormText
+                id="lastname"
+                label="Last name"
+                name="lastname"
+                autoComplete="lname"
+                errorText={form.touched && form.errors['lastname']}
+                onChange={form.handleChange}
+                value={form.values.lastname}
+              />
+            </Box>
+
             <FormText
-              id="email"
-              label="E-mail"
-              name="email"
-              errorText={form.touched && form.errors['email']}
+              id="nationalID"
+              label="National ID"
+              name="nationalID"
+              autoComplete="nationalID"
+              errorText={form.touched && form.errors['nationalID']}
               onChange={form.handleChange}
-              value={form.values.email}
+              value={form.values.nationalID}
             />
             <FormText
-              id="firstname"
-              label="First name"
-              name="firstname"
-              autoComplete="fname"
-              errorText={form.touched && form.errors['firstname']}
+              id="address"
+              label="Address"
+              name="address"
+              autoComplete="address"
+              errorText={form.touched && form.errors['address']}
               onChange={form.handleChange}
-              value={form.values.firstname}
+              value={form.values.address}
             />
             <FormText
-              id="lastname"
-              label="Last name"
-              name="lastname"
-              autoComplete="lname"
-              errorText={form.touched && form.errors['lastname']}
+              id="phone"
+              label="Phone"
+              name="phone"
+              autoComplete="phone"
+              errorText={form.touched && form.errors['phone']}
               onChange={form.handleChange}
-              value={form.values.lastname}
+              value={form.values.phone}
             />
             <Button
               variant="contained"

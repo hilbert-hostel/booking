@@ -53,7 +53,7 @@ export const Login: React.FC = observer(() => {
   const form = useFormik<LoginModel>({
     validationSchema: loginSchema,
     initialValues: {
-      username: '',
+      email: '',
       password: '',
     },
     onSubmit: async values => {
@@ -88,12 +88,12 @@ export const Login: React.FC = observer(() => {
         <form onSubmit={form.handleSubmit}>
           <Box alignItems="stretch" flexDirection="column" display="flex">
             <FormText
-              id="username"
-              label="Username"
-              name="username"
-              errorText={form.touched && form.errors['username']}
+              id="email"
+              label="E-mail"
+              name="email"
+              errorText={form.touched && form.errors['email']}
               onChange={form.handleChange}
-              value={form.values.username}
+              value={form.values.email}
             />
             <FormText
               id="password"

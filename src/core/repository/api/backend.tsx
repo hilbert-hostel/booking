@@ -33,4 +33,13 @@ export class BackendAPI {
   static reserve(data: RoomSearchPayload) {
     return client.post<Room[]>('/reservation', data);
   }
+  static openDoor() {
+    return client.post('/door/lock', {});
+  }
+  static closeDoor() {
+    return client.post('/door/unlock', {});
+  }
+  static sound() {
+    return client.post('/door/sound', {});
+  }
 }

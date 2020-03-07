@@ -14,6 +14,7 @@ import {
 } from '@material-ui/core';
 import { useHistory } from 'react-router-dom';
 import { orange } from '@material-ui/core/colors';
+import { BackendAPI } from '../../core/repository/api/backend';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -50,6 +51,17 @@ export const Profile: React.FC = observer(() => {
     history.push('/');
   };
 
+  const door = async (isLocked: boolean) => {
+    if (isLocked) {
+      await BackendAPI.openDoor();
+    } else {
+      await BackendAPI.closeDoor();
+    }
+  };
+  const makeSound = async () => {
+    await BackendAPI.sound();
+  };
+
   return (
     <>
       <Paper elevation={3} className={classes.paper}>
@@ -67,6 +79,15 @@ export const Profile: React.FC = observer(() => {
         <Typography variant="h3" gutterBottom>
           Profile
         </Typography>
+        <Button color="primary" variant="contained" onClick={() => door(true)}>
+          Lock
+        </Button>
+        <Button color="primary" variant="contained" onClick={() => door(false)}>
+          Unlock
+        </Button>
+        <Button color="primary" variant="contained" onClick={() => makeSound()}>
+          Make Sound
+        </Button>
         <Button color="primary" variant="contained" onClick={() => logout()}>
           Logout
         </Button>
