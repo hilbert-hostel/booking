@@ -96,6 +96,7 @@ export const RoomSearchForm: React.FC<RoomSearchFormProps> = forwardRef(
             name="guests"
             value={form.values.guests}
             onChange={form.handleChange}
+            errorText={form.errors && form.errors.guests}
           />
           {searchButton && (
             <Button

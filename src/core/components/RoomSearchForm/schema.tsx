@@ -6,5 +6,6 @@ export const roomSearchFormSchema = Yup.object<RoomSearchFormInput>({
   to: Yup.date().required(),
   guests: Yup.number()
     .integer()
+    .positive('Guests must be positive')
     .required('Please enter number of guests'),
 });
