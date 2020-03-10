@@ -17,8 +17,11 @@ export const registrationSchema = Yup.object<RegistrationModel>({
   address: Yup.string().required('Please enter your address'),
   phone: Yup.string()
     .required('Please enter your phone number')
-    .matches(/0[0-9]{8,9}/, 'Invalid Phone number format'),
+    .matches(/^0[0-9]{9}$/g, 'Invalid Phone number format'),
   nationalID: Yup.string()
     .required('Please enter your national ID')
-    .matches(/[0-9]{13}/, 'Invalid National ID Card 13 Characters'),
+    .matches(
+      /^[0-9]{13}$/g,
+      'Invalid National ID, National ID Card has to be 13 Characters'
+    ),
 });
