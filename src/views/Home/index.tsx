@@ -1,20 +1,15 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { observer } from 'mobx-react-lite';
-import { useStores } from '../../core/hooks/use-stores';
 import {
   createStyles,
   makeStyles,
   Theme,
   Container,
-  Paper,
   Typography,
   Button,
-  Avatar,
   Box,
 } from '@material-ui/core';
 import { useHistory } from 'react-router-dom';
-import { orange } from '@material-ui/core/colors';
-import { BackendAPI } from '../../core/repository/api/backend';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -38,7 +33,6 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export const Home: React.FC = observer(() => {
   const classes = useStyles();
-  const { authStore } = useStores();
   const history = useHistory();
 
   return (

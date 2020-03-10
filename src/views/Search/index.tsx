@@ -30,7 +30,7 @@ const useStyles = makeStyles((theme: Theme) =>
 export const Search: React.FC = observer(() => {
   const { testStore, themeStore, authStore } = useStores();
   const classes = useStyles();
-  const [message, setMessage] = useState();
+  const [message] = useState();
 
   useEffect(() => {
     BackendAPI.ping().then(({ data }) => {});
