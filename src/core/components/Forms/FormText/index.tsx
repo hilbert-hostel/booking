@@ -13,6 +13,7 @@ const useStyles = makeStyles((theme: Theme) =>
       marginBottom: theme.spacing(2),
       paddingLeft: theme.spacing(1),
       paddingRight: theme.spacing(1),
+      width: '100%',
     },
   })
 );
@@ -34,22 +35,23 @@ export const FormText: React.FC<FormTextProps> = ({
 }) => {
   const classes = useStyles();
   return (
-    <TextField
-      id={id}
-      label={label}
-      name={name}
-      type={type}
-      error={!!error}
-      //   placeholder={}
-      helperText={error ? errorText : helperText}
-      onChange={onChange}
-      value={value}
-      variant="filled"
-      fullWidth
-      autoComplete={autoComplete}
-      className={classes.root}
-      {...rest}
-    />
+    <div className={classes.root}>
+      <TextField
+        id={id}
+        label={label}
+        name={name}
+        type={type}
+        error={!!error}
+        //   placeholder={}
+        helperText={error ? errorText : helperText}
+        onChange={onChange}
+        value={value}
+        variant="filled"
+        fullWidth
+        autoComplete={autoComplete}
+        {...rest}
+      />
+    </div>
   );
 };
 

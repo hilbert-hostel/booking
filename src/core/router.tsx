@@ -1,12 +1,13 @@
 import React from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
-import { Home } from '../views/Home';
+import { Search } from '../views/Search';
 import { Login } from '../views/Login';
 import { makeStyles, Theme, createStyles } from '@material-ui/core';
 import { BottomNav } from './components/BottomNavigation';
-import { Search } from '../views/Search';
+import { SearchResult } from '../views/SearchResult';
 import { Profile } from '../views/Profile';
 import { Register } from '../views/Register';
+import { Home } from '../views/Home';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -20,6 +21,8 @@ const useStyles = makeStyles((theme: Theme) =>
       flexGrow: 1,
       height: '100%',
       marginBottom: '64px',
+      display: 'flex',
+      flexDirection: 'column',
     },
   })
 );
@@ -37,6 +40,12 @@ export const AppRouter: React.FC = () => {
             </Route>
             <Route path="/profile">
               <Profile />
+            </Route>
+            <Route path="/notification">
+              <Home />
+            </Route>
+            <Route path="/search/result">
+              <SearchResult />
             </Route>
             <Route path="/search">
               <Search />

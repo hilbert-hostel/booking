@@ -1,104 +1,81 @@
-import React, { useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import { observer } from 'mobx-react-lite';
-// import { useStores } from '../../core/hooks/use-stores';
+import { useStores } from '../../core/hooks/use-stores';
 import {
-  createStyles,
+  Container,
+  Paper,
+  Typography,
   makeStyles,
   Theme,
-  Container,
-  Typography,
-  ExpansionPanel,
-  ExpansionPanelSummary,
-  ExpansionPanelDetails,
-  Divider,
-  Box,
+  createStyles,
   Button,
 } from '@material-ui/core';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import FilterIcon from '@material-ui/icons/FilterList';
-import SortIcon from '@material-ui/icons/Sort';
-import { RoomSearchForm } from '../../core/components/RoomSearchForm';
-import { RoomSearchFormInput } from '../../core/models/search';
-import moment from 'moment';
+import { Hero } from './components/Hero';
+import { BackendAPI } from '../../core/repository/api/backend';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       marginTop: theme.spacing(4),
     },
-    expansionPanel: {
-      margin: 0,
+    paper: {
+      padding: theme.spacing(3),
     },
-    text: {
-      color: theme.palette.text.primary,
-    },
-    heading: {
-      fontSize: theme.typography.pxToRem(15),
-      fontWeight: theme.typography.fontWeightRegular,
-    },
-    menu: {
-      paddingTop: theme.spacing(1),
-      paddingBottom: theme.spacing(1),
-    },
-    panel: {
-      paddingBottom: theme.spacing(1),
+    button: {
+      marginRight: theme.spacing(1),
     },
   })
 );
 
 export const Search: React.FC = observer(() => {
+  const { testStore, themeStore, authStore } = useStores();
   const classes = useStyles();
-  const [isExpanded, setExpanded] = useState(true);
-  const ref = useRef();
-  const [title, setTitle] = useState('Please select you stay');
-  //   const { testStore, authStore } = useStores();
+  const [message, setMessage] = useState();
 
-  const updateTitle = (values: RoomSearchFormInput) => {
-    setTitle(
-      `${moment(values.from).format('MMM Do')} - ${moment(values.to).format(
-        'MMM Do'
-      )} , ${values.guests} guest(s)`
-    );
+  useEffect(() => {
+    BackendAPI.ping().then(({ data }) => {});
+
+    authStore.fetchUserData();
+  }, [authStore]);
+
+  const addMessage = () => {
+    testStore.addMessage({ message: 'Hi', sender: 'jay' });
   };
+
   return (
     <>
-      <ExpansionPanel
-        className={classes.expansionPanel}
-        expanded={isExpanded}
-        onChange={(_, expanded) => setExpanded(expanded)}
-      >
-        <ExpansionPanelSummary
-          expandIcon={<ExpandMoreIcon />}
-          aria-controls="panel1a-content"
-          id="panel1a-header"
-        >
-          <Typography className={classes.heading}>{title}</Typography>
-        </ExpansionPanelSummary>
-        <ExpansionPanelDetails className={classes.panel}>
-          <RoomSearchForm
-            ref={ref}
-            onSubmit={console.log}
-            searchButton={false}
-            onChange={updateTitle}
-          />
-        </ExpansionPanelDetails>
-      </ExpansionPanel>
-      <Container maxWidth="xl" className={classes.menu}>
-        <Box display="flex" justifyContent="space-between">
-          <Button>
-            Sort　
-            <SortIcon />
+      <Hero />
+      <Container maxWidth="lg" className={classes.root}>
+        <Paper elevation={3} className={classes.paper}>
+          <Typography variant="h3" gutterBottom>
+            This is home
+          </Typography>
+          <Typography variant="h6" gutterBottom>
+            pong? : {message || 'Waiting...'}
+            {authStore.user && ` ${authStore.user.firstname}`}
+          </Typography>
+          <ul>
+            {testStore.uppercased.map(e => (
+              <li>{e.sender + ' : ' + e.message}</li>
+            ))}
+          </ul>
+          <Button
+            variant="contained"
+            className={classes.button}
+            onClick={() => addMessage()}
+            color="primary"
+          >
+            Add Message
           </Button>
-          <Button>
-            Filter <FilterIcon />
+          <Button
+            variant="contained"
+            className={classes.button}
+            onClick={() => themeStore.setDarkMode(!themeStore.dark)}
+            color="default"
+          >
+            Toggle dark mode
           </Button>
-        </Box>
-      </Container>
-      <Divider />
-      <Container maxWidth="md" className={classes.root}>
-        <Typography variant="h3" gutterBottom className={classes.text}>
-          Search
-        </Typography>
+        </Paper>
       </Container>
     </>
   );

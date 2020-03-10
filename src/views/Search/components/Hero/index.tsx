@@ -7,6 +7,7 @@ import {
   Theme,
   Paper,
 } from '@material-ui/core';
+import { useHistory } from 'react-router-dom';
 import { RoomSearchForm } from '../../../../core/components/RoomSearchForm';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -64,6 +65,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export const Hero: React.FC<HeroProps> = () => {
   const classes = useStyles();
+  const history = useHistory();
   return (
     <Container
       style={{
@@ -86,7 +88,7 @@ export const Hero: React.FC<HeroProps> = () => {
       </div>
       <Paper elevation={1} className={classes.paper}>
         <Container maxWidth="xl">
-          <RoomSearchForm onSubmit={console.log} />
+          <RoomSearchForm onSubmit={() => history.push('/search/result')} />
         </Container>
       </Paper>
     </Container>

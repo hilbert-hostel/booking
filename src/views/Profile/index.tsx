@@ -67,8 +67,8 @@ export const Profile: React.FC = observer(() => {
       <Paper elevation={3} className={classes.paper}>
         <Box display="flex" alignItems="center">
           <Avatar className={classes.yellow}>
-            {user?.firstname[0]}
-            {user?.lastname[0]}
+            {user?.firstname && user?.firstname[0]}
+            {user?.lastname && user?.lastname[0]}
           </Avatar>
           <Typography variant="h4">
             {user && `Hi, ${user?.firstname} ${user?.lastname}`}

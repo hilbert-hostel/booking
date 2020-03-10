@@ -1,84 +1,77 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { observer } from 'mobx-react-lite';
 import { useStores } from '../../core/hooks/use-stores';
 import {
+  createStyles,
+  makeStyles,
+  Theme,
   Container,
   Paper,
   Typography,
-  makeStyles,
-  Theme,
-  createStyles,
   Button,
+  Avatar,
+  Box,
 } from '@material-ui/core';
-import { Hero } from './components/Hero';
+import { useHistory } from 'react-router-dom';
+import { orange } from '@material-ui/core/colors';
 import { BackendAPI } from '../../core/repository/api/backend';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       marginTop: theme.spacing(4),
+      height: '100%',
+      flexGrow: 1,
     },
-    paper: {
-      padding: theme.spacing(3),
+    box: {
+      height: '100%',
+    },
+    title: {
+      marginBottom: theme.spacing(6),
     },
     button: {
-      marginRight: theme.spacing(1),
+      marginBottom: theme.spacing(2),
+      padding: theme.spacing(2),
     },
   })
 );
 
 export const Home: React.FC = observer(() => {
-  const { testStore, themeStore, authStore } = useStores();
   const classes = useStyles();
-  const [message, setMessage] = useState();
-
-  useEffect(() => {
-    BackendAPI.ping().then(({ data }) => {
-      setMessage(data.message);
-    });
-
-    authStore.fetchUserData();
-  }, [authStore]);
-
-  const addMessage = () => {
-    testStore.addMessage({ message: 'Hi', sender: 'jay' });
-  };
+  const { authStore } = useStores();
+  const history = useHistory();
 
   return (
-    <>
-      <Hero />
-      <Container maxWidth="lg" className={classes.root}>
-        <Paper elevation={3} className={classes.paper}>
-          <Typography variant="h3" gutterBottom>
-            This is home
+    <Box
+      className={classes.root}
+      flexDirection="column"
+      justifyContent="center"
+      display="flex"
+    >
+      <Container maxWidth="xs">
+        <Box flexDirection="column" justifyContent="center" display="flex">
+          <Typography variant="h4" gutterBottom className={classes.title}>
+            Welcome to Hilbert Hostel Management System
           </Typography>
-          <Typography variant="h6" gutterBottom>
-            pong? : {message || 'Waiting...'}
-            {authStore.user && ` ${authStore.user.firstname}`}
-          </Typography>
-          <ul>
-            {testStore.uppercased.map(e => (
-              <li>{e.sender + ' : ' + e.message}</li>
-            ))}
-          </ul>
           <Button
-            variant="contained"
-            className={classes.button}
-            onClick={() => addMessage()}
             color="primary"
+            variant="contained"
+            onClick={() => history.push('/search')}
+            className={classes.button}
           >
-            Add Message
+            Booking
           </Button>
           <Button
+            color="primary"
             variant="contained"
+            disabled
+            onClick={() => history.push('/search')}
             className={classes.button}
-            onClick={() => themeStore.setDarkMode(!themeStore.dark)}
-            color="default"
           >
-            Toggle dark mode
+            Get QR Code key
           </Button>
-        </Paper>
+        </Box>
       </Container>
-    </>
+    </Box>
   );
 });
