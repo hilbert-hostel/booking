@@ -5,7 +5,7 @@ import HomeIcon from '@material-ui/icons/Home';
 import PersonIcon from '@material-ui/icons/Person';
 import LoginIcon from '@material-ui/icons/ExitToApp';
 import SearchIcon from '@material-ui/icons/Search';
-import NotificationIcon from '@material-ui/icons/Notifications';
+import VpnKeyIcon from '@material-ui/icons/VpnKey';
 import { createStyles, makeStyles, Theme } from '@material-ui/core';
 import { useHistory } from 'react-router-dom';
 import { useStores } from '../../hooks/use-stores';
@@ -44,7 +44,7 @@ export const BottomNav: React.FC<BottomNavProps> = observer(() => {
       <BottomNavigationAction
         value="/qrkey"
         onClick={() => history.push('/qrkey')}
-        icon={<NotificationIcon />}
+        icon={<VpnKeyIcon />}
       />
       {authStore.isAuthenticated ? (
         <BottomNavigationAction
