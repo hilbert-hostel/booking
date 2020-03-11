@@ -8,6 +8,7 @@ import { SearchResult } from '../views/SearchResult';
 import { Profile } from '../views/Profile';
 import { Register } from '../views/Register';
 import { Home } from '../views/Home';
+import { QRKey } from '../views/QRKey';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -20,7 +21,7 @@ const useStyles = makeStyles((theme: Theme) =>
     content: {
       flexGrow: 1,
       height: '100%',
-      marginBottom: '64px',
+      marginBottom: '56px',
       display: 'flex',
       flexDirection: 'column',
     },
@@ -40,6 +41,9 @@ export const AppRouter: React.FC = () => {
             </Route>
             <Route path="/profile">
               <Profile />
+            </Route>
+            <Route path="/qrkey">
+              <QRKey />
             </Route>
             <Route path="/notification">
               <Home />

@@ -42,8 +42,8 @@ export const BottomNav: React.FC<BottomNavProps> = observer(() => {
         icon={<SearchIcon />}
       />
       <BottomNavigationAction
-        value="/notification"
-        onClick={() => history.push('/notification')}
+        value="/qrkey"
+        onClick={() => history.push('/qrkey')}
         icon={<NotificationIcon />}
       />
       {authStore.isAuthenticated ? (

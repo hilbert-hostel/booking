@@ -10,7 +10,7 @@ import {
   Box,
 } from '@material-ui/core';
 import { useHistory } from 'react-router-dom';
-import { useStores } from '../../core/hooks/use-stores';
+import qr from '../../assets/qr.png';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -21,13 +21,12 @@ const useStyles = makeStyles((theme: Theme) =>
       backgroundPosition: 'center',
       position: 'relative',
     },
-
     filter: {
-      backdropFilter: 'blur(2px) brightness(0.7)',
-      position: 'absolute',
-      height: '100%',
-      width: '100%',
-      backgroundColor: ' rgba(255,255,255,0.4)',
+      // backdropFilter: 'blur(2px) brightness(0.7)',
+      // position: 'absolute',
+      // height: '100%',
+      // width: '100%',
+      // backgroundColor: ' rgba(255,255,255,0.4)',
     },
     box: {
       height: '100%',
@@ -38,24 +37,28 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     title: {
       marginBottom: theme.spacing(6),
+      textAlign: 'center',
     },
     button: {
       marginBottom: theme.spacing(2),
       padding: theme.spacing(2),
       zIndex: 5,
     },
+    image: {
+      height: 'auto',
+      margin: '0 auto',
+      display: 'block',
+      marginBottom: theme.spacing(3),
+    },
   })
 );
 
-export const Home: React.FC = observer(() => {
+export const QRKey: React.FC = observer(() => {
   const classes = useStyles();
   const history = useHistory();
-  const { authStore } = useStores();
+
   return (
     <Box
-      style={{
-        backgroundImage: `url(${'https://pix10.agoda.net/hotelImages/1165482/-1/781e60570bbaa427b4afa9d66b7d500d.jpg?s=1024x768'})`,
-      }}
       className={classes.root}
       flexDirection="column"
       justifyContent="center"
@@ -67,24 +70,19 @@ export const Home: React.FC = observer(() => {
       <Container maxWidth="xs" className={classes.content}>
         <Box flexDirection="column" justifyContent="center" display="flex">
           <Typography variant="h4" gutterBottom className={classes.title}>
-            Welcome to Hilbert Hostel Management System
+            Your QR Code Key
           </Typography>
+          <div>
+            <img src={qr} className={classes.image} alt="qrcode" />
+          </div>
           <Button
             color="primary"
             variant="contained"
+            disabled
             onClick={() => history.push('/search')}
             className={classes.button}
           >
-            Booking
-          </Button>
-          <Button
-            color="primary"
-            variant="contained"
-            disabled={!authStore.isAuthenticated}
-            onClick={() => history.push('/qrkey')}
-            className={classes.button}
-          >
-            Get QR Code key
+            Generate Again
           </Button>
         </Box>
       </Container>
