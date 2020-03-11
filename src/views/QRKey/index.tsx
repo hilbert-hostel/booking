@@ -11,6 +11,7 @@ import {
 } from '@material-ui/core';
 import { useHistory } from 'react-router-dom';
 import qr from '../../assets/qr.png';
+import { BackendAPI } from '../../core/repository/api/backend';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -57,6 +58,17 @@ export const QRKey: React.FC = observer(() => {
   const classes = useStyles();
   const history = useHistory();
 
+  const door = async (isLocked: boolean) => {
+    if (isLocked) {
+      await BackendAPI.openDoor();
+    } else {
+      await BackendAPI.closeDoor();
+    }
+  };
+  const makeSound = async () => {
+    await BackendAPI.sound();
+  };
+
   return (
     <Box
       className={classes.root}
@@ -84,6 +96,33 @@ export const QRKey: React.FC = observer(() => {
           >
             Generate Again
           </Button>
+          <Box
+            flexDirection="row"
+            justifyContent="space-between"
+            display="flex"
+          >
+            <Button
+              color="primary"
+              variant="contained"
+              onClick={() => door(true)}
+            >
+              Lock
+            </Button>
+            <Button
+              color="primary"
+              variant="contained"
+              onClick={() => door(false)}
+            >
+              Unlock
+            </Button>
+            <Button
+              color="primary"
+              variant="contained"
+              onClick={() => makeSound()}
+            >
+              Make Sound
+            </Button>
+          </Box>
         </Box>
       </Container>
     </Box>
