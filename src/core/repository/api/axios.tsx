@@ -26,19 +26,19 @@ export class AxiosClient implements HttpClient {
     );
   }
 
-  get<T>(resource: string, options?: any) {
+  get<T>(resource: string, options?: AxiosRequestConfig) {
     return this.instance.get<T>(resource, options);
   }
-  post<T>(resource: string, data: any, options?: any) {
+  post<T>(resource: string, data: any, options?: AxiosRequestConfig) {
     return this.instance.post<T>(resource, data, options);
   }
-  put<T>(resource: string, id: string, options?: any) {
+  put<T>(resource: string, id: string, options?: AxiosRequestConfig) {
     return this.instance.put<T>(resource + '/' + id, options);
   }
-  patch<T>(resource: string, id: string, options?: any) {
+  patch<T>(resource: string, id: string, options?: AxiosRequestConfig) {
     return this.instance.patch<T>(resource + '/' + id, options);
   }
-  delete<T>(resource: string, id: string, options?: any) {
+  delete<T>(resource: string, id: string, options?: AxiosRequestConfig) {
     return this.instance.delete<T>(resource + '/' + id, options);
   }
 

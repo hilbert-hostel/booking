@@ -44,8 +44,8 @@ export const RoomSearchForm: React.FC<RoomSearchFormProps> = forwardRef(
     const form = useFormik<RoomSearchFormInput>({
       validationSchema: roomSearchFormSchema,
       initialValues: {
-        from: new Date(),
-        to: moment()
+        checkIn: new Date(),
+        checkOut: moment()
           .add(1, 'day')
           .toDate(),
         guests: 1,
@@ -63,6 +63,7 @@ export const RoomSearchForm: React.FC<RoomSearchFormProps> = forwardRef(
     useImperativeHandle(ref, () => ({
       submitForm: () => form.submitForm(),
       getForm: () => form,
+      setForm: (values: RoomSearchFormInput) => form.setValues(values),
     }));
 
     return (
@@ -74,20 +75,20 @@ export const RoomSearchForm: React.FC<RoomSearchFormProps> = forwardRef(
           maxWidth="xl"
         >
           <FormDatePicker
-            label="From"
-            name="from"
-            value={form.values.from}
+            label="Check In"
+            name="checkIn"
+            value={form.values.checkIn}
             minDate={new Date()}
             className={`${classes.formItem} ${classes.marginTop}`}
-            onChange={date => form.setFieldValue('from', date?.toDate())}
+            onChange={date => form.setFieldValue('checkIn', date?.toDate())}
           />
           <FormDatePicker
-            label="To"
-            name="to"
-            value={form.values.to}
-            minDate={form.values.from}
+            label="Check Out"
+            name="checkOut"
+            value={form.values.checkOut}
+            minDate={form.values.checkIn}
             className={classes.formItem}
-            onChange={date => form.setFieldValue('to', date?.toDate())}
+            onChange={date => form.setFieldValue('checkOut', date?.toDate())}
           />
           <FormText
             id="guests"

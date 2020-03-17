@@ -1,7 +1,7 @@
 import { AxiosClient } from './axios';
 import { RegistrationModel } from '../../models/registration';
 import { AuthPayload, LoginModel } from '../../models/auth';
-import { RoomSearchPayload } from '../../models/search';
+import { RoomSearchPayload, RoomSearchFormInput } from '../../models/search';
 import { Room } from '../../models/room';
 
 export let client: AxiosClient;
@@ -27,12 +27,15 @@ export class BackendAPI {
   }
 
   static searchRooms(data: RoomSearchPayload) {
-    return client.get<Room[]>('/reservation', data);
+    return client.get<Room[]>('/reservation', { params: data });
   }
 
   static reserve(data: RoomSearchPayload) {
     return client.post<Room[]>('/reservation', data);
   }
+
+  static reservationStatus(id: number) {}
+
   static openDoor() {
     return client.post('/door/lock', {});
   }

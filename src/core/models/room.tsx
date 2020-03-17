@@ -1,8 +1,9 @@
 export interface Room {
-  name: string;
+  id: number;
+  type: string;
   description: string;
   available: number;
   price: number;
-  photo: string;
+  photo?: string;
   facilities: string[];
 }

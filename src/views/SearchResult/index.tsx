@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { observer } from 'mobx-react-lite';
 // import { useStores } from '../../core/hooks/use-stores';
 import {
@@ -20,11 +20,17 @@ import SortIcon from '@material-ui/icons/Sort';
 import { RoomSearchForm } from '../../core/components/RoomSearchForm';
 import { RoomSearchFormInput } from '../../core/models/search';
 import moment from 'moment';
+import { useQuery } from '../../core/hooks/use-query';
+import { toQuerystring } from '../../core/utils/querystring';
+import { useLocation, useHistory } from 'react-router-dom';
+import { Room } from '../../core/models/room';
+import { BackendAPI } from '../../core/repository/api/backend';
+import { RoomCard } from './components';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
-      marginTop: theme.spacing(4),
+      marginTop: theme.spacing(2),
     },
     expansionPanel: {
       margin: 0,
@@ -49,17 +55,49 @@ const useStyles = makeStyles((theme: Theme) =>
 export const SearchResult: React.FC = observer(() => {
   const classes = useStyles();
   const [isExpanded, setExpanded] = useState(true);
-  const ref = useRef();
+  const ref = useRef<any>();
   const [title, setTitle] = useState('Please select you stay');
+  const query = useQuery();
+  const [searchQuery, setSearchQuery] = useState<RoomSearchFormInput>();
+  const [searchResults, setSearchResults] = useState<Room[]>();
+  const location = useLocation();
   //   const { testStore, authStore } = useStores();
+  useEffect(() => {
+    const query = new URLSearchParams(location.search);
+    if (query.get('checkIn')) {
+      ref.current.setForm({
+        checkIn: new Date(query.get('checkIn') || ''),
+        checkOut:
+          query.get('checkOut') !== null
+            ? new Date(query.get('checkOut') || '')
+            : moment()
+                .add('day', 1)
+                .toDate(),
+        guests: parseInt(query.get('guests') || '1') || 1,
+      });
+      setExpanded(false);
+    }
+  }, [location.search]);
 
-  const updateTitle = (values: RoomSearchFormInput) => {
+  const updateForm = (values: RoomSearchFormInput) => {
     setTitle(
-      `${moment(values.from).format('MMM Do')} - ${moment(values.to).format(
-        'MMM Do'
-      )} , ${values.guests} guest(s)`
+      `${moment(values.checkIn).format('MMM Do')} - ${moment(
+        values.checkOut
+      ).format('MMM Do')} , ${values.guests} guest(s)`
     );
+    setSearchQuery(values);
   };
+
+  useEffect(() => {
+    if (searchQuery) {
+      BackendAPI.searchRooms({
+        checkIn: moment(searchQuery.checkIn).format('YYYY-MM-DD'),
+        checkOut: moment(searchQuery.checkIn).format('YYYY-MM-DD'),
+        guests: searchQuery.guests,
+      }).then(res => setSearchResults(res.data));
+    }
+  }, [searchQuery]);
+
   return (
     <>
       <ExpansionPanel
@@ -79,7 +117,7 @@ export const SearchResult: React.FC = observer(() => {
             ref={ref}
             onSubmit={console.log}
             searchButton={false}
-            onChange={updateTitle}
+            onChange={data => updateForm(data)}
           />
         </ExpansionPanelDetails>
       </ExpansionPanel>
@@ -96,9 +134,15 @@ export const SearchResult: React.FC = observer(() => {
       </Container>
       <Divider />
       <Container maxWidth="md" className={classes.root}>
-        <Typography variant="h3" gutterBottom className={classes.text}>
-          Search
+        <Typography variant="h4" gutterBottom className={classes.text}>
+          Type of room
         </Typography>
+        {searchResults &&
+          searchResults.map(room => {
+            return (
+              <RoomCard key={'room-result-' + room.id} room={room}></RoomCard>
+            );
+          })}
       </Container>
     </>
   );

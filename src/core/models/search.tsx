@@ -1,11 +1,11 @@
 export interface RoomSearchFormInput {
-  from: Date;
-  to: Date;
+  checkIn: Date;
+  checkOut: Date;
   guests: number;
 }
 
 export interface RoomSearchPayload {
-  from: string;
-  to: string;
+  checkIn: string;
+  checkOut: string;
   guests: number;
 }

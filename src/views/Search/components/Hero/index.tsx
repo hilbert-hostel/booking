@@ -9,6 +9,7 @@ import {
 } from '@material-ui/core';
 import { useHistory } from 'react-router-dom';
 import { RoomSearchForm } from '../../../../core/components/RoomSearchForm';
+import { toQuerystring } from '../../../../core/utils/querystring';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -88,7 +89,18 @@ export const Hero: React.FC<HeroProps> = () => {
       </div>
       <Paper elevation={1} className={classes.paper}>
         <Container maxWidth="xl">
-          <RoomSearchForm onSubmit={() => history.push('/search/result')} />
+          <RoomSearchForm
+            onSubmit={res =>
+              history.push(
+                '/search/result' +
+                  toQuerystring({
+                    checkIn: res.checkIn.toJSON(),
+                    checkOut: res.checkOut.toJSON(),
+                    guests: res.guests,
+                  })
+              )
+            }
+          />
         </Container>
       </Paper>
     </Container>
