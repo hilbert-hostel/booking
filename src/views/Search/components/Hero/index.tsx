@@ -10,6 +10,7 @@ import {
 import { useHistory } from 'react-router-dom';
 import { RoomSearchForm } from '../../../../core/components/RoomSearchForm';
 import { toQuerystring } from '../../../../core/utils/querystring';
+import { LocalStorage } from '../../../../core/repository/localStorage';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -90,7 +91,8 @@ export const Hero: React.FC<HeroProps> = () => {
       <Paper elevation={1} className={classes.paper}>
         <Container maxWidth="xl">
           <RoomSearchForm
-            onSubmit={res =>
+            initial={new LocalStorage('roomSearchInfo').value}
+            onSubmit={res => {
               history.push(
                 '/search/result' +
                   toQuerystring({
@@ -98,8 +100,8 @@ export const Hero: React.FC<HeroProps> = () => {
                     checkOut: res.checkOut.toJSON(),
                     guests: res.guests,
                   })
-              )
-            }
+              );
+            }}
           />
         </Container>
       </Paper>

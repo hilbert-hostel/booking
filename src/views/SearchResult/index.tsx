@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { observer } from 'mobx-react-lite';
 // import { useStores } from '../../core/hooks/use-stores';
 import {
@@ -29,6 +29,7 @@ import { RoomTypeCard } from './components/RoomTypeCard';
 import BackArrow from '@material-ui/icons/ArrowBackIos';
 import MuiExpansionPanel from '@material-ui/core/ExpansionPanel';
 import { useStores } from '../../core/hooks/use-stores';
+import { LocalStorage } from '../../core/repository/localStorage';
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
@@ -83,17 +84,16 @@ export const SearchResult: React.FC = observer(() => {
   const [isExpanded, setExpanded] = useState(true);
   const ref = useRef<any>();
   const [title, setTitle] = useState('Please select you stay');
-  const query = useQuery();
   const { bookingStore } = useStores();
   const [searchQuery, setSearchQuery] = useState<RoomSearchFormInput>();
   const [searchResults, setSearchResults] = useState<RoomTypeResult[]>();
   const location = useLocation();
   const history = useHistory();
-  //   const { testStore, authStore } = useStores();
-  useEffect(() => {
+
+  const queryData = useMemo(() => {
     const query = new URLSearchParams(location.search);
     if (query.get('checkIn')) {
-      ref.current.setForm({
+      return {
         checkIn: new Date(query.get('checkIn') || ''),
         checkOut:
           query.get('checkOut') !== null
@@ -102,10 +102,21 @@ export const SearchResult: React.FC = observer(() => {
                 .add('day', 1)
                 .toDate(),
         guests: parseInt(query.get('guests') || '1') || 1,
-      });
-      setExpanded(false);
+      };
+      // setExpanded(false);
     }
   }, [location.search]);
+
+  useEffect(() => {
+    if (queryData) {
+      ref.current.setForm(queryData);
+      setExpanded(false);
+      history.push('/search/result');
+    } else {
+      ref.current.setForm(new LocalStorage('roomSearchInfo').value);
+      setExpanded(false);
+    }
+  }, [queryData, history]);
 
   const updateForm = (values: RoomSearchFormInput) => {
     setTitle(
@@ -137,7 +148,7 @@ export const SearchResult: React.FC = observer(() => {
           id="top-panel-header"
         >
           <Box className={classes.topPanel}>
-            <BackArrow onClick={() => history.goBack()} />
+            <BackArrow onClick={() => history.push('/search')} />
             <Typography variant="h4" className={classes.text}>
               Types of room
             </Typography>
@@ -158,6 +169,7 @@ export const SearchResult: React.FC = observer(() => {
         </ExpansionPanelSummary>
         <ExpansionPanelDetails className={classes.panel}>
           <RoomSearchForm
+            initial={new LocalStorage('roomSearchInfo').value}
             ref={ref}
             onSubmit={console.log}
             searchButton={false}

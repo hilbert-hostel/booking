@@ -1,12 +1,15 @@
 import { RoomSearchFormInput } from '../models/search';
+import { LocalStorage } from '../repository/localStorage';
+import { convertDateObject } from '../utils/convertDateObject';
 
 export function createBookingStore(): BookingStore {
   // note the use of this which refers to observable instance of the store
   return {
-    roomSearchInfo: undefined,
-    selectedRooms: [],
+    roomSearchInfo: convertDateObject(new LocalStorage('roomSearchInfo').value),
+    selectedRooms: new LocalStorage('selectedRooms').value || [],
     setRoomSearchInfo(data: RoomSearchFormInput) {
       this.roomSearchInfo = data;
+      new LocalStorage('roomSearchInfo').value = data;
     },
     selectRooms(room: number, amount: number) {
       if (amount < 1) {
@@ -18,6 +21,7 @@ export function createBookingStore(): BookingStore {
       } else {
         this.selectedRooms = [...this.selectedRooms, { room, amount }];
       }
+      new LocalStorage('selectedRooms').value = this.selectedRooms;
     },
     getSelectRoomAmount(room: number) {
       return this.selectedRooms.find(r => r.room === room)?.amount;
@@ -26,6 +30,13 @@ export function createBookingStore(): BookingStore {
       return (
         !!this.roomSearchInfo &&
         this.selectedRooms.reduce((p, c) => p + c.amount, 0) <
+          this.roomSearchInfo?.guests
+      );
+    },
+    get invalid() {
+      return (
+        !!this.roomSearchInfo &&
+        this.selectedRooms.reduce((p, c) => p + c.amount, 0) >
           this.roomSearchInfo?.guests
       );
     },
@@ -40,4 +51,5 @@ export interface BookingStore {
   selectRooms: (room: number, amount: number) => void;
   getSelectRoomAmount: (room: number) => number | undefined;
   canSelect: boolean;
+  invalid: boolean;
 }

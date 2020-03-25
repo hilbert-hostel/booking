@@ -91,9 +91,9 @@ export const AppRouter: React.FC = () => {
       <div className={classes.root}>
         {/* <Navigation /> */}
         <AnimatedSwitch
-          // atEnter={transition.atEnter}
-          // atLeave={transition.atLeave}
-          // atActive={transition.atActive}
+          atEnter={transition.atEnter}
+          atLeave={transition.atLeave}
+          atActive={transition.atActive}
           mapStyles={mapStyles}
           className={classes.content}
         >

@@ -40,10 +40,18 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 export const RoomSearchForm: React.FC<RoomSearchFormProps> = forwardRef(
-  ({ onSubmit, searchButton = true, onChange }, ref) => {
+  ({ initial, onSubmit, searchButton = true, onChange }, ref) => {
     const form = useFormik<RoomSearchFormInput>({
       validationSchema: roomSearchFormSchema,
       initialValues: {
+        guests: initial?.guests || 1,
+        checkIn: new Date(initial?.checkIn || ''),
+        checkOut: initial?.checkOut
+          ? new Date(initial?.checkOut || '')
+          : moment()
+              .add('day', 1)
+              .toDate(),
+      } || {
         checkIn: new Date(),
         checkOut: moment()
           .add(1, 'day')
@@ -120,4 +128,5 @@ export interface RoomSearchFormProps {
   searchButton?: boolean;
   ref?: React.Ref<any>;
   onChange?: (values: RoomSearchFormInput) => void;
+  initial?: RoomSearchFormInput;
 }

@@ -11,7 +11,6 @@ import {
 } from '@material-ui/core';
 import { useFormik } from 'formik';
 import { useHistory } from 'react-router-dom';
-import { Hero } from './components/Hero';
 import { RegistrationModel } from '../../core/models/registration';
 import { registrationSchema } from './schema';
 import { FormText } from '../../core/components/Forms/FormText';

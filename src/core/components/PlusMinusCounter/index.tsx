@@ -21,15 +21,18 @@ const useStyles = makeStyles((theme: Theme) =>
 export const PlusMinusCounter: React.FC<PlusMinusCounterProps> = ({
   value,
   onChange,
+  invalid = false,
   disabled = false,
 }) => {
   const classes = useStyles();
   return (
-    <Box>
+    <Box display="flex" alignItems="center">
       <IconButton disabled={value == 0} onClick={() => onChange(value - 1)}>
         <MinusIcon />
-      </IconButton>{' '}
-      {value}
+      </IconButton>
+      <Typography variant="body1" color={invalid ? 'error' : 'textPrimary'}>
+        {value}
+      </Typography>
       <IconButton disabled={disabled} onClick={() => onChange(value + 1)}>
         <PlusIcon />
       </IconButton>
@@ -41,4 +44,5 @@ export interface PlusMinusCounterProps {
   onChange: (value: number) => void;
   value: number;
   disabled?: boolean;
+  invalid?: boolean;
 }
