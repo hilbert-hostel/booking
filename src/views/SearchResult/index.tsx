@@ -7,12 +7,12 @@ import {
   Theme,
   Container,
   Typography,
-  ExpansionPanel,
   ExpansionPanelSummary,
   ExpansionPanelDetails,
   Divider,
   Box,
   Button,
+  withStyles,
 } from '@material-ui/core';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import FilterIcon from '@material-ui/icons/FilterList';
@@ -23,10 +23,12 @@ import moment from 'moment';
 import { useQuery } from '../../core/hooks/use-query';
 import { toQuerystring } from '../../core/utils/querystring';
 import { useLocation, useHistory } from 'react-router-dom';
-import { Room } from '../../core/models/room';
+import { Room, RoomTypeResult } from '../../core/models/room';
 import { BackendAPI } from '../../core/repository/api/backend';
-import { RoomCard } from './components';
-
+import { RoomTypeCard } from './components/RoomTypeCard';
+import BackArrow from '@material-ui/icons/ArrowBackIos';
+import MuiExpansionPanel from '@material-ui/core/ExpansionPanel';
+import { useStores } from '../../core/hooks/use-stores';
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
@@ -48,9 +50,33 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     panel: {
       paddingBottom: theme.spacing(1),
+      marginTop: 0,
+    },
+    topPanel: {
+      verticalAlign: 'middle',
+      display: 'flex',
+      alignItems: 'center',
     },
   })
 );
+
+const ExpansionPanel = withStyles({
+  root: {
+    border: '1px solid rgba(0, 0, 0, .125)',
+    boxShadow: 'none',
+    '&:not(:last-child)': {
+      borderBottom: 0,
+    },
+    '&:before': {
+      display: 'none',
+    },
+    '&$expanded': {
+      margin: 'auto',
+    },
+    width: '100%',
+  },
+  expanded: {},
+})(MuiExpansionPanel);
 
 export const SearchResult: React.FC = observer(() => {
   const classes = useStyles();
@@ -58,9 +84,11 @@ export const SearchResult: React.FC = observer(() => {
   const ref = useRef<any>();
   const [title, setTitle] = useState('Please select you stay');
   const query = useQuery();
+  const { bookingStore } = useStores();
   const [searchQuery, setSearchQuery] = useState<RoomSearchFormInput>();
-  const [searchResults, setSearchResults] = useState<Room[]>();
+  const [searchResults, setSearchResults] = useState<RoomTypeResult[]>();
   const location = useLocation();
+  const history = useHistory();
   //   const { testStore, authStore } = useStores();
   useEffect(() => {
     const query = new URLSearchParams(location.search);
@@ -81,11 +109,14 @@ export const SearchResult: React.FC = observer(() => {
 
   const updateForm = (values: RoomSearchFormInput) => {
     setTitle(
-      `${moment(values.checkIn).format('MMM Do')} - ${moment(
+      `${moment(values.checkIn).format('MMM Do')} to ${moment(
         values.checkOut
-      ).format('MMM Do')} , ${values.guests} guest(s)`
+      ).format('MMM Do')} , ${values.guests} guest${
+        values.guests > 1 ? 's' : ''
+      }`
     );
     setSearchQuery(values);
+    bookingStore.setRoomSearchInfo(values);
   };
 
   useEffect(() => {
@@ -100,6 +131,19 @@ export const SearchResult: React.FC = observer(() => {
 
   return (
     <>
+      <ExpansionPanel expanded={false}>
+        <ExpansionPanelSummary
+          aria-controls="panel1a-content"
+          id="top-panel-header"
+        >
+          <Box className={classes.topPanel}>
+            <BackArrow onClick={() => history.goBack()} />
+            <Typography variant="h4" className={classes.text}>
+              Types of room
+            </Typography>
+          </Box>
+        </ExpansionPanelSummary>
+      </ExpansionPanel>
       <ExpansionPanel
         className={classes.expansionPanel}
         expanded={isExpanded}
@@ -134,13 +178,13 @@ export const SearchResult: React.FC = observer(() => {
       </Container>
       <Divider />
       <Container maxWidth="md" className={classes.root}>
-        <Typography variant="h4" gutterBottom className={classes.text}>
-          Type of room
-        </Typography>
         {searchResults &&
           searchResults.map(room => {
             return (
-              <RoomCard key={'room-result-' + room.id} room={room}></RoomCard>
+              <RoomTypeCard
+                key={'room-result-' + room.type}
+                roomType={room}
+              ></RoomTypeCard>
             );
           })}
       </Container>
