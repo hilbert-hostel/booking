@@ -1,29 +1,27 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { observer } from 'mobx-react-lite';
-// import { useStores } from '../../core/hooks/use-stores';
+import React, { useState, useMemo, useEffect } from 'react';
 import {
   createStyles,
   makeStyles,
   Theme,
   Container,
   Typography,
-  Divider,
   Box,
   Button,
   Card,
-  CardActionArea,
   CardMedia,
   CardContent,
   ListItem,
   List,
+  CardActions,
+  Collapse,
 } from '@material-ui/core';
-import { RoomSearchFormInput } from '../../core/models/search';
-import moment from 'moment';
-import { useLocation, useHistory, useParams } from 'react-router-dom';
-import { Room } from '../../core/models/room';
-import { BackendAPI } from '../../core/repository/api/backend';
+import { useHistory, useParams } from 'react-router-dom';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import { PlusMinusCounter } from '../../core/components/PlusMinusCounter';
 import BackArrow from '@material-ui/icons/ArrowBackIos';
 import { toSentenceCase } from '../../core/utils/text-formatting';
+import { useStores } from '../../core/hooks/use-stores';
+import { observer } from 'mobx-react-lite';
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
@@ -49,33 +47,46 @@ const useStyles = makeStyles((theme: Theme) =>
     listItem: {
       paddingLeft: 0,
     },
+    expand: {
+      transform: 'rotate(0deg) translateY(3px)',
+      marginLeft: 'auto',
+      transition: theme.transitions.create('transform', {
+        duration: theme.transitions.duration.shortest,
+      }),
+    },
+    expandOpen: {
+      transform: 'rotate(180deg)',
+    },
+    expandBtn: {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    roomItem: {
+      paddingLeft: '0px',
+      paddingTop: '0px',
+      paddingRight: '0px',
+    },
+    noPaddingTopBottom: {
+      paddingTop: '0px',
+      paddingBottom: '0px',
+    },
   })
 );
 
 export const RoomDetails: React.FC = observer(() => {
   const classes = useStyles();
-  const params = useParams();
+  const { type } = useParams();
   const history = useHistory();
-  const room: Room = {
-    id: 1,
-    price: 1500,
-    type: 'Double room with bathroom',
-    description: '',
-    facilities: [
-      'hair dryer',
-      'toiletries',
-      'towels',
-      'shower',
-      'bathroom',
-      'telephone',
-      'TV',
-      'air conditioning',
-      'free bottled water',
-      'closet',
-      'clothes rack',
-    ],
-    available: 2,
-  };
+  const [expanded, setExpanded] = useState(true);
+  const { bookingStore } = useStores();
+  const roomType = bookingStore.getCurrentRoomType(type as string);
+
+  useEffect(() => {
+    if (!roomType) {
+      bookingStore.fetchSearchResults();
+    }
+  }, [roomType]);
 
   return (
     <>
@@ -91,90 +102,111 @@ export const RoomDetails: React.FC = observer(() => {
             Room Details
           </Typography>
         </Box>
-        <Card className={classes.card}>
-          <CardActionArea>
-            {room.photo && (
-              <CardMedia
-                component="img"
-                alt={room.type}
-                height="140"
-                image={room.photo}
-                title={room.type}
-              />
-            )}
-            <CardContent>
-              <Typography gutterBottom variant="h5" component="h2">
-                {room.type}
-              </Typography>
-              <Box display="flex" width="100%" alignItems="stretch">
-                <Box width="100%" height="100%" flexGrow="1">
-                  <Typography
-                    variant="body2"
-                    color="textSecondary"
-                    component="p"
-                  >
-                    {room.description}
-                  </Typography>
-                  <Typography
-                    variant="body2"
-                    color="textSecondary"
-                    component="p"
-                  >
-                    Facilities :{' '}
-                    {room.facilities
-                      .map((e: any) => toSentenceCase(e))
-                      .join(', ')}
-                  </Typography>
-                </Box>
-                <Box
-                  flexShrink="1"
-                  fontWeight="fontWeightBold"
-                  fontSize={24}
-                  width="fit-content"
-                  whiteSpace="nowrap"
-                  padding={1}
-                  alignSelf="flex-end"
+        <Card className={classes.root}>
+          {/* <CardActionAnrea> */}
+          {roomType?.photos[0] && (
+            <CardMedia
+              component="img"
+              alt={roomType?.photos[0].photo_description || roomType?.type}
+              height="140"
+              image={roomType?.photos[0].photo_url}
+              title={roomType?.type}
+            />
+          )}
+          <CardContent>
+            <Typography gutterBottom variant="h5" component="h2">
+              {roomType?.type}
+            </Typography>
+            <Box display="flex" width="100%" alignItems="stretch">
+              <Box width="100%" height="100%" flexGrow="1">
+                <Typography variant="body2" color="textSecondary" component="p">
+                  {roomType?.description}
+                </Typography>
+                <br />
+                <Typography variant="body2" color="textSecondary" component="p">
+                  Facilities :{' '}
+                  {roomType?.facilities
+                    .map(e => toSentenceCase(e.name))
+                    .join(', ')}
+                </Typography>
+              </Box>
+              <Box
+                flexShrink="1"
+                fontWeight="fontWeightBold"
+                fontSize={24}
+                width="fit-content"
+                whiteSpace="nowrap"
+                padding={1}
+                alignSelf="flex-end"
+              >
+                {roomType?.price} THB
+              </Box>
+            </Box>
+          </CardContent>
+          <CardActions>
+            <Button
+              size="small"
+              color="primary"
+              onClick={() => history.push('/search/rooms/' + roomType?.type)}
+            >
+              View Details
+            </Button>
+            <Button
+              onClick={() => setExpanded(e => !e)}
+              aria-expanded={expanded}
+              aria-label="show more"
+              size="small"
+              color="primary"
+            >
+              <Box className={classes.expandBtn}>
+                <Typography variant="body2" color="primary" component="p">
+                  See available rooms
+                </Typography>{' '}
+                <div
+                  className={
+                    classes.expand + (expanded ? ' ' + classes.expandOpen : '')
+                  }
                 >
-                  {room.price} THB
-                </Box>
+                  <ExpandMoreIcon />
+                </div>
               </Box>
-            </CardContent>
-          </CardActionArea>
-          {/* <CardActions>
-        <Button size="small" color="primary">
-          Share
-        </Button>
-        <Button size="small" color="primary">
-          Learn More
-        </Button>
-      </CardActions> */}
-        </Card>
-        <Card className={classes.card}>
-          <CardActionArea>
-            <CardContent>
-              <Typography gutterBottom variant="h5" component="h2">
-                Add-ons
-              </Typography>
-              <Box>
-                <List>
-                  <ListItem className={classes.listItem}>
-                    <Box display="flex" justifyContent="spaced-evenly">
-                      <Typography gutterBottom variant="body1">
-                        Breakfast
-                      </Typography>
+            </Button>
+          </CardActions>
+          <CardContent className={classes.noPaddingTopBottom}>
+            <List className={classes.noPaddingTopBottom}>
+              {roomType?.availability.map(room => {
+                const amount = bookingStore.getSelectRoomAmount(room.id) || 0;
+                return (
+                  <ListItem
+                    className={classes.roomItem}
+                    key={'card-' + roomType?.type + '-' + room.id}
+                  >
+                    <Box
+                      display="flex"
+                      justifyContent="space-between"
+                      alignItems="center"
+                      width="100%"
+                    >
+                      <Typography variant="body1">Room {room.id}</Typography>
+                      <Box display="flex" alignItems="center">
+                        Available : {room.available}
+                        <PlusMinusCounter
+                          value={amount}
+                          onChange={value =>
+                            bookingStore.selectRooms(room.id, value)
+                          }
+                          invalid={bookingStore.invalid}
+                          disabled={
+                            !(amount < room.available && bookingStore.canSelect)
+                          }
+                        />
+                      </Box>
                     </Box>
                   </ListItem>
-                  <ListItem className={classes.listItem}>
-                    <Box display="flex" justifyContent="spaced-evenly">
-                      <Typography gutterBottom variant="body1">
-                        Pizza
-                      </Typography>
-                    </Box>
-                  </ListItem>
-                </List>
-              </Box>
-            </CardContent>
-          </CardActionArea>
+                );
+              })}
+            </List>
+          </CardContent>
         </Card>
       </Container>
     </>

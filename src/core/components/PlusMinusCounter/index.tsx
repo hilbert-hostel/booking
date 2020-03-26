@@ -1,6 +1,4 @@
 import React from 'react';
-import Container from '@material-ui/core/Container';
-import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import PlusIcon from '@material-ui/icons/Add';
 import MinusIcon from '@material-ui/icons/Remove';
@@ -26,8 +24,8 @@ export const PlusMinusCounter: React.FC<PlusMinusCounterProps> = ({
 }) => {
   const classes = useStyles();
   return (
-    <Box display="flex" alignItems="center">
-      <IconButton disabled={value == 0} onClick={() => onChange(value - 1)}>
+    <Box className={classes.root} display="flex" alignItems="center">
+      <IconButton disabled={value === 0} onClick={() => onChange(value - 1)}>
         <MinusIcon />
       </IconButton>
       <Typography variant="body1" color={invalid ? 'error' : 'textPrimary'}>

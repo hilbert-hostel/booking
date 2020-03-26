@@ -1,7 +1,7 @@
 import { AxiosClient } from './axios';
 import { RegistrationModel } from '../../models/registration';
 import { AuthPayload, LoginModel } from '../../models/auth';
-import { RoomSearchPayload, RoomSearchFormInput } from '../../models/search';
+import { RoomSearchPayload } from '../../models/search';
 import { Room, RoomTypeResult } from '../../models/room';
 
 export let client: AxiosClient;

@@ -110,6 +110,9 @@ export const AppRouter: React.FC = () => {
           <Route path="/notification">
             <Home />
           </Route>
+          <Route path="/search/rooms/:type">
+            <RoomDetails />
+          </Route>
           <Route path="/search/result">
             <SearchResult />
           </Route>

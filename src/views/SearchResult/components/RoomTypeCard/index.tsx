@@ -1,6 +1,4 @@
 import React, { useState } from 'react';
-import Container from '@material-ui/core/Container';
-import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 
 import {
@@ -8,14 +6,12 @@ import {
   makeStyles,
   Theme,
   Card,
-  CardActionArea,
   CardMedia,
   CardContent,
   CardActions,
   Button,
   Box,
   Collapse,
-  IconButton,
   List,
   ListItem,
 } from '@material-ui/core';
@@ -25,7 +21,7 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { PlusMinusCounter } from '../../../../core/components/PlusMinusCounter';
 import { useStores } from '../../../../core/hooks/use-stores';
 import { observer } from 'mobx-react-lite';
-
+import { useHistory } from 'react-router-dom';
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
@@ -63,6 +59,7 @@ export const RoomTypeCard: React.FC<RoomCardProps> = observer(
     const { bookingStore } = useStores();
     const [expanded, setExpanded] = useState(true);
     const classes = useStyles();
+    const history = useHistory();
     return (
       <Card className={classes.root}>
         {/* <CardActionAnrea> */}
@@ -107,7 +104,11 @@ export const RoomTypeCard: React.FC<RoomCardProps> = observer(
         </CardContent>
         {/* </CardActionArea> */}
         <CardActions>
-          <Button size="small" color="primary">
+          <Button
+            size="small"
+            color="primary"
+            onClick={() => history.push('/search/rooms/' + roomType.type)}
+          >
             View Details
           </Button>
           <Button

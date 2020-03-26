@@ -4,7 +4,7 @@ export const convertDateObject = (obj: any) => {
   if (obj) {
     return {
       guests: obj.guests || 1,
-      checkIn: new Date(obj.checkIn || ''),
+      checkIn: obj.checkIn ? new Date(obj.checkIn) : new Date(),
       checkOut: obj.checkOut
         ? new Date(obj.checkOut || '')
         : moment()

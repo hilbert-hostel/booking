@@ -13,6 +13,7 @@ import {
   Box,
   Button,
   withStyles,
+  Fab,
 } from '@material-ui/core';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import FilterIcon from '@material-ui/icons/FilterList';
@@ -20,20 +21,20 @@ import SortIcon from '@material-ui/icons/Sort';
 import { RoomSearchForm } from '../../core/components/RoomSearchForm';
 import { RoomSearchFormInput } from '../../core/models/search';
 import moment from 'moment';
-import { useQuery } from '../../core/hooks/use-query';
-import { toQuerystring } from '../../core/utils/querystring';
 import { useLocation, useHistory } from 'react-router-dom';
-import { Room, RoomTypeResult } from '../../core/models/room';
+import { RoomTypeResult } from '../../core/models/room';
 import { BackendAPI } from '../../core/repository/api/backend';
 import { RoomTypeCard } from './components/RoomTypeCard';
 import BackArrow from '@material-ui/icons/ArrowBackIos';
 import MuiExpansionPanel from '@material-ui/core/ExpansionPanel';
 import { useStores } from '../../core/hooks/use-stores';
 import { LocalStorage } from '../../core/repository/localStorage';
+import { SearchInfo } from './components/SearchInfo';
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       marginTop: theme.spacing(2),
+      marginBottom: theme.spacing(4),
     },
     expansionPanel: {
       margin: 0,
@@ -58,6 +59,12 @@ const useStyles = makeStyles((theme: Theme) =>
       display: 'flex',
       alignItems: 'center',
     },
+    fab: {
+      position: 'sticky',
+      bottom: theme.spacing(2),
+      right: theme.spacing(2),
+      float: 'right',
+    },
   })
 );
 
@@ -81,64 +88,16 @@ const ExpansionPanel = withStyles({
 
 export const SearchResult: React.FC = observer(() => {
   const classes = useStyles();
-  const [isExpanded, setExpanded] = useState(true);
-  const ref = useRef<any>();
-  const [title, setTitle] = useState('Please select you stay');
   const { bookingStore } = useStores();
-  const [searchQuery, setSearchQuery] = useState<RoomSearchFormInput>();
-  const [searchResults, setSearchResults] = useState<RoomTypeResult[]>();
-  const location = useLocation();
   const history = useHistory();
-
-  const queryData = useMemo(() => {
-    const query = new URLSearchParams(location.search);
-    if (query.get('checkIn')) {
-      return {
-        checkIn: new Date(query.get('checkIn') || ''),
-        checkOut:
-          query.get('checkOut') !== null
-            ? new Date(query.get('checkOut') || '')
-            : moment()
-                .add('day', 1)
-                .toDate(),
-        guests: parseInt(query.get('guests') || '1') || 1,
-      };
-      // setExpanded(false);
-    }
-  }, [location.search]);
-
-  useEffect(() => {
-    if (queryData) {
-      ref.current.setForm(queryData);
-      setExpanded(false);
-      history.push('/search/result');
-    } else {
-      ref.current.setForm(new LocalStorage('roomSearchInfo').value);
-      setExpanded(false);
-    }
-  }, [queryData, history]);
-
-  const updateForm = (values: RoomSearchFormInput) => {
-    setTitle(
-      `${moment(values.checkIn).format('MMM Do')} to ${moment(
-        values.checkOut
-      ).format('MMM Do')} , ${values.guests} guest${
-        values.guests > 1 ? 's' : ''
-      }`
-    );
-    setSearchQuery(values);
-    bookingStore.setRoomSearchInfo(values);
-  };
+  const searchQuery = bookingStore.roomSearchInfo;
+  const searchResults = bookingStore.searchResults;
 
   useEffect(() => {
     if (searchQuery) {
-      BackendAPI.searchRooms({
-        checkIn: moment(searchQuery.checkIn).format('YYYY-MM-DD'),
-        checkOut: moment(searchQuery.checkIn).format('YYYY-MM-DD'),
-        guests: searchQuery.guests,
-      }).then(res => setSearchResults(res.data));
+      bookingStore.fetchSearchResults();
     }
-  }, [searchQuery]);
+  }, [searchQuery, bookingStore]);
 
   return (
     <>
@@ -155,28 +114,7 @@ export const SearchResult: React.FC = observer(() => {
           </Box>
         </ExpansionPanelSummary>
       </ExpansionPanel>
-      <ExpansionPanel
-        className={classes.expansionPanel}
-        expanded={isExpanded}
-        onChange={(_, expanded) => setExpanded(expanded)}
-      >
-        <ExpansionPanelSummary
-          expandIcon={<ExpandMoreIcon />}
-          aria-controls="panel1a-content"
-          id="panel1a-header"
-        >
-          <Typography className={classes.heading}>{title}</Typography>
-        </ExpansionPanelSummary>
-        <ExpansionPanelDetails className={classes.panel}>
-          <RoomSearchForm
-            initial={new LocalStorage('roomSearchInfo').value}
-            ref={ref}
-            onSubmit={console.log}
-            searchButton={false}
-            onChange={data => updateForm(data)}
-          />
-        </ExpansionPanelDetails>
-      </ExpansionPanel>
+      <SearchInfo />
       <Container maxWidth="xl" className={classes.menu}>
         <Box display="flex" justifyContent="space-between">
           <Button>
@@ -190,7 +128,7 @@ export const SearchResult: React.FC = observer(() => {
       </Container>
       <Divider />
       <Container maxWidth="md" className={classes.root}>
-        {searchResults &&
+        {searchResults ? (
           searchResults.map(room => {
             return (
               <RoomTypeCard
@@ -198,8 +136,25 @@ export const SearchResult: React.FC = observer(() => {
                 roomType={room}
               ></RoomTypeCard>
             );
-          })}
+          })
+        ) : (
+          <></>
+        )}
       </Container>
+      <Box className={classes.fab}>
+        <Fab
+          variant="extended"
+          color={
+            bookingStore.selected === searchQuery?.guests
+              ? 'primary'
+              : 'inherit'
+          }
+        >
+          {bookingStore.selected !== searchQuery?.guests
+            ? `${bookingStore.selected}/${searchQuery?.guests} rooms selected`
+            : 'Confirm Your Booking'}
+        </Fab>
+      </Box>
     </>
   );
 });
