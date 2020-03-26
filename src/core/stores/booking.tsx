@@ -4,6 +4,8 @@ import { convertDateObject } from '../utils/convertDateObject';
 import { RoomTypeResult } from '../models/room';
 import { BackendAPI } from '../repository/api/backend';
 import moment from 'moment';
+import deepEqual from 'deep-equal';
+import { toJS } from 'mobx';
 
 export function createBookingStore(): BookingStore {
   // note the use of this which refers to observable instance of the store
@@ -12,9 +14,11 @@ export function createBookingStore(): BookingStore {
     selectedRooms: new LocalStorage('selectedRooms').value || [],
     searchResults: [],
     setRoomSearchInfo(data: RoomSearchFormInput) {
-      this.roomSearchInfo = data;
-      new LocalStorage('roomSearchInfo').value = data;
-      this.fetchSearchResults();
+      if (!deepEqual(data, this.roomSearchInfo)) {
+        this.roomSearchInfo = data;
+        new LocalStorage('roomSearchInfo').value = data;
+        this.fetchSearchResults();
+      }
     },
     selectRooms(room: number, amount: number) {
       if (amount < 1) {
