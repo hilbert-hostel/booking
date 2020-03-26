@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useMemo } from 'react';
+import React from 'react';
 import { observer } from 'mobx-react-lite';
 // import { useStores } from '../../core/hooks/use-stores';
 import {
@@ -8,27 +8,19 @@ import {
   Container,
   Typography,
   ExpansionPanelSummary,
-  ExpansionPanelDetails,
   Divider,
   Box,
   Button,
   withStyles,
-  Fab,
 } from '@material-ui/core';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import FilterIcon from '@material-ui/icons/FilterList';
 import SortIcon from '@material-ui/icons/Sort';
-import { RoomSearchForm } from '../../core/components/RoomSearchForm';
-import { RoomSearchFormInput } from '../../core/models/search';
-import moment from 'moment';
-import { useLocation, useHistory } from 'react-router-dom';
-import { RoomTypeResult } from '../../core/models/room';
-import { BackendAPI } from '../../core/repository/api/backend';
+import { useHistory } from 'react-router-dom';
 import { RoomTypeCard } from './components/RoomTypeCard';
+import { RoomSelectFab } from './components/RoomSelectFab';
 import BackArrow from '@material-ui/icons/ArrowBackIos';
 import MuiExpansionPanel from '@material-ui/core/ExpansionPanel';
 import { useStores } from '../../core/hooks/use-stores';
-import { LocalStorage } from '../../core/repository/localStorage';
 import { SearchInfo } from './components/SearchInfo';
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -59,12 +51,6 @@ const useStyles = makeStyles((theme: Theme) =>
       display: 'flex',
       alignItems: 'center',
     },
-    fab: {
-      position: 'sticky',
-      bottom: theme.spacing(2),
-      right: theme.spacing(2),
-      float: 'right',
-    },
   })
 );
 
@@ -90,14 +76,7 @@ export const SearchResult: React.FC = observer(() => {
   const classes = useStyles();
   const { bookingStore } = useStores();
   const history = useHistory();
-  const searchQuery = bookingStore.roomSearchInfo;
   const searchResults = bookingStore.searchResults;
-
-  useEffect(() => {
-    if (searchQuery) {
-      bookingStore.fetchSearchResults();
-    }
-  }, [searchQuery, bookingStore]);
 
   return (
     <>
@@ -141,20 +120,7 @@ export const SearchResult: React.FC = observer(() => {
           <></>
         )}
       </Container>
-      <Box className={classes.fab}>
-        <Fab
-          variant="extended"
-          color={
-            bookingStore.selected === searchQuery?.guests
-              ? 'primary'
-              : 'inherit'
-          }
-        >
-          {bookingStore.selected !== searchQuery?.guests
-            ? `${bookingStore.selected}/${searchQuery?.guests} rooms selected`
-            : 'Confirm Your Booking'}
-        </Fab>
-      </Box>
+      <RoomSelectFab />
     </>
   );
 });

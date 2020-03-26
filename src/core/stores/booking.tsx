@@ -14,6 +14,7 @@ export function createBookingStore(): BookingStore {
     setRoomSearchInfo(data: RoomSearchFormInput) {
       this.roomSearchInfo = data;
       new LocalStorage('roomSearchInfo').value = data;
+      this.fetchSearchResults();
     },
     selectRooms(room: number, amount: number) {
       if (amount < 1) {

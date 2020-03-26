@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React from 'react';
 import {
   createStyles,
   makeStyles,
@@ -6,22 +6,19 @@ import {
   Container,
   Typography,
   Box,
-  Button,
   Card,
   CardMedia,
   CardContent,
   ListItem,
   List,
-  CardActions,
-  Collapse,
 } from '@material-ui/core';
 import { useHistory, useParams } from 'react-router-dom';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { PlusMinusCounter } from '../../core/components/PlusMinusCounter';
 import BackArrow from '@material-ui/icons/ArrowBackIos';
 import { toSentenceCase } from '../../core/utils/text-formatting';
 import { useStores } from '../../core/hooks/use-stores';
 import { observer } from 'mobx-react-lite';
+import { RoomSelectFab } from '../SearchResult/components/RoomSelectFab';
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
@@ -78,15 +75,8 @@ export const RoomDetails: React.FC = observer(() => {
   const classes = useStyles();
   const { type } = useParams();
   const history = useHistory();
-  const [expanded, setExpanded] = useState(true);
   const { bookingStore } = useStores();
   const roomType = bookingStore.getCurrentRoomType(type as string);
-
-  useEffect(() => {
-    if (!roomType) {
-      bookingStore.fetchSearchResults();
-    }
-  }, [roomType]);
 
   return (
     <>
@@ -143,36 +133,10 @@ export const RoomDetails: React.FC = observer(() => {
               </Box>
             </Box>
           </CardContent>
-          <CardActions>
-            <Button
-              size="small"
-              color="primary"
-              onClick={() => history.push('/search/rooms/' + roomType?.type)}
-            >
-              View Details
-            </Button>
-            <Button
-              onClick={() => setExpanded(e => !e)}
-              aria-expanded={expanded}
-              aria-label="show more"
-              size="small"
-              color="primary"
-            >
-              <Box className={classes.expandBtn}>
-                <Typography variant="body2" color="primary" component="p">
-                  See available rooms
-                </Typography>{' '}
-                <div
-                  className={
-                    classes.expand + (expanded ? ' ' + classes.expandOpen : '')
-                  }
-                >
-                  <ExpandMoreIcon />
-                </div>
-              </Box>
-            </Button>
-          </CardActions>
           <CardContent className={classes.noPaddingTopBottom}>
+            <Typography gutterBottom variant="h5" component="h2">
+              Available Rooms
+            </Typography>
             <List className={classes.noPaddingTopBottom}>
               {roomType?.availability.map(room => {
                 const amount = bookingStore.getSelectRoomAmount(room.id) || 0;
@@ -209,6 +173,7 @@ export const RoomDetails: React.FC = observer(() => {
           </CardContent>
         </Card>
       </Container>
+      <RoomSelectFab />
     </>
   );
 });

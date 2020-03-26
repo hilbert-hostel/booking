@@ -77,6 +77,7 @@ export const SearchInfo: React.FC = observer(() => {
   const location = useLocation();
   const history = useHistory();
 
+  console.log('ha, rerender');
   const queryData = useMemo(() => {
     const query = new URLSearchParams(location.search);
     if (query.get('checkIn')) {
@@ -134,7 +135,6 @@ export const SearchInfo: React.FC = observer(() => {
           <RoomSearchForm
             initial={new LocalStorage('roomSearchInfo').value}
             ref={ref}
-            onSubmit={console.log}
             searchButton={false}
             onChange={data => updateForm(data)}
           />
