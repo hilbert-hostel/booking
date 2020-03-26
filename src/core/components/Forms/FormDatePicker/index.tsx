@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { DatePicker, DatePickerProps } from '@material-ui/pickers';
 import { FormText } from '../FormText';
 import { MaterialUiPickersDate } from '@material-ui/pickers/typings/date';
@@ -22,6 +22,7 @@ export const FormDatePicker: React.FC<FormDatePickerProps> = ({
   ...rest
 }) => {
   const classes = useStyles();
+  const [error, setError] = useState<any>();
   return (
     <DatePicker
       label={label}
@@ -30,6 +31,10 @@ export const FormDatePicker: React.FC<FormDatePickerProps> = ({
       TextFieldComponent={FormText}
       className={`${classes.formItem}`}
       onChange={date => onChange(date)}
+      onError={err => {
+        setError(err);
+      }}
+      error={error}
       {...rest}
     />
   );

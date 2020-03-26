@@ -43,15 +43,7 @@ export const RoomSearchForm: React.FC<RoomSearchFormProps> = forwardRef(
   ({ initial, onSubmit, searchButton = true, onChange }, ref) => {
     const form = useFormik<RoomSearchFormInput>({
       validationSchema: roomSearchFormSchema,
-      initialValues: {
-        guests: initial?.guests || 1,
-        checkIn: new Date(initial?.checkIn || ''),
-        checkOut: initial?.checkOut
-          ? new Date(initial?.checkOut || '')
-          : moment()
-              .add('day', 1)
-              .toDate(),
-      } || {
+      initialValues: initial || {
         checkIn: new Date(),
         checkOut: moment()
           .add(1, 'day')
@@ -86,7 +78,15 @@ export const RoomSearchForm: React.FC<RoomSearchFormProps> = forwardRef(
             label="Check In"
             name="checkIn"
             value={form.values.checkIn}
-            minDate={new Date()}
+            minDate={moment()
+              .subtract('day', 1)
+              .set({
+                hour: 23,
+                minute: 59,
+                second: 59,
+                millisecond: 59,
+              })
+              .toDate()}
             className={`${classes.formItem} ${classes.marginTop}`}
             onChange={date => form.setFieldValue('checkIn', date?.toDate())}
           />
