@@ -44,16 +44,11 @@ const useStyles = makeStyles((theme: Theme) =>
     priceText: {
       fontWeight: 'bold',
       marginBottom: theme.spacing(1),
-      color: theme.palette.text.primary,
-    },
-    text: {
-      color: theme.palette.text.primary,
-      marginBottom: theme.spacing(1),
     },
   })
 );
 
-export const ConfirmBooking: React.FC = observer(() => {
+export const Payment: React.FC = observer(() => {
   const classes = useStyles();
   const history = useHistory();
   const { authStore, bookingStore } = useStores();
@@ -213,7 +208,7 @@ export const ConfirmBooking: React.FC = observer(() => {
             textAlign="center"
             flexDirection="column"
           >
-            <Typography variant="body1" className={classes.text} gutterBottom>
+            <Typography variant="body1" gutterBottom>
               You're not logged in
             </Typography>
             <Button

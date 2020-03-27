@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { observer } from 'mobx-react-lite';
 // import { useStores } from '../../core/hooks/use-stores';
 import {
@@ -81,6 +81,10 @@ export const SearchResult: React.FC = observer(() => {
   const { bookingStore } = useStores();
   const history = useHistory();
   const searchResults = bookingStore.searchResults;
+
+  useEffect(() => {
+    bookingStore.fetchSearchResults();
+  }, [bookingStore]);
 
   return (
     <>

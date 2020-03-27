@@ -61,14 +61,16 @@ export const FormText: React.FC<FormTextProps> = ({
         type={type}
         error={!!error}
         placeholder={placeholder || undefined}
-        helperText={(error ? error || errorText : helperText) || <></>}
+        helperText={error ? errorText : helperText}
         onChange={onChange}
         value={value}
         variant={'filled'}
         fullWidth
         autoComplete={autoComplete}
         {...rest}
-      />
+      >
+        <> </>
+      </TextField>
     </div>
   );
 };

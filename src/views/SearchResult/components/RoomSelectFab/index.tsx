@@ -18,6 +18,9 @@ const useStyles = makeStyles((theme: Theme) =>
       right: theme.spacing(2),
       float: 'right',
     },
+    error: {
+      backgroundColor: theme.palette.error.dark,
+    },
   })
 );
 
@@ -37,10 +40,17 @@ export const RoomSelectFab: React.FC = observer(() => {
               ? 'primary'
               : 'inherit'
           }
+          className={
+            searchQuery && searchQuery?.guests < bookingStore.selected
+              ? classes.error
+              : ''
+          }
           onClick={() => history.push('/confirm')}
         >
           {bookingStore.selected !== searchQuery?.guests
-            ? `${bookingStore.selected}/${searchQuery?.guests} rooms selected`
+            ? searchQuery?.guests && searchQuery?.guests < bookingStore.selected
+              ? 'Invalid Room Selection'
+              : `${bookingStore.selected}/${searchQuery?.guests} rooms selected`
             : 'Confirm Your Booking'}
         </Fab>
       </Box>

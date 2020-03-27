@@ -67,7 +67,7 @@ export function createBookingStore(): BookingStore {
       if (this.roomSearchInfo) {
         const res = await BackendAPI.searchRooms({
           checkIn: moment(this.roomSearchInfo.checkIn).format('YYYY-MM-DD'),
-          checkOut: moment(this.roomSearchInfo.checkIn).format('YYYY-MM-DD'),
+          checkOut: moment(this.roomSearchInfo.checkOut).format('YYYY-MM-DD'),
           guests: this.roomSearchInfo.guests,
         });
         this.setSearchResults(res.data);

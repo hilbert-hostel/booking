@@ -19,6 +19,7 @@ import { FormText } from '../../core/components/Forms/FormText';
 import { LoginModel } from '../../core/models/auth';
 import { loginSchema } from './schema';
 import { useQuery } from '../../core/hooks/use-query';
+import { AxiosError } from 'axios';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -42,13 +43,17 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     button: {
       padding: theme.spacing(2),
+      marginBottom: theme.spacing(4),
+    },
+    toRegister: {
+      fontWeight: 'bold',
     },
   })
 );
 
 export const Login: React.FC = observer(() => {
   const classes = useStyles();
-  const { authStore } = useStores();
+  const { authStore, snackbarStore } = useStores();
   const history = useHistory();
   const query = useQuery();
 
@@ -63,7 +68,28 @@ export const Login: React.FC = observer(() => {
         const res = await BackendAPI.login(values);
         authStore.setToken(res.data.token);
         history.push(query.get('returnTo') || '/');
-      } catch (error) {}
+      } catch (error) {
+        switch (error.response.status) {
+          case 401:
+            snackbarStore.sendMessage({
+              type: 'error',
+              message: 'Username or password is incorrect',
+            });
+            break;
+          case 500:
+            snackbarStore.sendMessage({
+              type: 'error',
+              message: 'Something went wrong',
+            });
+            break;
+          default:
+            snackbarStore.sendMessage({
+              type: 'error',
+              message: "Can't connect to server",
+            });
+            break;
+        }
+      }
     },
   });
 
@@ -115,15 +141,30 @@ export const Login: React.FC = observer(() => {
             >
               Login
             </Button>
-            <Divider className={classes.divider} />
-            <Button
-              variant="contained"
-              onClick={() => history.push('/register')}
-              color="primary"
-              className={classes.button}
-            >
-              Register
-            </Button>
+            <Box width="100%" alignItems="center">
+              <Typography
+                variant="body1"
+                className={classes.text}
+                align="center"
+              >
+                Have no account yet ?
+              </Typography>
+              <Typography
+                onClick={() =>
+                  history.push(
+                    '/register' +
+                      (query.get('returnTo')
+                        ? '?returnTo' + query.get('returnTo')
+                        : '')
+                  )
+                }
+                color="primary"
+                align="center"
+                className={classes.toRegister}
+              >
+                Register
+              </Typography>
+            </Box>
           </Box>
         </form>
       </Container>

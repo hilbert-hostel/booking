@@ -13,6 +13,7 @@ import { Navigation } from './components/Navigation';
 import { AnimatedSwitch, spring } from 'react-router-transition';
 import { RoomDetails } from '../views/RoomDetails';
 import { ConfirmBooking } from '../views/ConfirmBooking';
+import { PopupSnackbar } from './components/PopupSnackbar';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -132,6 +133,7 @@ export const AppRouter: React.FC = () => {
           {/* </Switch> */}
         </AnimatedSwitch>
         <BottomNav />
+        <PopupSnackbar />
         {/* <Footer /> */}
       </div>
     </Router>

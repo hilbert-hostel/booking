@@ -2,8 +2,11 @@ import { AxiosClient } from './axios';
 import { RegistrationModel } from '../../models/registration';
 import { AuthPayload, LoginModel } from '../../models/auth';
 import { RoomSearchPayload } from '../../models/search';
-import { Room, RoomTypeResult } from '../../models/room';
-import { ReservationPayload } from '../../models/reservation';
+import { RoomTypeResult } from '../../models/room';
+import {
+  ReservationPayload,
+  ReservationResponse,
+} from '../../models/reservation';
 
 export let client: AxiosClient;
 
@@ -32,7 +35,7 @@ export class BackendAPI {
   }
 
   static reserve(data: ReservationPayload) {
-    return client.post<Room[]>('/reservation', data);
+    return client.post<ReservationResponse>('/reservation', data);
   }
 
   static reservationStatus(id: number) {}

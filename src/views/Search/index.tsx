@@ -12,6 +12,7 @@ import {
 } from '@material-ui/core';
 import { Hero } from './components/Hero';
 import { BackendAPI } from '../../core/repository/api/backend';
+import { useHistory } from 'react-router-dom';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -28,15 +29,17 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 export const Search: React.FC = observer(() => {
-  const { testStore, themeStore, authStore } = useStores();
+  const { testStore, themeStore, authStore, bookingStore } = useStores();
   const classes = useStyles();
   const [message] = useState();
+  const history = useHistory();
 
   useEffect(() => {
-    BackendAPI.ping().then(({ data }) => {});
-
     authStore.fetchUserData();
-  }, [authStore]);
+    if (bookingStore.selectRooms.length > 0) {
+      history.push('/search/result');
+    }
+  }, [authStore, bookingStore, history]);
 
   const addMessage = () => {
     testStore.addMessage({ message: 'Hi', sender: 'jay' });

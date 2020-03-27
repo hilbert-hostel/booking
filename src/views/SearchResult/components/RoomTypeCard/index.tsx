@@ -156,7 +156,9 @@ export const RoomTypeCard: React.FC<RoomCardProps> = observer(
                           onChange={value =>
                             bookingStore.selectRooms(room.id, value)
                           }
-                          invalid={bookingStore.invalid}
+                          invalid={
+                            bookingStore.invalid || amount > room.available
+                          }
                           disabled={
                             !(amount < room.available && bookingStore.canSelect)
                           }
