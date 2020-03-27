@@ -33,6 +33,7 @@ const useStyles = makeStyles((theme: Theme) =>
     button: {
       paddingTop: theme.spacing(2),
       paddingBottom: theme.spacing(2),
+      marginBottom: theme.spacing(2),
       width: '100%',
     },
     form: {
@@ -98,10 +99,11 @@ export const Register: React.FC = observer(() => {
                     name="firstname"
                     autoComplete="fname"
                     errorText={
-                      form.submitCount > 0 && form.touched
+                      form.submitCount > 0 || form.touched.firstname
                         ? form.errors['firstname']
                         : undefined
                     }
+                    onBlur={form.handleBlur}
                     onChange={form.handleChange}
                     value={form.values.firstname}
                   />
@@ -111,10 +113,11 @@ export const Register: React.FC = observer(() => {
                     name="lastname"
                     autoComplete="lname"
                     errorText={
-                      form.submitCount > 0 && form.touched
+                      form.submitCount > 0 || form.touched.lastname
                         ? form.errors['lastname']
                         : undefined
                     }
+                    onBlur={form.handleBlur}
                     onChange={form.handleChange}
                     value={form.values.lastname}
                   />
@@ -123,10 +126,11 @@ export const Register: React.FC = observer(() => {
                     label="E-mail"
                     name="email"
                     errorText={
-                      form.submitCount > 0 && form.touched
+                      form.submitCount > 0 || form.touched.email
                         ? form.errors['email']
                         : undefined
                     }
+                    onBlur={form.handleBlur}
                     onChange={form.handleChange}
                     value={form.values.email}
                   />
@@ -137,10 +141,11 @@ export const Register: React.FC = observer(() => {
                     type="password"
                     autoComplete="new-password"
                     errorText={
-                      form.submitCount > 0 && form.touched
+                      form.submitCount > 0 || form.touched.password
                         ? form.errors['password']
                         : undefined
                     }
+                    onBlur={form.handleBlur}
                     onChange={form.handleChange}
                     value={form.values.password}
                   />
@@ -150,10 +155,11 @@ export const Register: React.FC = observer(() => {
                     name="nationalID"
                     autoComplete="nationalID"
                     errorText={
-                      form.submitCount > 0 && form.touched
+                      form.submitCount > 0 || form.touched.nationalID
                         ? form.errors['nationalID']
                         : undefined
                     }
+                    onBlur={form.handleBlur}
                     onChange={form.handleChange}
                     value={form.values.nationalID}
                   />
@@ -163,10 +169,11 @@ export const Register: React.FC = observer(() => {
                     name="phone"
                     autoComplete="phone"
                     errorText={
-                      form.submitCount > 0 && form.touched
+                      form.submitCount > 0 || form.touched.phone
                         ? form.errors['phone']
                         : undefined
                     }
+                    onBlur={form.handleBlur}
                     onChange={form.handleChange}
                     value={form.values.phone}
                   />
@@ -177,10 +184,11 @@ export const Register: React.FC = observer(() => {
                     type="textarea"
                     autoComplete="address"
                     errorText={
-                      form.submitCount > 0 && form.touched
+                      form.submitCount > 0 || form.touched.address
                         ? form.errors['address']
                         : undefined
                     }
+                    onBlur={form.handleBlur}
                     onChange={form.handleChange}
                     value={form.values.address}
                   />

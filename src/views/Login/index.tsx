@@ -49,6 +49,7 @@ const useStyles = makeStyles((theme: Theme) =>
       fontWeight: 'bold',
       display: 'block',
       textDecoration: 'none',
+      marginBottom: theme.spacing(3),
     },
   })
 );
@@ -122,10 +123,11 @@ export const Login: React.FC = observer(() => {
               label="E-mail"
               name="email"
               errorText={
-                form.submitCount > 0 && form.touched
+                form.submitCount > 0 && form.touched.email
                   ? form.errors['email']
                   : undefined
               }
+              onBlur={form.handleBlur}
               onChange={form.handleChange}
               value={form.values.email}
             />
@@ -136,10 +138,11 @@ export const Login: React.FC = observer(() => {
               type="password"
               autoComplete="current-password"
               errorText={
-                form.submitCount > 0 && form.touched
+                form.submitCount > 0 && form.touched.password
                   ? form.errors['password']
                   : undefined
               }
+              onBlur={form.handleBlur}
               onChange={form.handleChange}
               value={form.values.password}
             />
