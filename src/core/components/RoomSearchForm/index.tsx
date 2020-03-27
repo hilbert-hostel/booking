@@ -63,10 +63,12 @@ export const RoomSearchForm: React.FC<RoomSearchFormProps> = forwardRef(
           onChange(form.values);
         }
       } else if (form.errors) {
-        form.setFieldValue(
-          'checkOut',
-          moment((form.values as RoomSearchFormInput).checkIn).add(1, 'day')
-        );
+        if (form.errors.checkOut) {
+          form.setFieldValue(
+            'checkOut',
+            moment((form.values as RoomSearchFormInput).checkIn).add(1, 'day')
+          );
+        }
       }
     }, [form, onChange]);
 

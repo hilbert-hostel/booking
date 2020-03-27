@@ -72,7 +72,7 @@ export const Login: React.FC = observer(() => {
         history.push(query.get('returnTo') || '/');
       } catch (error) {
         switch (error.response.status) {
-          case 401:
+          case 400:
             snackbarStore.sendMessage({
               type: 'error',
               message: 'Username or password is incorrect',

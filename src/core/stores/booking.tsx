@@ -19,7 +19,6 @@ export function createBookingStore(): BookingStore {
       if (!deepEqual(data, toJS(this.roomSearchInfo))) {
         this.roomSearchInfo = data;
         new LocalStorage('roomSearchInfo').value = data;
-        this.fetchSearchResults();
       }
     },
     setSpecialRequests(req: string) {

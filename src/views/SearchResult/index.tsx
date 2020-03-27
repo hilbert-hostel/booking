@@ -22,6 +22,7 @@ import BackArrow from '@material-ui/icons/ArrowBackIos';
 import MuiExpansionPanel from '@material-ui/core/ExpansionPanel';
 import { useStores } from '../../core/hooks/use-stores';
 import { SearchInfo } from './components/SearchInfo';
+import { reaction } from 'mobx';
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
@@ -83,7 +84,18 @@ export const SearchResult: React.FC = observer(() => {
   const searchResults = bookingStore.searchResults;
 
   useEffect(() => {
-    bookingStore.fetchSearchResults();
+    const dispose = reaction(
+      () => {
+        return bookingStore.roomSearchInfo;
+      },
+      info => {
+        bookingStore.fetchSearchResults();
+      },
+      {
+        delay: 1000,
+      }
+    );
+    return () => dispose();
   }, [bookingStore]);
 
   return (

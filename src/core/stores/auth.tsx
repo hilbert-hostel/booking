@@ -29,7 +29,12 @@ export function createAuthStore() {
       try {
         await this.fetchUserData();
       } catch (error) {
-        this.logout();
+        if (error.response) {
+          switch (error.response.status) {
+            case 401:
+              this.logout();
+          }
+        }
       }
     },
     get isAuthenticated() {
