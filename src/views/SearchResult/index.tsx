@@ -94,7 +94,7 @@ export const SearchResult: React.FC = observer(() => {
           id="top-panel-header"
         >
           <Box className={classes.topPanel}>
-            <BackArrow onClick={() => history.push('/search')} />
+            <BackArrow onClick={() => history.push('/')} />
             <Typography variant="h4" className={classes.text}>
               Types of room
             </Typography>

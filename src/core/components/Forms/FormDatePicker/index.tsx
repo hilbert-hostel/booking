@@ -44,5 +44,6 @@ export const FormDatePicker: React.FC<FormDatePickerProps> = ({
 
 export type FormDatePickerProps = DatePickerProps & {
   value: Date;
+  errorText?: string;
   onChange: (value: MaterialUiPickersDate) => void;
 };

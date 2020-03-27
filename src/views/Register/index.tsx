@@ -5,7 +5,6 @@ import {
   makeStyles,
   Theme,
   Container,
-  Typography,
   Box,
   Button,
 } from '@material-ui/core';
@@ -14,16 +13,16 @@ import { useHistory } from 'react-router-dom';
 import { RegistrationModel } from '../../core/models/registration';
 import { registrationSchema } from './schema';
 import { FormText } from '../../core/components/Forms/FormText';
+import { TitleBar } from '../../core/components/TitleBar';
 import { BackendAPI } from '../../core/repository/api/backend';
 import { useStores } from '../../core/hooks/use-stores';
-import BackArrow from '@material-ui/icons/ArrowBackIos';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       paddingTop: theme.spacing(3),
       color: theme.palette.text.primary,
-      height: '100%',
+      minHeight: '100%',
     },
     text: {
       marginBottom: theme.spacing(2),
@@ -37,7 +36,7 @@ const useStyles = makeStyles((theme: Theme) =>
       width: '100%',
     },
     form: {
-      height: '100%',
+      padding: '',
     },
   })
 );
@@ -68,6 +67,7 @@ export const Register: React.FC = observer(() => {
 
   return (
     <>
+      <TitleBar title="Register" />
       <Container maxWidth="md" className={classes.root}>
         <Box
           display="flex"
@@ -76,17 +76,6 @@ export const Register: React.FC = observer(() => {
           flexDirection="column"
           height="100%"
         >
-          <Box
-            display="flex"
-            justifyContent="flex-start"
-            alignItems="stretch"
-            paddingBottom={2}
-          >
-            <BackArrow onClick={() => history.goBack()} />
-            <Typography variant="h4" className={classes.text}>
-              Register
-            </Typography>
-          </Box>
           <Box flexGrow={1} height="100%" paddingBottom={1}>
             <form onSubmit={form.handleSubmit} className={classes.form}>
               <Box
@@ -108,7 +97,11 @@ export const Register: React.FC = observer(() => {
                     label="First name"
                     name="firstname"
                     autoComplete="fname"
-                    errorText={form.touched && form.errors['firstname']}
+                    errorText={
+                      form.submitCount > 0 && form.touched
+                        ? form.errors['firstname']
+                        : undefined
+                    }
                     onChange={form.handleChange}
                     value={form.values.firstname}
                   />
@@ -117,7 +110,11 @@ export const Register: React.FC = observer(() => {
                     label="Last name"
                     name="lastname"
                     autoComplete="lname"
-                    errorText={form.touched && form.errors['lastname']}
+                    errorText={
+                      form.submitCount > 0 && form.touched
+                        ? form.errors['lastname']
+                        : undefined
+                    }
                     onChange={form.handleChange}
                     value={form.values.lastname}
                   />
@@ -125,7 +122,11 @@ export const Register: React.FC = observer(() => {
                     id="email"
                     label="E-mail"
                     name="email"
-                    errorText={form.touched && form.errors['email']}
+                    errorText={
+                      form.submitCount > 0 && form.touched
+                        ? form.errors['email']
+                        : undefined
+                    }
                     onChange={form.handleChange}
                     value={form.values.email}
                   />
@@ -135,7 +136,11 @@ export const Register: React.FC = observer(() => {
                     name="password"
                     type="password"
                     autoComplete="new-password"
-                    errorText={form.touched && form.errors['password']}
+                    errorText={
+                      form.submitCount > 0 && form.touched
+                        ? form.errors['password']
+                        : undefined
+                    }
                     onChange={form.handleChange}
                     value={form.values.password}
                   />
@@ -144,7 +149,11 @@ export const Register: React.FC = observer(() => {
                     label="National ID"
                     name="nationalID"
                     autoComplete="nationalID"
-                    errorText={form.touched && form.errors['nationalID']}
+                    errorText={
+                      form.submitCount > 0 && form.touched
+                        ? form.errors['nationalID']
+                        : undefined
+                    }
                     onChange={form.handleChange}
                     value={form.values.nationalID}
                   />
@@ -153,7 +162,11 @@ export const Register: React.FC = observer(() => {
                     label="Phone"
                     name="phone"
                     autoComplete="phone"
-                    errorText={form.touched && form.errors['phone']}
+                    errorText={
+                      form.submitCount > 0 && form.touched
+                        ? form.errors['phone']
+                        : undefined
+                    }
                     onChange={form.handleChange}
                     value={form.values.phone}
                   />
@@ -163,7 +176,11 @@ export const Register: React.FC = observer(() => {
                     name="address"
                     type="textarea"
                     autoComplete="address"
-                    errorText={form.touched && form.errors['address']}
+                    errorText={
+                      form.submitCount > 0 && form.touched
+                        ? form.errors['address']
+                        : undefined
+                    }
                     onChange={form.handleChange}
                     value={form.values.address}
                   />

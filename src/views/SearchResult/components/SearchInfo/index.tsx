@@ -18,6 +18,7 @@ import { useLocation, useHistory } from 'react-router-dom';
 import MuiExpansionPanel from '@material-ui/core/ExpansionPanel';
 import { useStores } from '../../../../core/hooks/use-stores';
 import { LocalStorage } from '../../../../core/repository/localStorage';
+import { pluralize } from '../../../../core/utils/text-formatting';
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
@@ -104,11 +105,12 @@ export const SearchInfo: React.FC = observer(() => {
 
   const updateForm = (values: RoomSearchFormInput) => {
     setTitle(
-      `${moment(values.checkIn).format('MMM Do')} to ${moment(
+      `${moment(values.checkIn).format('MMM Do YYYY')} to ${moment(
         values.checkOut
-      ).format('MMM Do')} , ${values.guests} guest${
-        values.guests > 1 ? 's' : ''
-      }`
+      ).format('MMM Do YYYY')} , ${values.guests} ${pluralize(
+        'guest',
+        values.guests
+      )}`
     );
     bookingStore.setRoomSearchInfo(values);
   };

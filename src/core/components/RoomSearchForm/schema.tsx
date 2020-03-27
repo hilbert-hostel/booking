@@ -1,11 +1,22 @@
 import * as Yup from 'yup';
 import { RoomSearchFormInput } from '../../models/search';
+import moment from 'moment';
 
 export const roomSearchFormSchema = Yup.object<RoomSearchFormInput>({
-  checkIn: Yup.date().required(),
-  checkOut: Yup.date().required(),
+  checkIn: Yup.date()
+    .required()
+    .min(
+      moment()
+        .subtract(1, 'day')
+        .set({ hours: 23, minutes: 59, seconds: 59 })
+        .toDate(),
+      "Check In date can't be in the past"
+    ),
+  checkOut: Yup.date()
+    .required()
+    .min(Yup.ref('checkIn'), "Check Out date can't be before check in date"),
   guests: Yup.number()
     .integer()
-    .positive('Guests must be positive')
-    .required('Please enter number of guests'),
+    .required('Please enter number of guests')
+    .min(1, 'Guests must be more than 0'),
 });

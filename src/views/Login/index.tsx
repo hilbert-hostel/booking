@@ -47,6 +47,8 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     toRegister: {
       fontWeight: 'bold',
+      display: 'block',
+      textDecoration: 'none',
     },
   })
 );
@@ -119,7 +121,11 @@ export const Login: React.FC = observer(() => {
               id="email"
               label="E-mail"
               name="email"
-              errorText={form.touched && form.errors['email']}
+              errorText={
+                form.submitCount > 0 && form.touched
+                  ? form.errors['email']
+                  : undefined
+              }
               onChange={form.handleChange}
               value={form.values.email}
             />
@@ -129,7 +135,11 @@ export const Login: React.FC = observer(() => {
               name="password"
               type="password"
               autoComplete="current-password"
-              errorText={form.touched && form.errors['password']}
+              errorText={
+                form.submitCount > 0 && form.touched
+                  ? form.errors['password']
+                  : undefined
+              }
               onChange={form.handleChange}
               value={form.values.password}
             />
@@ -150,16 +160,15 @@ export const Login: React.FC = observer(() => {
                 Have no account yet ?
               </Typography>
               <Typography
-                onClick={() =>
-                  history.push(
-                    '/register' +
-                      (query.get('returnTo')
-                        ? '?returnTo' + query.get('returnTo')
-                        : '')
-                  )
-                }
                 color="primary"
                 align="center"
+                href={
+                  '/register' +
+                  (query.get('returnTo')
+                    ? '?returnTo' + query.get('returnTo')
+                    : '')
+                }
+                component="a"
                 className={classes.toRegister}
               >
                 Register

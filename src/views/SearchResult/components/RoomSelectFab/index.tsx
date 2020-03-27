@@ -19,6 +19,11 @@ const useStyles = makeStyles((theme: Theme) =>
       float: 'right',
     },
     error: {
+      '&.Mui-disabled': {
+        opacity: '1',
+        backgroundColor: theme.palette.error.dark,
+        color: theme.palette.error.contrastText,
+      },
       backgroundColor: theme.palette.error.dark,
     },
   })
@@ -45,12 +50,23 @@ export const RoomSelectFab: React.FC = observer(() => {
               ? classes.error
               : ''
           }
-          onClick={() => history.push('/confirm')}
+          disabled={
+            !(
+              (searchQuery && searchQuery?.guests >= bookingStore.selected) ||
+              bookingStore.validInfo
+            )
+          }
+          onClick={() =>
+            bookingStore.selected === searchQuery?.guests &&
+            history.push('/confirm')
+          }
         >
-          {bookingStore.selected !== searchQuery?.guests
+          {!bookingStore.validInfo
+            ? 'Invalid Dates'
+            : bookingStore.selected !== searchQuery?.guests
             ? searchQuery?.guests && searchQuery?.guests < bookingStore.selected
-              ? 'Invalid Room Selection'
-              : `${bookingStore.selected}/${searchQuery?.guests} rooms selected`
+              ? 'Invalid Bed Selection'
+              : `${bookingStore.selected}/${searchQuery?.guests} beds selected`
             : 'Confirm Your Booking'}
         </Fab>
       </Box>

@@ -6,6 +6,7 @@ import { BackendAPI } from '../repository/api/backend';
 import moment from 'moment';
 import deepEqual from 'deep-equal';
 import { toJS } from 'mobx';
+import { roomSearchFormSchema } from '../components/RoomSearchForm/schema';
 
 export function createBookingStore(): BookingStore {
   // note the use of this which refers to observable instance of the store
@@ -59,6 +60,12 @@ export function createBookingStore(): BookingStore {
         !!this.roomSearchInfo && this.selected > this.roomSearchInfo?.guests
       );
     },
+    get validInfo() {
+      return (
+        !!this.roomSearchInfo &&
+        roomSearchFormSchema.isValidSync(this.roomSearchInfo)
+      );
+    },
     get selected() {
       return this.selectedRooms.reduce((p, c) => p + c.amount, 0);
     },
@@ -104,5 +111,6 @@ export interface BookingStore {
   specialRequests?: string;
   canSelect: boolean;
   invalid: boolean;
+  validInfo: boolean;
   selected: number;
 }

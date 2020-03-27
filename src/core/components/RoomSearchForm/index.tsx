@@ -43,22 +43,32 @@ export const RoomSearchForm: React.FC<RoomSearchFormProps> = forwardRef(
   ({ initial, onSubmit, searchButton = true, onChange }, ref) => {
     const form = useFormik<RoomSearchFormInput>({
       validationSchema: roomSearchFormSchema,
-      initialValues: initial || {
-        checkIn: new Date(),
-        checkOut: moment()
-          .add(1, 'day')
-          .toDate(),
-        guests: 1,
-      },
+      initialValues:
+        initial && roomSearchFormSchema.isValidSync(initial)
+          ? initial
+          : {
+              checkIn: new Date(),
+              checkOut: moment()
+                .add(1, 'day')
+                .toDate(),
+              guests: 1,
+            },
       onSubmit: values => onSubmit && onSubmit(values),
     });
     const classes = useStyles();
 
-    if (onChange) {
-      useEffect(() => {
-        onChange(form.values);
-      }, [form.values, onChange]);
-    }
+    useEffect(() => {
+      if (roomSearchFormSchema.isValidSync(form.values)) {
+        if (onChange) {
+          onChange(form.values);
+        }
+      } else if (form.errors) {
+        form.setFieldValue(
+          'checkOut',
+          moment((form.values as RoomSearchFormInput).checkIn).add(1, 'day')
+        );
+      }
+    }, [form, onChange]);
 
     useImperativeHandle(ref, () => ({
       submitForm: () => form.submitForm(),
@@ -78,16 +88,10 @@ export const RoomSearchForm: React.FC<RoomSearchFormProps> = forwardRef(
             label="Check In"
             name="checkIn"
             value={form.values.checkIn}
-            minDate={moment()
-              .subtract(1, 'day')
-              .set({
-                hour: 23,
-                minute: 59,
-                second: 59,
-                millisecond: 59,
-              })
-              .toDate()}
+            minDate={moment().toDate()}
             minDateMessage="Check in date can not be in the past."
+            format="Do MMMM YYYY"
+            errorText={form.errors && (form.errors.checkIn as string)}
             className={`${classes.formItem} ${classes.marginTop}`}
             onChange={date => form.setFieldValue('checkIn', date?.toDate())}
           />
@@ -97,6 +101,8 @@ export const RoomSearchForm: React.FC<RoomSearchFormProps> = forwardRef(
             value={form.values.checkOut}
             minDate={form.values.checkIn}
             className={classes.formItem}
+            errorText={form.errors && (form.errors.checkOut as string)}
+            format="Do MMMM YYYY"
             onChange={date => form.setFieldValue('checkOut', date?.toDate())}
           />
           <FormText

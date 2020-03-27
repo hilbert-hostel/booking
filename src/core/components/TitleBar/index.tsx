@@ -40,8 +40,9 @@ export const TitleBar: React.FC<TitleBarProps> = observer(
           <Box
             display="flex"
             justifyContent="flex-start"
-            alignItems="stretch"
+            alignItems="center"
             padding={2}
+            height="100%"
           >
             <BackArrow onClick={() => (onBack ? onBack() : history.goBack())} />
             <Typography variant="h4" className={classes.text}>

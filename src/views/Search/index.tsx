@@ -11,7 +11,6 @@ import {
   Button,
 } from '@material-ui/core';
 import { Hero } from './components/Hero';
-import { BackendAPI } from '../../core/repository/api/backend';
 import { useHistory } from 'react-router-dom';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -36,7 +35,7 @@ export const Search: React.FC = observer(() => {
 
   useEffect(() => {
     authStore.fetchUserData();
-    if (bookingStore.selectRooms.length > 0) {
+    if (bookingStore.selectedRooms.length > 0) {
       history.push('/search/result');
     }
   }, [authStore, bookingStore, history]);

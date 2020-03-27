@@ -10,6 +10,7 @@ import {
   CardContent,
   Divider,
   Button,
+  TextField,
 } from '@material-ui/core';
 import { useHistory } from 'react-router-dom';
 import { useStores } from '../../core/hooks/use-stores';
@@ -19,6 +20,7 @@ import moment from 'moment';
 import { RoomAmountPair } from '../../core/stores/booking';
 import { BackendAPI } from '../../core/repository/api/backend';
 import { FormText } from '../../core/components/Forms/FormText';
+import { pluralize } from '../../core/utils/text-formatting';
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
@@ -29,7 +31,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     divider: {
       marginTop: theme.spacing(1),
-      marginBottom: theme.spacing(1),
+      marginBottom: theme.spacing(2),
     },
     noLineHeight: {
       verticalAlign: 'middle',
@@ -60,6 +62,10 @@ export const ConfirmBooking: React.FC = observer(() => {
   const bookingInfo = bookingStore.roomSearchInfo;
   const searchResults = bookingStore.searchResults;
   const selectedRooms = bookingStore.selectedRooms;
+  const days =
+    bookingInfo?.checkIn && bookingInfo?.checkOut
+      ? moment(bookingInfo?.checkOut).diff(moment(bookingInfo?.checkIn), 'days')
+      : 1;
   useEffect(() => {
     if (!searchResults) {
       bookingStore.fetchSearchResults();
@@ -69,10 +75,10 @@ export const ConfirmBooking: React.FC = observer(() => {
   useEffect(() => {
     if (!bookingInfo) {
       history.push('/search');
-    } else if (selectedRooms.length === 0) {
+    } else if (!bookingStore.invalid && selectedRooms.length === 0) {
       history.push('/search/result');
     }
-  }, [bookingInfo, selectedRooms, history]);
+  }, [bookingInfo, bookingStore, selectedRooms, history]);
   const bookedRooms = searchResults
     ? searchResults
         .map(roomType => {
@@ -117,7 +123,8 @@ export const ConfirmBooking: React.FC = observer(() => {
           <CardContent>
             <Typography variant="body1">
               {moment(bookingInfo?.checkIn).format('DD MMMM YYYY')} -{' '}
-              {moment(bookingInfo?.checkOut).format('DD MMMM YYYY')}
+              {moment(bookingInfo?.checkOut).format('DD MMMM YYYY')} ({days}{' '}
+              {pluralize('day', days)})
             </Typography>
             <Divider className={classes.divider} />
             <Typography variant="h6" gutterBottom={true}>
@@ -173,7 +180,7 @@ export const ConfirmBooking: React.FC = observer(() => {
             </Typography>
             <Divider className={classes.divider} />
             {/* <Typography variant="h6">Special Requests</Typography> */}
-            <FormText
+            <TextField
               id="speicalRequests"
               name="specialRequests"
               variant="outlined"
@@ -183,17 +190,18 @@ export const ConfirmBooking: React.FC = observer(() => {
                 bookingStore.setSpecialRequests(e.target.value)
               }
               multiline
-              marginBottom={false}
-            />
+              fullWidth
+            ></TextField>
           </CardContent>
         </Card>
         <Box display="flex" justifyContent="center" padding={2}>
           <Typography variant="h4" className={classes.priceText}>
-            {bookedRooms.reduce(
-              (p, c) =>
-                p + c.price * c.selected.reduce((p, r) => p + r.amount, 0),
-              0
-            )}{' '}
+            {days *
+              bookedRooms.reduce(
+                (p, c) =>
+                  p + c.price * c.selected.reduce((p, r) => p + r.amount, 0),
+                0
+              )}{' '}
             THB (tax included)
           </Typography>
         </Box>

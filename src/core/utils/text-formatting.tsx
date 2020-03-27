@@ -4,3 +4,7 @@ export const toSentenceCase = (text: string) => {
     (text.length > 1 ? text.slice(1).toLowerCase() : '')
   );
 };
+
+export const pluralize = (string: string, amount: number) => {
+  return `${string}${amount > 1 ? 's' : ''}`;
+};
