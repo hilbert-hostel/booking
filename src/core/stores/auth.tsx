@@ -25,6 +25,13 @@ export function createAuthStore() {
       this.user = undefined;
       new LocalStorage('token').clear();
     },
+    async init() {
+      try {
+        await this.fetchUserData();
+      } catch (error) {
+        this.logout();
+      }
+    },
     get isAuthenticated() {
       return !!this.token;
     },

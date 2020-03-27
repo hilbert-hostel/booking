@@ -61,6 +61,13 @@ export const ConfirmBooking: React.FC = observer(() => {
     }
   }, [bookingStore, searchResults]);
 
+  useEffect(() => {
+    if (!bookingInfo) {
+      history.push('/search');
+    } else if (selectedRooms.length === 0) {
+      history.push('/search/result');
+    }
+  }, [bookingInfo, selectedRooms]);
   const bookedRooms = searchResults
     ? searchResults
         .map(roomType => {

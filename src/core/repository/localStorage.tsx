@@ -20,6 +20,6 @@ export class LocalStorage<T = any> {
   }
 
   clear() {
-    localStorage.clear();
+    localStorage.removeItem(this.key);
   }
 }

@@ -9,10 +9,13 @@ import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 import { useLocalStorage } from './core/hooks/use-localStorage';
 
 export const App: React.FC<AppProps> = observer(() => {
-  const { themeStore } = useStores();
+  const { themeStore, authStore } = useStores();
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
   const [localDarkMode] = useLocalStorage<boolean>('dark', prefersDarkMode);
 
+  useEffect(() => {
+    authStore.init();
+  }, [authStore]);
   useEffect(() => {
     const isDark = localDarkMode !== null ? localDarkMode : prefersDarkMode;
     themeStore.setDarkMode(isDark);
