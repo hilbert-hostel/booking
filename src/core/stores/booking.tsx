@@ -12,6 +12,7 @@ export function createBookingStore(): BookingStore {
   return {
     roomSearchInfo: convertDateObject(new LocalStorage('roomSearchInfo').value),
     selectedRooms: new LocalStorage('selectedRooms').value || [],
+    specialRequests: new LocalStorage('specialRequests').value || '',
     searchResults: null,
     setRoomSearchInfo(data: RoomSearchFormInput) {
       if (!deepEqual(data, toJS(this.roomSearchInfo))) {
@@ -19,6 +20,10 @@ export function createBookingStore(): BookingStore {
         new LocalStorage('roomSearchInfo').value = data;
         this.fetchSearchResults();
       }
+    },
+    setSpecialRequests(req: string) {
+      this.specialRequests = req;
+      new LocalStorage('specialRequests').value = req;
     },
     selectRooms(room: number, amount: number) {
       if (amount < 1) {
@@ -71,6 +76,15 @@ export function createBookingStore(): BookingStore {
     getCurrentRoomType(type: string) {
       return this.searchResults?.find(e => e.type === type);
     },
+    clear() {
+      this.roomSearchInfo = undefined;
+      new LocalStorage('roomSearchInfo').clear();
+      this.selectedRooms = [];
+      new LocalStorage('selectedRooms').clear();
+      this.searchResults = null;
+      this.specialRequests = '';
+      new LocalStorage('specialRequests').clear();
+    },
   };
 }
 
@@ -85,6 +99,9 @@ export interface BookingStore {
   getSelectRoomAmount: (room: number) => number | undefined;
   fetchSearchResults: () => Promise<void>;
   getCurrentRoomType: (type: string) => RoomTypeResult | undefined;
+  setSpecialRequests: (req: string) => void;
+  clear: () => void;
+  specialRequests?: string;
   canSelect: boolean;
   invalid: boolean;
   selected: number;

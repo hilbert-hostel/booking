@@ -3,6 +3,7 @@ import { RegistrationModel } from '../../models/registration';
 import { AuthPayload, LoginModel } from '../../models/auth';
 import { RoomSearchPayload } from '../../models/search';
 import { Room, RoomTypeResult } from '../../models/room';
+import { ReservationPayload } from '../../models/reservation';
 
 export let client: AxiosClient;
 
@@ -30,7 +31,7 @@ export class BackendAPI {
     return client.get<RoomTypeResult[]>('/reservation', { params: data });
   }
 
-  static reserve(data: RoomSearchPayload) {
+  static reserve(data: ReservationPayload) {
     return client.post<Room[]>('/reservation', data);
   }
 

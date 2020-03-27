@@ -10,20 +10,32 @@ import {
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
-      marginBottom: theme.spacing(2),
       // paddingLeft: theme.spacing(1),
       // paddingRight: theme.spacing(1),
       width: '100%',
     },
+    marginBottom: {
+      marginBottom: theme.spacing(2),
+    },
   })
 );
 
+const getVariant = (variant: string) => {
+  switch (variant) {
+    case 'filled':
+      return 'filled' as 'filled';
+    case 'outlined':
+      return 'outlined' as 'outlined';
+    default:
+      return 'starndard' as 'standard';
+  }
+};
 export const FormText: React.FC<FormTextProps> = ({
   id,
   name,
   label,
   type = 'text',
-  placeholder = label,
+  placeholder,
   errorText,
   error = !!errorText,
   onChange,
@@ -31,22 +43,27 @@ export const FormText: React.FC<FormTextProps> = ({
   helperText,
   value,
   variant,
+  marginBottom = true,
   ...rest
 }) => {
   const classes = useStyles();
   return (
-    <div className={classes.root}>
+    <div
+      className={
+        classes.root + (marginBottom ? ' ' + classes.marginBottom : '')
+      }
+    >
       <TextField
         id={id}
         label={label}
         name={name}
         type={type}
         error={!!error}
-        //   placeholder={}
+        placeholder={placeholder || undefined}
         helperText={(error ? error || errorText : helperText) || <></>}
         onChange={onChange}
         value={value}
-        variant="filled"
+        variant={'filled'}
         fullWidth
         autoComplete={autoComplete}
         {...rest}
@@ -63,7 +80,9 @@ export type FormTextProps = TextFieldProps & {
   label?: string | ReactNode;
   placeholder?: string;
   autoComplete?: string;
+  multiline?: boolean;
   error?: boolean;
+  marginBottom?: boolean;
   errorText?: string;
   onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
   value?: string | number | unknown;

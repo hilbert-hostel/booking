@@ -23,6 +23,8 @@ import moment from 'moment';
 import { toJS } from 'mobx';
 import { SelectedRoomType } from '../../core/models/room';
 import { RoomAmountPair } from '../../core/stores/booking';
+import { BackendAPI } from '../../core/repository/api/backend';
+import { FormText } from '../../core/components/Forms/FormText';
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
@@ -59,7 +61,6 @@ export const ConfirmBooking: React.FC = observer(() => {
   const bookingInfo = bookingStore.roomSearchInfo;
   const searchResults = bookingStore.searchResults;
   const selectedRooms = bookingStore.selectedRooms;
-
   useEffect(() => {
     if (!searchResults) {
       bookingStore.fetchSearchResults();
@@ -84,6 +85,18 @@ export const ConfirmBooking: React.FC = observer(() => {
         .filter(bookedRooms => bookedRooms.selected.length > 0)
     : [];
 
+  const reserve = async () => {
+    const reservation = await BackendAPI.reserve({
+      checkIn: moment(bookingInfo?.checkIn).format('YYYY-MM-DD'),
+      checkOut: moment(bookingInfo?.checkOut).format('YYYY-MM-DD'),
+      rooms: selectedRooms.map(room => ({
+        id: room.room,
+        guests: room.amount,
+      })),
+      specialRequests: '',
+    });
+    console.log(reservation);
+  };
   return (
     <>
       <TitleBar
@@ -149,6 +162,20 @@ export const ConfirmBooking: React.FC = observer(() => {
               Free cancellation before 23:59, {moment().format('DD MMMM YYYY')}{' '}
               (GMT+7)
             </Typography>
+            <Divider className={classes.divider} />
+            {/* <Typography variant="h6">Special Requests</Typography> */}
+            <FormText
+              id="speicalRequests"
+              name="specialRequests"
+              variant="outlined"
+              label="Special Requests (Optional)"
+              value={bookingStore.specialRequests}
+              onChange={(e: any) =>
+                bookingStore.setSpecialRequests(e.target.value)
+              }
+              multiline
+              marginBottom={false}
+            />
           </CardContent>
         </Card>
         <Box display="flex" justifyContent="center" padding={2}>
@@ -161,7 +188,12 @@ export const ConfirmBooking: React.FC = observer(() => {
             THB (tax included)
           </Typography>
         </Box>
-        <Button variant="contained" color="primary" className={classes.button}>
+        <Button
+          variant="contained"
+          color="primary"
+          className={classes.button}
+          onClick={() => reserve()}
+        >
           Go to Payment
         </Button>
       </Container>
