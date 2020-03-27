@@ -57,7 +57,7 @@ const useStyles = makeStyles((theme: Theme) =>
 export const ConfirmBooking: React.FC = observer(() => {
   const classes = useStyles();
   const history = useHistory();
-  const { bookingStore } = useStores();
+  const { authStore, bookingStore } = useStores();
   const bookingInfo = bookingStore.roomSearchInfo;
   const searchResults = bookingStore.searchResults;
   const selectedRooms = bookingStore.selectedRooms;
@@ -93,7 +93,7 @@ export const ConfirmBooking: React.FC = observer(() => {
         id: room.room,
         guests: room.amount,
       })),
-      specialRequests: '',
+      specialRequests: bookingStore.specialRequests || '',
     });
     console.log(reservation);
   };
@@ -188,14 +188,35 @@ export const ConfirmBooking: React.FC = observer(() => {
             THB (tax included)
           </Typography>
         </Box>
-        <Button
-          variant="contained"
-          color="primary"
-          className={classes.button}
-          onClick={() => reserve()}
-        >
-          Go to Payment
-        </Button>
+        {authStore.isAuthenticated ? (
+          <Button
+            variant="contained"
+            color="primary"
+            className={classes.button}
+            onClick={() => reserve()}
+          >
+            Go to Payment
+          </Button>
+        ) : (
+          <Box
+            display="flex"
+            justifyContent="center"
+            textAlign="center"
+            flexDirection="column"
+          >
+            <Typography variant="body1" gutterBottom>
+              You're not logged in
+            </Typography>
+            <Button
+              variant="contained"
+              color="primary"
+              className={classes.button}
+              onClick={() => history.push('/login?returnTo=/confirm')}
+            >
+              Login
+            </Button>
+          </Box>
+        )}
       </Container>
     </>
   );

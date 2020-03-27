@@ -18,6 +18,7 @@ import { useFormik } from 'formik';
 import { FormText } from '../../core/components/Forms/FormText';
 import { LoginModel } from '../../core/models/auth';
 import { loginSchema } from './schema';
+import { useQuery } from '../../core/hooks/use-query';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -49,6 +50,7 @@ export const Login: React.FC = observer(() => {
   const classes = useStyles();
   const { authStore } = useStores();
   const history = useHistory();
+  const query = useQuery();
 
   const form = useFormik<LoginModel>({
     validationSchema: loginSchema,
@@ -60,7 +62,7 @@ export const Login: React.FC = observer(() => {
       try {
         const res = await BackendAPI.login(values);
         authStore.setToken(res.data.token);
-        history.push('/');
+        history.push(query.get('returnTo') || '/');
       } catch (error) {}
     },
   });
