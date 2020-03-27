@@ -68,7 +68,7 @@ const ExpansionPanel = withStyles({
 
 export const SearchInfo: React.FC = observer(() => {
   const classes = useStyles();
-  const [isExpanded, setExpanded] = useState(true);
+  const [isExpanded, setExpanded] = useState(false);
   const ref = useRef<any>();
   const [title, setTitle] = useState('Please select you stay');
   const { bookingStore } = useStores();
@@ -95,11 +95,9 @@ export const SearchInfo: React.FC = observer(() => {
   useEffect(() => {
     if (queryData) {
       ref.current.setForm(queryData);
-      setExpanded(false);
       history.push('/search/result');
     } else {
       ref.current.setForm(new LocalStorage('roomSearchInfo').value);
-      setExpanded(false);
     }
   }, [queryData, history]);
 
