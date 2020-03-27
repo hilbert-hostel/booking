@@ -7,21 +7,15 @@ import {
   Typography,
   Box,
   Card,
-  CardMedia,
   CardContent,
-  ListItem,
-  List,
   Divider,
   Button,
 } from '@material-ui/core';
 import { useHistory } from 'react-router-dom';
-import BackArrow from '@material-ui/icons/ArrowBackIos';
 import { useStores } from '../../core/hooks/use-stores';
 import { observer } from 'mobx-react-lite';
 import { TitleBar } from '../../core/components/TitleBar';
 import moment from 'moment';
-import { toJS } from 'mobx';
-import { SelectedRoomType } from '../../core/models/room';
 import { RoomAmountPair } from '../../core/stores/booking';
 import { BackendAPI } from '../../core/repository/api/backend';
 import { FormText } from '../../core/components/Forms/FormText';
@@ -65,7 +59,7 @@ export const ConfirmBooking: React.FC = observer(() => {
     if (!searchResults) {
       bookingStore.fetchSearchResults();
     }
-  }, []);
+  }, [bookingStore, searchResults]);
 
   const bookedRooms = searchResults
     ? searchResults

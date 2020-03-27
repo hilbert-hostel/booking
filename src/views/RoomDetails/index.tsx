@@ -12,14 +12,12 @@ import {
   ListItem,
   List,
 } from '@material-ui/core';
-import { useHistory, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { PlusMinusCounter } from '../../core/components/PlusMinusCounter';
-import BackArrow from '@material-ui/icons/ArrowBackIos';
 import { toSentenceCase } from '../../core/utils/text-formatting';
 import { useStores } from '../../core/hooks/use-stores';
 import { observer } from 'mobx-react-lite';
 import { RoomSelectFab } from '../SearchResult/components/RoomSelectFab';
-import { reaction, autorun } from 'mobx';
 import { SearchInfo } from '../SearchResult/components/SearchInfo';
 import { TitleBar } from '../../core/components/TitleBar';
 const useStyles = makeStyles((theme: Theme) =>
@@ -77,7 +75,6 @@ const useStyles = makeStyles((theme: Theme) =>
 export const RoomDetails: React.FC = observer(() => {
   const classes = useStyles();
   const { type } = useParams();
-  const history = useHistory();
   const { bookingStore } = useStores();
   const roomType = bookingStore.getCurrentRoomType(type as string);
 

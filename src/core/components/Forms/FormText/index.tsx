@@ -20,16 +20,17 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-const getVariant = (variant: string) => {
-  switch (variant) {
-    case 'filled':
-      return 'filled' as 'filled';
-    case 'outlined':
-      return 'outlined' as 'outlined';
-    default:
-      return 'starndard' as 'standard';
-  }
-};
+// const getVariant = (variant: string) => {
+//   switch (variant) {
+//     case 'filled':
+//       return 'filled' as 'filled';
+//     case 'outlined':
+//       return 'outlined' as 'outlined';
+//     default:
+//       return 'starndard' as 'standard';
+//   }
+// };
+
 export const FormText: React.FC<FormTextProps> = ({
   id,
   name,
