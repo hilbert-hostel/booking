@@ -12,6 +12,7 @@ import { QRKey } from '../views/QRKey';
 import { Navigation } from './components/Navigation';
 import { AnimatedSwitch, spring } from 'react-router-transition';
 import { RoomDetails } from '../views/RoomDetails';
+import { ConfirmBooking } from '../views/ConfirmBooking';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -50,7 +51,7 @@ const useStyles = makeStyles((theme: Theme) =>
 function mapStyles(styles: any) {
   return {
     opacity: styles.opacity,
-    transform: `translate(${styles.translateX}%, 0)`,
+    // transform: `translate(${styles.translateX}%, 0)`,
   };
 }
 
@@ -107,6 +108,9 @@ export const AppRouter: React.FC = () => {
           <Route path="/qrkey">
             <QRKey />
           </Route>
+          <Route path="/confirm">
+            <ConfirmBooking />
+          </Route>
           <Route path="/notification">
             <Home />
           </Route>
@@ -115,9 +119,6 @@ export const AppRouter: React.FC = () => {
           </Route>
           <Route path="/search/result">
             <SearchResult />
-          </Route>
-          <Route path="/room/:id">
-            <RoomDetails />
           </Route>
           <Route path="/search">
             <Search />

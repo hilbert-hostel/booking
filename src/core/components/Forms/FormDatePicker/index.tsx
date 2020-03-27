@@ -19,6 +19,7 @@ export const FormDatePicker: React.FC<FormDatePickerProps> = ({
   name,
   value,
   onChange,
+  minDateMessage,
   ...rest
 }) => {
   const classes = useStyles();
@@ -34,6 +35,7 @@ export const FormDatePicker: React.FC<FormDatePickerProps> = ({
       onError={err => {
         setError(err);
       }}
+      minDateMessage={minDateMessage}
       error={error}
       {...rest}
     />

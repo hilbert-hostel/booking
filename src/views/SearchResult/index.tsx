@@ -51,6 +51,10 @@ const useStyles = makeStyles((theme: Theme) =>
       display: 'flex',
       alignItems: 'center',
     },
+    notRounded: {
+      borderTopLeftRadius: '0 !important',
+      borderTopRightRadius: '0 !important',
+    },
   })
 );
 
@@ -80,7 +84,7 @@ export const SearchResult: React.FC = observer(() => {
 
   return (
     <>
-      <ExpansionPanel expanded={false}>
+      <ExpansionPanel className={classes.notRounded} expanded={false}>
         <ExpansionPanelSummary
           aria-controls="panel1a-content"
           id="top-panel-header"

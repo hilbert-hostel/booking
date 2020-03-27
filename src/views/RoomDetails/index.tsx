@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   createStyles,
   makeStyles,
@@ -19,6 +19,9 @@ import { toSentenceCase } from '../../core/utils/text-formatting';
 import { useStores } from '../../core/hooks/use-stores';
 import { observer } from 'mobx-react-lite';
 import { RoomSelectFab } from '../SearchResult/components/RoomSelectFab';
+import { reaction, autorun } from 'mobx';
+import { SearchInfo } from '../SearchResult/components/SearchInfo';
+import { TitleBar } from '../../core/components/TitleBar';
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
@@ -78,22 +81,20 @@ export const RoomDetails: React.FC = observer(() => {
   const { bookingStore } = useStores();
   const roomType = bookingStore.getCurrentRoomType(type as string);
 
+  useEffect(() => {
+    if (type) {
+      const results = bookingStore.searchResults;
+      if (!results) {
+        bookingStore.fetchSearchResults();
+      }
+    }
+  }, [bookingStore, type]);
   return (
     <>
+      <TitleBar title="Room Details" />
+      <SearchInfo></SearchInfo>
       <Container maxWidth="md" className={classes.root}>
-        <Box
-          display="flex"
-          justifyContent="flex-start"
-          alignItems="stretch"
-          paddingBottom={2}
-        >
-          <BackArrow onClick={() => history.goBack()} />
-          <Typography variant="h4" className={classes.text}>
-            Room Details
-          </Typography>
-        </Box>
         <Card className={classes.root}>
-          {/* <CardActionAnrea> */}
           {roomType?.photos[0] && (
             <CardMedia
               component="img"

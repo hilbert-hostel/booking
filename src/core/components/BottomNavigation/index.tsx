@@ -25,30 +25,29 @@ export const BottomNav: React.FC<BottomNavProps> = observer(() => {
   const classes = useStyles();
   const history = useHistory();
   const { authStore } = useStores();
-
   return (
     <BottomNavigation
-      value={history.location.pathname}
+      value={history.location.pathname.split('/')[1]}
       className={classes.root}
     >
       <BottomNavigationAction
-        value="/"
+        value=""
         onClick={() => history.push('/')}
         icon={<HomeIcon />}
       />
       <BottomNavigationAction
-        value="/search"
+        value="search"
         onClick={() => history.push('/search')}
         icon={<SearchIcon />}
       />
       <BottomNavigationAction
-        value="/qrkey"
+        value="qrkey"
         onClick={() => history.push('/qrkey')}
         icon={<VpnKeyIcon />}
       />
       {authStore.isAuthenticated ? (
         <BottomNavigationAction
-          value="/profile"
+          value="profile"
           onClick={() => history.push('/profile')}
           icon={<PersonIcon />}
         />

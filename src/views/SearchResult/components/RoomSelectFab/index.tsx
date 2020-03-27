@@ -37,6 +37,7 @@ export const RoomSelectFab: React.FC = observer(() => {
               ? 'primary'
               : 'inherit'
           }
+          onClick={() => history.push('/confirm')}
         >
           {bookingStore.selected !== searchQuery?.guests
             ? `${bookingStore.selected}/${searchQuery?.guests} rooms selected`

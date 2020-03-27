@@ -79,7 +79,7 @@ export const RoomSearchForm: React.FC<RoomSearchFormProps> = forwardRef(
             name="checkIn"
             value={form.values.checkIn}
             minDate={moment()
-              .subtract('day', 1)
+              .subtract(1, 'day')
               .set({
                 hour: 23,
                 minute: 59,
@@ -87,6 +87,7 @@ export const RoomSearchForm: React.FC<RoomSearchFormProps> = forwardRef(
                 millisecond: 59,
               })
               .toDate()}
+            minDateMessage="Check in date can not be in the past."
             className={`${classes.formItem} ${classes.marginTop}`}
             onChange={date => form.setFieldValue('checkIn', date?.toDate())}
           />

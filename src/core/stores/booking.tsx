@@ -12,9 +12,9 @@ export function createBookingStore(): BookingStore {
   return {
     roomSearchInfo: convertDateObject(new LocalStorage('roomSearchInfo').value),
     selectedRooms: new LocalStorage('selectedRooms').value || [],
-    searchResults: [],
+    searchResults: null,
     setRoomSearchInfo(data: RoomSearchFormInput) {
-      if (!deepEqual(data, this.roomSearchInfo)) {
+      if (!deepEqual(data, toJS(this.roomSearchInfo))) {
         this.roomSearchInfo = data;
         new LocalStorage('roomSearchInfo').value = data;
         this.fetchSearchResults();
@@ -39,7 +39,7 @@ export function createBookingStore(): BookingStore {
       this.searchResults = data;
       this.selectedRooms = this.selectedRooms.filter(room =>
         this.searchResults
-          .map(r => r.availability)
+          ?.map(r => r.availability)
           .reduce((p, r) => [...p, ...r], [])
           .find(r => r.id === room.room)
       );
@@ -69,7 +69,7 @@ export function createBookingStore(): BookingStore {
       }
     },
     getCurrentRoomType(type: string) {
-      return this.searchResults.find(e => e.type === type);
+      return this.searchResults?.find(e => e.type === type);
     },
   };
 }
@@ -78,7 +78,7 @@ export type RoomAmountPair = { room: number; amount: number };
 export interface BookingStore {
   roomSearchInfo?: RoomSearchFormInput;
   selectedRooms: RoomAmountPair[];
-  searchResults: RoomTypeResult[];
+  searchResults: RoomTypeResult[] | null;
   setRoomSearchInfo: (data: RoomSearchFormInput) => void;
   setSearchResults: (data: RoomTypeResult[]) => void;
   selectRooms: (room: number, amount: number) => void;
