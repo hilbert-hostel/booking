@@ -52,7 +52,8 @@ export const RoomSelectFab: React.FC = observer(() => {
           }
           disabled={
             !(
-              (searchQuery && searchQuery?.guests >= bookingStore.selected) ||
+              searchQuery &&
+              searchQuery?.guests >= bookingStore.selected &&
               bookingStore.validInfo
             )
           }

@@ -84,6 +84,7 @@ export const SearchResult: React.FC = observer(() => {
   const searchResults = bookingStore.searchResults;
 
   useEffect(() => {
+    bookingStore.fetchSearchResults();
     const dispose = reaction(
       () => {
         return bookingStore.roomSearchInfo;
