@@ -8,7 +8,6 @@ import {
   Container,
   Typography,
   Button,
-  Divider,
   Box,
 } from '@material-ui/core';
 import { BackendAPI } from '../../core/repository/api/backend';
@@ -19,7 +18,6 @@ import { FormText } from '../../core/components/Forms/FormText';
 import { LoginModel } from '../../core/models/auth';
 import { loginSchema } from './schema';
 import { useQuery } from '../../core/hooks/use-query';
-import { AxiosError } from 'axios';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

@@ -6,6 +6,8 @@ import { RoomTypeResult } from '../../models/room';
 import {
   ReservationPayload,
   ReservationResponse,
+  ReservationStatusResponse,
+  ReservationPaymentStatusResponse,
 } from '../../models/reservation';
 
 export let client: AxiosClient;
@@ -38,7 +40,15 @@ export class BackendAPI {
     return client.post<ReservationResponse>('/reservation', data);
   }
 
-  static reservationStatus(id: number) {}
+  static reservationStatus(id: string) {
+    return client.get<ReservationStatusResponse>('/reservation/' + id);
+  }
+
+  static paymentStatus(id: string) {
+    return client.get<ReservationPaymentStatusResponse>(
+      '/reservation/' + id + '/payment'
+    );
+  }
 
   static openDoor() {
     return client.post('/door/lock', {});

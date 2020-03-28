@@ -14,6 +14,8 @@ import { AnimatedSwitch, spring } from 'react-router-transition';
 import { RoomDetails } from '../views/RoomDetails';
 import { ConfirmBooking } from '../views/ConfirmBooking';
 import { PopupSnackbar } from './components/PopupSnackbar';
+import { Payment } from '../views/Payment';
+import { BookingComplete } from '../views/BookingComplete';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -108,6 +110,12 @@ export const AppRouter: React.FC = () => {
           </Route>
           <Route path="/qrkey">
             <QRKey />
+          </Route>
+          <Route path="/payment/:id">
+            <Payment />
+          </Route>
+          <Route path="/complete/:id">
+            <BookingComplete />
           </Route>
           <Route path="/confirm">
             <ConfirmBooking />

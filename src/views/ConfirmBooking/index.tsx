@@ -19,7 +19,6 @@ import { TitleBar } from '../../core/components/TitleBar';
 import moment from 'moment';
 import { RoomAmountPair } from '../../core/stores/booking';
 import { BackendAPI } from '../../core/repository/api/backend';
-import { FormText } from '../../core/components/Forms/FormText';
 import { pluralize } from '../../core/utils/text-formatting';
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -202,7 +201,7 @@ export const ConfirmBooking: React.FC = observer(() => {
                   p + c.price * c.selected.reduce((p, r) => p + r.amount, 0),
                 0
               )}{' '}
-            THB (tax included)
+            THB <small>(tax included)</small>
           </Typography>
         </Box>
         {authStore.isAuthenticated ? (

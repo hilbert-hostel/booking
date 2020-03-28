@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   createStyles,
   makeStyles,
@@ -11,7 +11,7 @@ import {
   Divider,
   Button,
 } from '@material-ui/core';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 import { useStores } from '../../core/hooks/use-stores';
 import { observer } from 'mobx-react-lite';
 import { TitleBar } from '../../core/components/TitleBar';
@@ -19,10 +19,16 @@ import moment from 'moment';
 import { RoomAmountPair } from '../../core/stores/booking';
 import { BackendAPI } from '../../core/repository/api/backend';
 import { FormText } from '../../core/components/Forms/FormText';
+import qrcode from 'qrcode';
+import { ReservationStatusResponse } from '../../core/models/reservation';
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       marginTop: theme.spacing(2),
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      flexDirection: 'column',
     },
     main: {
       marginBottom: theme.spacing(2),
@@ -34,8 +40,16 @@ const useStyles = makeStyles((theme: Theme) =>
     noLineHeight: {
       verticalAlign: 'middle',
     },
+    qrImage: {
+      marginTop: theme.spacing(2),
+      width: 'min( 80%, 500px)',
+      height: 'auto',
+    },
     bold: {
       fontWeight: 'bold',
+    },
+    text: {
+      color: theme.palette.text.primary,
     },
     button: {
       width: '100%',
@@ -44,6 +58,7 @@ const useStyles = makeStyles((theme: Theme) =>
     priceText: {
       fontWeight: 'bold',
       marginBottom: theme.spacing(1),
+      color: theme.palette.text.primary,
     },
   })
 );
@@ -51,175 +66,88 @@ const useStyles = makeStyles((theme: Theme) =>
 export const Payment: React.FC = observer(() => {
   const classes = useStyles();
   const history = useHistory();
-  const { authStore, bookingStore } = useStores();
-  const bookingInfo = bookingStore.roomSearchInfo;
-  const searchResults = bookingStore.searchResults;
-  const selectedRooms = bookingStore.selectedRooms;
+  const { id } = useParams();
+  const { authStore, themeStore } = useStores();
+  const [reservationInfo, setReservationInfo] = useState<
+    ReservationStatusResponse
+  >();
+  const [timer, setTimer] = useState<NodeJS.Timeout>();
+  const [qr, setQR] = useState<string>();
   useEffect(() => {
-    if (!searchResults) {
-      bookingStore.fetchSearchResults();
+    if (id) {
+      try {
+        BackendAPI.reservationStatus(id).then(async res => {
+          setReservationInfo(res.data);
+          console.log(res.data);
+          setQR(
+            await qrcode.toDataURL('paymeplease', {
+              errorCorrectionLevel: 'H',
+              color: themeStore.dark
+                ? {
+                    dark: '#FFF', // Blue dots
+                    light: '#0000', // Transparent background
+                  }
+                : {
+                    dark: '#000', // Blue dots
+                    light: '#0000', // Transparent background
+                  },
+            })
+          );
+        });
+      } catch (error) {}
     }
-  }, [bookingStore, searchResults]);
-
+  }, [id, themeStore.dark]);
   useEffect(() => {
-    if (!bookingInfo) {
-      history.push('/search');
-    } else if (selectedRooms.length === 0) {
-      history.push('/search/result');
+    if (reservationInfo) {
+      let timer: any;
+      const newTimer = () => {
+        console.log('time is ticking');
+        return setTimeout(async () => {
+          const { data } = await BackendAPI.paymentStatus(reservationInfo.id);
+          if (data.isPaid) {
+            history.push('/complete/' + reservationInfo.id);
+          }
+          timer = newTimer();
+        }, 1000);
+      };
+      timer = newTimer();
+      return () => {
+        console.log('I stop la');
+        clearTimeout(timer as any);
+      };
     }
-  }, [bookingInfo, selectedRooms, history]);
-  const bookedRooms = searchResults
-    ? searchResults
-        .map(roomType => {
-          const { type, price } = roomType;
-          return {
-            type,
-            price,
-            selected: roomType.availability
-              .filter(room => selectedRooms.find(s => s.room === room.id))
-              .map(
-                room =>
-                  selectedRooms.find(s => s.room === room.id) as RoomAmountPair
-              ),
-          };
-        })
-        .filter(bookedRooms => bookedRooms.selected.length > 0)
-    : [];
+  }, [reservationInfo, history]);
 
-  const reserve = async () => {
-    try {
-      const res = await BackendAPI.reserve({
-        checkIn: moment(bookingInfo?.checkIn).format('YYYY-MM-DD'),
-        checkOut: moment(bookingInfo?.checkOut).format('YYYY-MM-DD'),
-        rooms: selectedRooms.map(room => ({
-          id: room.room,
-          guests: room.amount,
-        })),
-        specialRequests: bookingStore.specialRequests || '',
-      });
-      bookingStore.clear();
-      history.push('/payment/' + res.data.id);
-    } catch (error) {}
-  };
   return (
     <>
-      <TitleBar
-        title="Confirmation"
-        onBack={() => history.push('/search/result')}
-      />
+      <TitleBar title="Payment" onBack={() => history.push('/search/result')} />
       <Container maxWidth="md" className={classes.root}>
-        <Card className={classes.main}>
-          <CardContent>
-            <Typography variant="body1">
-              {moment(bookingInfo?.checkIn).format('DD MMMM YYYY')} -{' '}
-              {moment(bookingInfo?.checkOut).format('DD MMMM YYYY')}
-            </Typography>
-            <Divider className={classes.divider} />
-            <Typography variant="h6" gutterBottom={true}>
-              Selected Rooms
-            </Typography>
-            {bookedRooms.map(room => {
-              return (
-                <Box
-                  key={'booked-room-' + room.type}
-                  width="100%"
-                  display="flex"
-                  justifyContent="space-between"
-                >
-                  <Typography
-                    variant="body1"
-                    component="span"
-                    className={classes.noLineHeight}
-                  >
-                    {room.selected.reduce((p, r) => p + r.amount, 0)} x{' '}
-                    {room.type} ({room.price} THB)
-                  </Typography>
-                  <Button
-                    size="small"
-                    color="primary"
-                    onClick={() => history.push('/search/rooms/' + room.type)}
-                  >
-                    Change
-                  </Button>
-                </Box>
-              );
-            })}
-            <Typography
-              variant="body1"
-              component="span"
-              className={classes.bold}
-              gutterBottom={false}
+        {qr && (
+          <>
+            <Box
+              width="100%"
+              display="flex"
+              justifyContent="center"
+              flexDirection="column"
+              alignItems="center"
             >
-              Total :{' '}
-              {bookedRooms.reduce(
-                (p, c) => p + c.selected.reduce((p, r) => p + r.amount, 0),
+              <img
+                src={qr}
+                className={classes.qrImage}
+                alt={'qr for' + reservationInfo?.id}
+              />
+            </Box>
+            <Typography variant="body1" gutterBottom className={classes.text}>
+              Scan QR code to pay
+            </Typography>
+            <Typography variant="h4" className={classes.priceText}>
+              {reservationInfo?.rooms.reduce(
+                (p, r) => p + r.price * r.beds.length,
                 0
               )}{' '}
-              Beds
+              <small>THB (tax included)</small>
             </Typography>
-            <Divider className={classes.divider} />
-            <Typography
-              variant="body1"
-              color="primary"
-              className={classes.bold}
-            >
-              Free cancellation before 23:59, {moment().format('DD MMMM YYYY')}{' '}
-              (GMT+7)
-            </Typography>
-            <Divider className={classes.divider} />
-            {/* <Typography variant="h6">Special Requests</Typography> */}
-            <FormText
-              id="speicalRequests"
-              name="specialRequests"
-              variant="outlined"
-              label="Special Requests (Optional)"
-              value={bookingStore.specialRequests}
-              onChange={(e: any) =>
-                bookingStore.setSpecialRequests(e.target.value)
-              }
-              multiline
-              marginBottom={false}
-            />
-          </CardContent>
-        </Card>
-        <Box display="flex" justifyContent="center" padding={2}>
-          <Typography variant="h4" className={classes.priceText}>
-            {bookedRooms.reduce(
-              (p, c) =>
-                p + c.price * c.selected.reduce((p, r) => p + r.amount, 0),
-              0
-            )}{' '}
-            THB (tax included)
-          </Typography>
-        </Box>
-        {authStore.isAuthenticated ? (
-          <Button
-            variant="contained"
-            color="primary"
-            className={classes.button}
-            onClick={() => reserve()}
-          >
-            Go to Payment
-          </Button>
-        ) : (
-          <Box
-            display="flex"
-            justifyContent="center"
-            textAlign="center"
-            flexDirection="column"
-          >
-            <Typography variant="body1" gutterBottom>
-              You're not logged in
-            </Typography>
-            <Button
-              variant="contained"
-              color="primary"
-              className={classes.button}
-              onClick={() => history.push('/login?returnTo=/confirm')}
-            >
-              Login
-            </Button>
-          </Box>
+          </>
         )}
       </Container>
     </>

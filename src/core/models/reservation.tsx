@@ -13,10 +13,35 @@ export interface ReservationResponse {
   specialRequests: string;
 }
 
+export interface ReservationStatusResponse {
+  id: string;
+  checkIn: string;
+  checkOut: string;
+  rooms: {
+    id: number;
+    price: number;
+    description: string;
+    type: string;
+    guests: number;
+    beds: { id: number; room_id: number }[];
+  }[];
+  specialRequests: string;
+}
+
+export interface ReservationPaymentStatusResponse {
+  isPaid: true;
+}
 export interface Reservation {
   id: string;
   checkIn: Date;
   checkOut: Date;
-  rooms: { id: number; type: string; guests: number }[];
+  rooms: {
+    id: number;
+    price: number;
+    description: string;
+    type: string;
+    guests: number;
+    beds: { id: number; room_id: number }[];
+  }[];
   specialRequests: string;
 }
