@@ -24,7 +24,7 @@ const useStyles = makeStyles((theme: Theme) =>
 export const BottomNav: React.FC<BottomNavProps> = observer(() => {
   const classes = useStyles();
   const history = useHistory();
-  const { authStore } = useStores();
+  const { authStore, bookingStore } = useStores();
   return (
     <BottomNavigation
       value={history.location.pathname.split('/')[1]}
@@ -37,7 +37,11 @@ export const BottomNav: React.FC<BottomNavProps> = observer(() => {
       />
       <BottomNavigationAction
         value="search"
-        onClick={() => history.push('/search')}
+        onClick={() => {
+          bookingStore.selectedRooms.length > 0
+            ? history.push('/search/result')
+            : history.push('/search');
+        }}
         icon={<SearchIcon />}
       />
       <BottomNavigationAction

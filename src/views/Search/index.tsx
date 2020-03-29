@@ -35,9 +35,6 @@ export const Search: React.FC = observer(() => {
 
   useEffect(() => {
     authStore.fetchUserData();
-    if (bookingStore.selectedRooms.length > 0) {
-      history.push('/search/result');
-    }
   }, [authStore, bookingStore, history]);
 
   const addMessage = () => {

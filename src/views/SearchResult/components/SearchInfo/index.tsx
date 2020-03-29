@@ -48,6 +48,9 @@ const useStyles = makeStyles((theme: Theme) =>
       display: 'flex',
       alignItems: 'center',
     },
+    invalid: {
+      color: theme.palette.error.main,
+    },
   })
 );
 
@@ -74,6 +77,7 @@ export const SearchInfo: React.FC = observer(() => {
   const { bookingStore } = useStores();
   const location = useLocation();
   const history = useHistory();
+  const invalid = bookingStore.invalid;
 
   const queryData = useMemo(() => {
     const query = new URLSearchParams(location.search);
@@ -125,7 +129,11 @@ export const SearchInfo: React.FC = observer(() => {
           aria-controls="panel1a-content"
           id="panel1a-header"
         >
-          <Typography className={classes.heading}>{title}</Typography>
+          <Typography
+            className={classes.heading + (invalid ? ' ' + classes.invalid : '')}
+          >
+            {title}
+          </Typography>
         </ExpansionPanelSummary>
         <ExpansionPanelDetails className={classes.panel}>
           <RoomSearchForm
