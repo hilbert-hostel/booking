@@ -166,7 +166,7 @@ export const Login: React.FC = observer(() => {
                 href={
                   '/register' +
                   (query.get('returnTo')
-                    ? '?returnTo' + query.get('returnTo')
+                    ? '?returnTo=' + query.get('returnTo')
                     : '')
                 }
                 component="a"

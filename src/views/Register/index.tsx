@@ -16,6 +16,7 @@ import { FormText } from '../../core/components/Forms/FormText';
 import { TitleBar } from '../../core/components/TitleBar';
 import { BackendAPI } from '../../core/repository/api/backend';
 import { useStores } from '../../core/hooks/use-stores';
+import { useQuery } from '../../core/hooks/use-query';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -46,6 +47,7 @@ export const Register: React.FC = observer(() => {
   const classes = useStyles();
   const history = useHistory();
   const { authStore } = useStores();
+  const query = useQuery();
   const form = useFormik<RegistrationModel>({
     validationSchema: registrationSchema,
     initialValues: {
@@ -61,7 +63,7 @@ export const Register: React.FC = observer(() => {
       try {
         const res = await BackendAPI.register(values);
         authStore.setToken(res.data.token);
-        history.push('/');
+        history.push(query.get('returnTo') || '/');
       } catch (error) {}
     },
   });
