@@ -1,6 +1,7 @@
 import React from 'react';
 import BottomNavigationAction from '@material-ui/core/BottomNavigationAction';
 import BottomNavigation from '@material-ui/core/BottomNavigation';
+import Badge from '@material-ui/core/Badge';
 import HomeIcon from '@material-ui/icons/Home';
 import PersonIcon from '@material-ui/icons/Person';
 import LoginIcon from '@material-ui/icons/ExitToApp';
@@ -53,7 +54,11 @@ export const BottomNav: React.FC<BottomNavProps> = observer(() => {
         <BottomNavigationAction
           value="profile"
           onClick={() => history.push('/profile')}
-          icon={<PersonIcon />}
+          icon={
+            <Badge badgeContent={1} color="error" variant="dot">
+              <PersonIcon />
+            </Badge>
+          }
         />
       ) : (
         <BottomNavigationAction

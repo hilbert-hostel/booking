@@ -36,6 +36,10 @@ export class BackendAPI {
     return client.get<RoomTypeResult[]>('/reservation', { params: data });
   }
 
+  static reservations() {
+    return client.get<ReservationStatusResponse[]>('/reservation/all');
+  }
+
   static reserve(data: ReservationPayload) {
     return client.post<ReservationResponse>('/reservation', data);
   }

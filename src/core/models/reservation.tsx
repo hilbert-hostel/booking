@@ -23,7 +23,7 @@ export interface ReservationStatusResponse {
     description: string;
     type: string;
     guests: number;
-    beds: { id: number; room_id: number }[];
+    beds: number;
   }[];
   specialRequests: string;
 }
@@ -41,7 +41,7 @@ export interface Reservation {
     description: string;
     type: string;
     guests: number;
-    beds: { id: number; room_id: number }[];
+    beds: number;
   }[];
   specialRequests: string;
 }

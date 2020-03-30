@@ -100,10 +100,7 @@ export const BookingComplete: React.FC = observer(() => {
                   <Typography className="h6">Transaction ID : asdf</Typography>
                   <Typography className="h6">
                     Guests :{' '}
-                    {reservationInfo.rooms.reduce(
-                      (p, c) => p + c.beds.length,
-                      0
-                    )}
+                    {reservationInfo.rooms.reduce((p, c) => p + c.beds, 0)}
                   </Typography>
                   <Typography className="h6">
                     Rooms : {reservationInfo.rooms.map(c => c.type).join(', ')}

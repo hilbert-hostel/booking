@@ -100,6 +100,7 @@ export const Payment: React.FC = observer(() => {
   useEffect(() => {
     if (reservationInfo) {
       let timer: any;
+      console.log('hi');
       const newTimer = () => {
         console.log('time is ticking');
         return setTimeout(async () => {
@@ -112,7 +113,7 @@ export const Payment: React.FC = observer(() => {
       };
       timer = newTimer();
       return () => {
-        console.log('I stop la');
+        console.log('time is ticking');
         clearTimeout(timer as any);
       };
     }
@@ -141,10 +142,7 @@ export const Payment: React.FC = observer(() => {
               Scan QR code to pay
             </Typography>
             <Typography variant="h4" className={classes.priceText}>
-              {reservationInfo?.rooms.reduce(
-                (p, r) => p + r.price * r.beds.length,
-                0
-              )}{' '}
+              {reservationInfo?.rooms.reduce((p, r) => p + r.price * r.beds, 0)}{' '}
               <small>THB (tax included)</small>
             </Typography>
           </>
