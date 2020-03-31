@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme: Theme) =>
 export const BottomNav: React.FC<BottomNavProps> = observer(() => {
   const classes = useStyles();
   const history = useHistory();
-  const { authStore, bookingStore } = useStores();
+  const { authStore, bookingStore, reservationStore } = useStores();
   return (
     <BottomNavigation
       value={history.location.pathname.split('/')[1]}
@@ -49,13 +49,18 @@ export const BottomNav: React.FC<BottomNavProps> = observer(() => {
         value="qrkey"
         onClick={() => history.push('/qrkey')}
         icon={<VpnKeyIcon />}
+        disabled={!authStore.isAuthenticated}
       />
       {authStore.isAuthenticated ? (
         <BottomNavigationAction
           value="profile"
           onClick={() => history.push('/profile')}
           icon={
-            <Badge badgeContent={1} color="error" variant="dot">
+            <Badge
+              badgeContent={reservationStore.unPaid ? 1 : 0}
+              color="error"
+              variant="dot"
+            >
               <PersonIcon />
             </Badge>
           }

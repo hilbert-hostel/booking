@@ -17,6 +17,7 @@ import { PopupSnackbar } from './components/PopupSnackbar';
 import { Payment } from '../views/Payment';
 import { BookingComplete } from '../views/BookingComplete';
 import { Reservations } from '../views/Reservations';
+import { ReservationDetails } from '../views/ReservationDetails';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -114,6 +115,9 @@ export const AppRouter: React.FC = () => {
           </Route>
           <Route path="/payment/:id">
             <Payment />
+          </Route>
+          <Route path="/reservation/:id">
+            <ReservationDetails />
           </Route>
           <Route path="/reservation">
             <Reservations />

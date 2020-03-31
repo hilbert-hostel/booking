@@ -25,6 +25,7 @@ import PeopleIcon from '@material-ui/icons/People';
 import { useHistory } from 'react-router-dom';
 import { orange } from '@material-ui/core/colors';
 import { BackendAPI } from '../../core/repository/api/backend';
+import Alert from '@material-ui/lab/Alert';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -57,13 +58,14 @@ const useStyles = makeStyles((theme: Theme) =>
       flexGrow: 1,
       paddingTop: theme.spacing(2),
       display: 'flex',
+      flexDirection: 'column',
     },
   })
 );
 
 export const Profile: React.FC = observer(() => {
   const classes = useStyles();
-  const { authStore, themeStore } = useStores();
+  const { authStore, themeStore, reservationStore } = useStores();
   const history = useHistory();
   const user = authStore.user;
 
@@ -91,11 +93,17 @@ export const Profile: React.FC = observer(() => {
           </Box>
         </Paper>
         <Container maxWidth="md" className={classes.container}>
+          {reservationStore.unPaid.length > 0 && (
+            <Alert variant="filled" severity="warning">
+              You have unpaid reservations
+            </Alert>
+          )}
           <Box
             width="100%"
             minHeight="100%"
             display="flex"
             flexDirection="column"
+            justifyContent="stretch"
           >
             <Box width="100%" flexGrow="1" height="100%">
               <List className={classes.listItem}>
@@ -107,7 +115,10 @@ export const Profile: React.FC = observer(() => {
                 </ListItem>
                 <ListItem button onClick={() => history.push('/reservation')}>
                   <ListItemIcon>
-                    <Badge badgeContent={1} color="error">
+                    <Badge
+                      badgeContent={reservationStore.unPaid.length}
+                      color="error"
+                    >
                       <ReservationIcon />
                     </Badge>
                   </ListItemIcon>

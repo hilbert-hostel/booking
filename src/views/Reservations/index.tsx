@@ -78,21 +78,13 @@ const ExpansionPanel = withStyles({
 
 export const Reservations: React.FC = observer(() => {
   const classes = useStyles();
-  const { bookingStore } = useStores();
+  const { bookingStore, reservationStore } = useStores();
   const history = useHistory();
-  const [reservations, setReservations] = useState<Reservation[]>();
+  const reservations = reservationStore.reservations;
 
   useEffect(() => {
-    BackendAPI.reservations().then(res => {
-      setReservations(
-        res.data.map(e => ({
-          ...e,
-          checkIn: new Date(e.checkIn),
-          checkOut: new Date(e.checkOut),
-        }))
-      );
-    });
-  }, [bookingStore]);
+    reservationStore.fetchReservations();
+  }, [reservationStore]);
 
   return (
     <>

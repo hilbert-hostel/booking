@@ -1,3 +1,5 @@
+import { RoomPhoto } from './room';
+
 export interface ReservationPayload {
   checkIn: string;
   checkOut: string;
@@ -13,23 +15,13 @@ export interface ReservationResponse {
   specialRequests: string;
 }
 
-export interface ReservationStatusResponse {
-  id: string;
+export type ReservationStatusResponse = Reservation & {
   checkIn: string;
   checkOut: string;
-  rooms: {
-    id: number;
-    price: number;
-    description: string;
-    type: string;
-    guests: number;
-    beds: number;
-  }[];
-  specialRequests: string;
-}
+};
 
 export interface ReservationPaymentStatusResponse {
-  isPaid: true;
+  isPaid: boolean;
 }
 export interface Reservation {
   id: string;
@@ -42,6 +34,8 @@ export interface Reservation {
     type: string;
     guests: number;
     beds: number;
+    photos: RoomPhoto[];
   }[];
   specialRequests: string;
+  isPaid: boolean;
 }

@@ -15,12 +15,10 @@ import { useHistory, useParams } from 'react-router-dom';
 import { useStores } from '../../core/hooks/use-stores';
 import { observer } from 'mobx-react-lite';
 import { TitleBar } from '../../core/components/TitleBar';
-import moment from 'moment';
-import { RoomAmountPair } from '../../core/stores/booking';
 import { BackendAPI } from '../../core/repository/api/backend';
-import { FormText } from '../../core/components/Forms/FormText';
 import qrcode from 'qrcode';
 import { ReservationStatusResponse } from '../../core/models/reservation';
+
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
@@ -67,11 +65,10 @@ export const Payment: React.FC = observer(() => {
   const classes = useStyles();
   const history = useHistory();
   const { id } = useParams();
-  const { authStore, themeStore } = useStores();
+  const { themeStore } = useStores();
   const [reservationInfo, setReservationInfo] = useState<
     ReservationStatusResponse
   >();
-  const [timer, setTimer] = useState<NodeJS.Timeout>();
   const [qr, setQR] = useState<string>();
   useEffect(() => {
     if (id) {
@@ -97,6 +94,7 @@ export const Payment: React.FC = observer(() => {
       } catch (error) {}
     }
   }, [id, themeStore.dark]);
+
   useEffect(() => {
     if (reservationInfo) {
       let timer: any;
@@ -107,13 +105,15 @@ export const Payment: React.FC = observer(() => {
           const { data } = await BackendAPI.paymentStatus(reservationInfo.id);
           if (data.isPaid) {
             history.push('/complete/' + reservationInfo.id);
+            clearTimeout(timer as any);
+          } else {
+            timer = newTimer();
           }
-          timer = newTimer();
         }, 1000);
       };
       timer = newTimer();
       return () => {
-        console.log('time is ticking');
+        console.log('time stop la');
         clearTimeout(timer as any);
       };
     }
@@ -123,7 +123,7 @@ export const Payment: React.FC = observer(() => {
     <>
       <TitleBar title="Payment" onBack={() => history.push('/search/result')} />
       <Container maxWidth="md" className={classes.root}>
-        {qr && (
+        {qr ? (
           <>
             <Box
               width="100%"
@@ -146,6 +146,8 @@ export const Payment: React.FC = observer(() => {
               <small>THB (tax included)</small>
             </Typography>
           </>
+        ) : (
+          <></>
         )}
       </Container>
     </>

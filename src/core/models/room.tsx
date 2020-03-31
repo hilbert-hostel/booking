@@ -13,7 +13,7 @@ export interface Room {
 export interface RoomTypeResult {
   price: number;
   description: string;
-  photos: { photo_url: string; photo_description?: string }[];
+  photos: RoomPhoto[];
   facilities: { name: string; description?: string; count: number }[];
   availability: { id: number; available: number }[];
   type: string;
@@ -23,4 +23,9 @@ export interface SelectedRoomType {
   price: number;
   selected: RoomAmountPair[];
   type: string;
+}
+
+export interface RoomPhoto {
+  photo_url: string;
+  photo_description?: string;
 }
