@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
 import { Search } from '../views/Search';
 import { Login } from '../views/Login';
 import { makeStyles, Theme, createStyles } from '@material-ui/core';
@@ -9,7 +9,6 @@ import { Profile } from '../views/Profile';
 import { Register } from '../views/Register';
 import { Home } from '../views/Home';
 import { QRKey } from '../views/QRKey';
-import { Navigation } from './components/Navigation';
 import { AnimatedSwitch, spring } from 'react-router-transition';
 import { RoomDetails } from '../views/RoomDetails';
 import { ConfirmBooking } from '../views/ConfirmBooking';

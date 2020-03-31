@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import {
   createStyles,
   makeStyles,
@@ -13,13 +13,12 @@ import {
   Paper,
   List,
   ListItem,
+  CardMedia,
 } from '@material-ui/core';
 import { useHistory, useParams } from 'react-router-dom';
 import { useStores } from '../../core/hooks/use-stores';
 import { observer } from 'mobx-react-lite';
 import { TitleBar } from '../../core/components/TitleBar';
-import { BackendAPI } from '../../core/repository/api/backend';
-import { Reservation } from '../../core/models/reservation';
 import moment from 'moment';
 import { pluralize } from '../../core/utils/text-formatting';
 const useStyles = makeStyles((theme: Theme) =>
@@ -86,18 +85,7 @@ export const ReservationDetails: React.FC = observer(() => {
         reservationStore.fetchReservations();
       } catch (error) {}
     }
-  }, [id]);
-
-  const getByType = () => {
-    const fromType = reservation?.rooms.reduce((p, c) => {
-      if (c.type in p) {
-        return { ...p, [c.type]: [...p[c.type], c] };
-      } else {
-        return { ...p, [c.type]: [c] };
-      }
-    }, {} as { [key: string]: any[] });
-    return fromType;
-  };
+  }, [id, reservationStore]);
 
   return (
     <>
@@ -116,10 +104,22 @@ export const ReservationDetails: React.FC = observer(() => {
           {reservation && (
             <>
               <Card className={classes.card}>
+                {reservation.rooms[0].photos[0] && (
+                  <CardMedia
+                    component="img"
+                    alt={
+                      reservation.rooms[0].photos[0].photo_description ||
+                      reservation.rooms[0].type
+                    }
+                    height="140"
+                    image={reservation.rooms[0].photos[0].photo_url}
+                    title={reservation.rooms[0].type}
+                  />
+                )}
                 <CardContent>
                   <Typography variant="h5">
                     {moment(reservation.checkIn).format('DD MMMM YYYY')} -{' '}
-                    {moment(reservation.checkIn).format('DD MMMM YYYY')}
+                    {moment(reservation.checkOut).format('DD MMMM YYYY')}
                   </Typography>
                   <Divider className={classes.divider} />
                   <Typography variant="h6">

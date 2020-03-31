@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { observer } from 'mobx-react-lite';
 // import { useStores } from '../../core/hooks/use-stores';
 import {
@@ -19,8 +19,6 @@ import { useHistory } from 'react-router-dom';
 import BackArrow from '@material-ui/icons/ArrowBackIos';
 import MuiExpansionPanel from '@material-ui/core/ExpansionPanel';
 import { useStores } from '../../core/hooks/use-stores';
-import { BackendAPI } from '../../core/repository/api/backend';
-import { Reservation } from '../../core/models/reservation';
 import { ReservationCard } from './components/ReservationCard';
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -78,7 +76,7 @@ const ExpansionPanel = withStyles({
 
 export const Reservations: React.FC = observer(() => {
   const classes = useStyles();
-  const { bookingStore, reservationStore } = useStores();
+  const { reservationStore } = useStores();
   const history = useHistory();
   const reservations = reservationStore.reservations;
 

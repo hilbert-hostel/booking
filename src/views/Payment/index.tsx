@@ -6,10 +6,6 @@ import {
   Container,
   Typography,
   Box,
-  Card,
-  CardContent,
-  Divider,
-  Button,
 } from '@material-ui/core';
 import { useHistory, useParams } from 'react-router-dom';
 import { useStores } from '../../core/hooks/use-stores';
