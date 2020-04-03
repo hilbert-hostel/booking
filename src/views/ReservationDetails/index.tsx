@@ -15,7 +15,7 @@ import {
   ListItem,
   CardMedia,
 } from '@material-ui/core';
-import { useHistory, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { useStores } from '../../core/hooks/use-stores';
 import { observer } from 'mobx-react-lite';
 import { TitleBar } from '../../core/components/TitleBar';
@@ -73,7 +73,6 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export const ReservationDetails: React.FC = observer(() => {
   const classes = useStyles();
-  const history = useHistory();
   const { id } = useParams();
   const { reservationStore } = useStores();
   const reservation = id

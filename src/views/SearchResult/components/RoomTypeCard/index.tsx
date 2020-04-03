@@ -21,7 +21,6 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { PlusMinusCounter } from '../../../../core/components/PlusMinusCounter';
 import { useStores } from '../../../../core/hooks/use-stores';
 import { observer } from 'mobx-react-lite';
-import { useHistory } from 'react-router-dom';
 import { CustomLink } from '../../../../core/components/CustomLink';
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -60,7 +59,6 @@ export const RoomTypeCard: React.FC<RoomCardProps> = observer(
     const { bookingStore } = useStores();
     const [expanded, setExpanded] = useState(true);
     const classes = useStyles();
-    const history = useHistory();
     return (
       <Card className={classes.root}>
         {/* <CardActionAnrea> */}
