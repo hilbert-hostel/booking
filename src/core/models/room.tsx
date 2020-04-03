@@ -10,6 +10,14 @@ export interface Room {
   facilities: string[];
 }
 
+export interface RoomSearchResults {
+  rooms: RoomTypeResult[];
+  suggestions: {
+    lowestPrice: { totalPrice: number; roomConfig: Room[] }[];
+    lowestNumberOfRooms: { totalPrice: number; roomConfig: Room[] }[];
+  };
+}
+
 export interface RoomTypeResult {
   price: number;
   description: string;

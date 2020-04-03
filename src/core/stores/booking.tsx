@@ -76,7 +76,7 @@ export function createBookingStore(): BookingStore {
           checkOut: moment(this.roomSearchInfo.checkOut).format('YYYY-MM-DD'),
           guests: this.roomSearchInfo.guests,
         });
-        this.setSearchResults(res.data);
+        this.setSearchResults(res.data.rooms);
       }
     },
     getCurrentRoomType(type: string) {

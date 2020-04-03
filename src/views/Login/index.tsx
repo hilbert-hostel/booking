@@ -54,7 +54,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export const Login: React.FC = observer(() => {
   const classes = useStyles();
-  const { authStore, snackbarStore } = useStores();
+  const { authStore, snackbarStore, reservationStore } = useStores();
   const history = useHistory();
   const query = useQuery();
 
@@ -69,6 +69,8 @@ export const Login: React.FC = observer(() => {
         const res = await BackendAPI.login(values);
         authStore.setToken(res.data.token);
         history.push(query.get('returnTo') || '/');
+        authStore.fetchUserData();
+        reservationStore.fetchReservations();
       } catch (error) {
         switch (error.response.status) {
           case 400:

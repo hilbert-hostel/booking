@@ -1,5 +1,11 @@
-import React from 'react';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import {
+  BrowserRouter as Router,
+  Route,
+  Redirect,
+  useHistory,
+  RouteProps,
+} from 'react-router-dom';
 import { Search } from '../views/Search';
 import { Login } from '../views/Login';
 import { makeStyles, Theme, createStyles } from '@material-ui/core';
@@ -17,6 +23,8 @@ import { Payment } from '../views/Payment';
 import { BookingComplete } from '../views/BookingComplete';
 import { Reservations } from '../views/Reservations';
 import { ReservationDetails } from '../views/ReservationDetails';
+import { useStores } from './hooks/use-stores';
+import { observer } from 'mobx-react-lite';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -109,26 +117,23 @@ export const AppRouter: React.FC = () => {
           <Route path="/profile">
             <Profile />
           </Route>
-          <Route path="/qrkey">
+          <MainRoute path="/qrkey">
             <QRKey />
-          </Route>
-          <Route path="/payment/:id">
+          </MainRoute>
+          <MainRoute path="/payment/:id">
             <Payment />
-          </Route>
-          <Route path="/reservation/:id">
+          </MainRoute>
+          <MainRoute path="/reservation/:id">
             <ReservationDetails />
-          </Route>
-          <Route path="/reservation">
+          </MainRoute>
+          <MainRoute path="/reservation">
             <Reservations />
-          </Route>
-          <Route path="/complete/:id">
+          </MainRoute>
+          <MainRoute path="/complete/:id">
             <BookingComplete />
-          </Route>
+          </MainRoute>
           <Route path="/confirm">
             <ConfirmBooking />
-          </Route>
-          <Route path="/notification">
-            <Home />
           </Route>
           <Route path="/search/rooms/:type">
             <RoomDetails />
@@ -154,3 +159,41 @@ export const AppRouter: React.FC = () => {
     </Router>
   );
 };
+
+export const MainRoute = observer<MainRouteProps>(
+  ({ path, children, ...rest }) => {
+    const { authStore, snackbarStore } = useStores();
+    const history = useHistory();
+
+    useEffect(() => {
+      const initStores = async () => {
+        try {
+          if (authStore.isAuthenticated && !authStore.user) {
+            await authStore.init();
+          }
+        } catch (error) {
+          if (error.response) {
+            switch (error.response.status) {
+              case 401:
+                snackbarStore.sendMessage({
+                  message: 'You are not logged In',
+                  type: 'error',
+                });
+                history.push('/login');
+                break;
+            }
+          }
+        }
+      };
+      initStores();
+    }, [authStore, snackbarStore, history]);
+
+    return (
+      <Route path={path} {...rest}>
+        {!authStore.isAuthenticated ? <Redirect to="/login" /> : children}
+      </Route>
+    );
+  }
+);
+
+export type MainRouteProps = RouteProps;
