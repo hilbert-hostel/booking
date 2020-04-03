@@ -20,6 +20,7 @@ import moment from 'moment';
 import { RoomAmountPair } from '../../core/stores/booking';
 import { BackendAPI } from '../../core/repository/api/backend';
 import { pluralize } from '../../core/utils/text-formatting';
+import { CustomLink } from '../../core/components/CustomLink';
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
@@ -113,10 +114,7 @@ export const ConfirmBooking: React.FC = observer(() => {
   };
   return (
     <>
-      <TitleBar
-        title="Confirmation"
-        onBack={() => history.push('/search/result')}
-      />
+      <TitleBar title="Confirmation" backTo="/search/result" />
       <Container maxWidth="md" className={classes.root}>
         <Card className={classes.main}>
           <CardContent>
@@ -223,14 +221,15 @@ export const ConfirmBooking: React.FC = observer(() => {
             <Typography variant="body1" className={classes.text} gutterBottom>
               You're not logged in
             </Typography>
-            <Button
-              variant="contained"
-              color="primary"
-              className={classes.button}
-              onClick={() => history.push('/login?returnTo=/confirm')}
-            >
-              Login
-            </Button>
+            <CustomLink to="/login?returnTo=/confirm">
+              <Button
+                variant="contained"
+                color="primary"
+                className={classes.button}
+              >
+                Login
+              </Button>
+            </CustomLink>
           </Box>
         )}
       </Container>

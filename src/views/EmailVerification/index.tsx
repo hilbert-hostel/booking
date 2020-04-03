@@ -9,6 +9,7 @@ import {
   Button,
 } from '@material-ui/core';
 import { useHistory } from 'react-router-dom';
+import { CustomLink } from '../../core/components/CustomLink';
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
@@ -44,14 +45,15 @@ export const Register: React.FC = observer(() => {
           Please Check Verification Email
         </Typography>
 
-        <Button
-          variant="contained"
-          onClick={() => history.push('/login')}
-          color="primary"
-          className={classes.button}
-        >
-          Login
-        </Button>
+        <CustomLink to="/login">
+          <Button
+            variant="contained"
+            color="primary"
+            className={classes.button}
+          >
+            Login
+          </Button>
+        </CustomLink>
       </Container>
     </>
   );

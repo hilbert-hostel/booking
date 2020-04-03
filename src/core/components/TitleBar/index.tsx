@@ -30,7 +30,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 export const TitleBar: React.FC<TitleBarProps> = observer(
-  ({ onBack, title, backButton = true }) => {
+  ({ onBack, title, backTo, backButton = true }) => {
     const classes = useStyles();
     const history = useHistory();
 
@@ -46,7 +46,14 @@ export const TitleBar: React.FC<TitleBarProps> = observer(
           >
             {backButton && (
               <BackArrow
-                onClick={() => (onBack ? onBack() : history.goBack())}
+                style={{ cursor: 'pointer' }}
+                onClick={() =>
+                  onBack
+                    ? backTo
+                      ? history.push(backTo)
+                      : onBack()
+                    : history.goBack()
+                }
               />
             )}
             <Typography variant="h4" className={classes.text}>
@@ -62,5 +69,6 @@ export const TitleBar: React.FC<TitleBarProps> = observer(
 export interface TitleBarProps {
   title: string;
   backButton?: boolean;
+  backTo?: string;
   onBack?: () => void;
 }

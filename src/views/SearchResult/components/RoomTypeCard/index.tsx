@@ -22,6 +22,7 @@ import { PlusMinusCounter } from '../../../../core/components/PlusMinusCounter';
 import { useStores } from '../../../../core/hooks/use-stores';
 import { observer } from 'mobx-react-lite';
 import { useHistory } from 'react-router-dom';
+import { CustomLink } from '../../../../core/components/CustomLink';
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
@@ -104,12 +105,10 @@ export const RoomTypeCard: React.FC<RoomCardProps> = observer(
         </CardContent>
         {/* </CardActionArea> */}
         <CardActions>
-          <Button
-            size="small"
-            color="primary"
-            onClick={() => history.push('/search/rooms/' + roomType.type)}
-          >
-            View Details
+          <Button size="small" color="primary">
+            <CustomLink to={'/search/rooms/' + roomType.type}>
+              View Details
+            </CustomLink>
           </Button>
           <Button
             onClick={() => setExpanded(e => !e)}

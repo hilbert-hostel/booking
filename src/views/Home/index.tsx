@@ -9,8 +9,8 @@ import {
   Button,
   Box,
 } from '@material-ui/core';
-import { useHistory } from 'react-router-dom';
 import { useStores } from '../../core/hooks/use-stores';
+import { CustomLink } from '../../core/components/CustomLink';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -49,7 +49,6 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export const Home: React.FC = observer(() => {
   const classes = useStyles();
-  const history = useHistory();
   const { authStore } = useStores();
   return (
     <Box
@@ -67,25 +66,27 @@ export const Home: React.FC = observer(() => {
       <Container maxWidth="xs" className={classes.content}>
         <Box flexDirection="column" justifyContent="center" display="flex">
           <Typography variant="h4" gutterBottom className={classes.title}>
-            Welcome to Hilbert Hostel Management System
+            Welcome to Hilbert Hostel
           </Typography>
-          <Button
-            color="primary"
-            variant="contained"
-            onClick={() => history.push('/search')}
-            className={classes.button}
-          >
-            Booking
-          </Button>
-          <Button
-            color="primary"
-            variant="contained"
-            disabled={!authStore.isAuthenticated}
-            onClick={() => history.push('/qrkey')}
-            className={classes.button}
-          >
-            Get QR Code key
-          </Button>
+          <CustomLink to="/search">
+            <Button
+              color="primary"
+              variant="contained"
+              className={classes.button}
+            >
+              Booking
+            </Button>
+          </CustomLink>
+          <CustomLink to="/qrkey">
+            <Button
+              color="primary"
+              variant="contained"
+              disabled={!authStore.isAuthenticated}
+              className={classes.button}
+            >
+              Get QR Code key
+            </Button>
+          </CustomLink>
         </Box>
       </Container>
     </Box>

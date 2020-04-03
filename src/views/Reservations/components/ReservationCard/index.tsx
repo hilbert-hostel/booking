@@ -19,6 +19,7 @@ import { observer } from 'mobx-react-lite';
 import { useHistory } from 'react-router-dom';
 import { Reservation } from '../../../../core/models/reservation';
 import moment from 'moment';
+import { CustomLink } from '../../../../core/components/CustomLink';
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
@@ -139,12 +140,10 @@ export const ReservationCard: React.FC<ReservationCardProps> = observer(
           </CardContent>
           {/* </CardActionArea> */}
           <CardActions>
-            <Button
-              size="small"
-              color="primary"
-              onClick={() => history.push('/reservation/' + reservation.id)}
-            >
-              View Details
+            <Button size="small" color="primary">
+              <CustomLink to={'/reservation/' + reservation.id}>
+                View Details
+              </CustomLink>
             </Button>
           </CardActions>
           {!reservation.isPaid && (

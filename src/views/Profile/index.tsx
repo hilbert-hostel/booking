@@ -26,6 +26,7 @@ import { useHistory } from 'react-router-dom';
 import { orange } from '@material-ui/core/colors';
 import { BackendAPI } from '../../core/repository/api/backend';
 import Alert from '@material-ui/lab/Alert';
+import { CustomLink } from '../../core/components/CustomLink';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -107,26 +108,30 @@ export const Profile: React.FC = observer(() => {
           >
             <Box width="100%" flexGrow="1" height="100%">
               <List className={classes.listItem}>
-                <ListItem disabled onClick={() => history.push('/profile')}>
-                  <ListItemIcon>
-                    <PeopleIcon />
-                  </ListItemIcon>
-                  <ListItemText id="view-reservations" primary="Profile" />
-                </ListItem>
-                <ListItem button onClick={() => history.push('/reservation')}>
-                  <ListItemIcon>
-                    <Badge
-                      badgeContent={reservationStore.unPaid.length}
-                      color="error"
-                    >
-                      <ReservationIcon />
-                    </Badge>
-                  </ListItemIcon>
-                  <ListItemText
-                    id="view-reservations"
-                    primary="View Reservations"
-                  />
-                </ListItem>
+                <CustomLink>
+                  <ListItem disabled>
+                    <ListItemIcon>
+                      <PeopleIcon />
+                    </ListItemIcon>
+                    <ListItemText id="view-reservations" primary="Profile" />
+                  </ListItem>
+                </CustomLink>
+                <CustomLink to="/reservation">
+                  <ListItem button onClick={() => history.push('/reservation')}>
+                    <ListItemIcon>
+                      <Badge
+                        badgeContent={reservationStore.unPaid.length}
+                        color="error"
+                      >
+                        <ReservationIcon />
+                      </Badge>
+                    </ListItemIcon>
+                    <ListItemText
+                      id="view-reservations"
+                      primary="View Reservations"
+                    />
+                  </ListItem>
+                </CustomLink>
                 <ListItem>
                   <ListItemIcon>
                     <DarkModeIcon />

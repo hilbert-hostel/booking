@@ -21,6 +21,7 @@ import { BackendAPI } from '../../core/repository/api/backend';
 import { Reservation } from '../../core/models/reservation';
 import moment from 'moment';
 import { pluralize } from '../../core/utils/text-formatting';
+import { CustomLink } from '../../core/components/CustomLink';
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
@@ -154,14 +155,15 @@ export const BookingComplete: React.FC = observer(() => {
                   </List>
                 </CardContent>
               </Card>
-              <Button
-                className={classes.button}
-                variant="contained"
-                color="primary"
-                onClick={() => history.push('/')}
-              >
-                Home
-              </Button>
+              <CustomLink to="/">
+                <Button
+                  className={classes.button}
+                  variant="contained"
+                  color="primary"
+                >
+                  Home
+                </Button>
+              </CustomLink>
             </>
           )}
         </Box>

@@ -21,6 +21,7 @@ import { observer } from 'mobx-react-lite';
 import { TitleBar } from '../../core/components/TitleBar';
 import moment from 'moment';
 import { pluralize } from '../../core/utils/text-formatting';
+import { CustomLink } from '../../core/components/CustomLink';
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     container: {
@@ -96,10 +97,7 @@ export const ReservationDetails: React.FC = observer(() => {
         minHeight="100%"
         flexDirection="column"
       >
-        <TitleBar
-          title="Reservation Details"
-          onBack={() => history.push('/reservation/')}
-        />
+        <TitleBar title="Reservation Details" backTo="/reservation" />
         <Container maxWidth="md" className={classes.container}>
           {reservation && (
             <>
@@ -178,14 +176,15 @@ export const ReservationDetails: React.FC = observer(() => {
                 {reservation?.rooms.reduce((p, c) => p + c.price * c.beds, 0)}{' '}
                 THB (tax included)
               </Typography>
-              <Button
-                className={classes.button}
-                variant="contained"
-                color="primary"
-                onClick={() => history.push('/payment/' + reservation?.id)}
-              >
-                Go to Payment
-              </Button>
+              <CustomLink to={'/payment/' + reservation?.id}>
+                <Button
+                  className={classes.button}
+                  variant="contained"
+                  color="primary"
+                >
+                  Go to Payment
+                </Button>
+              </CustomLink>
             </Box>
           </Paper>
         )}

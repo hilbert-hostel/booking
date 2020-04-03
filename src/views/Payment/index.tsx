@@ -117,7 +117,7 @@ export const Payment: React.FC = observer(() => {
 
   return (
     <>
-      <TitleBar title="Payment" onBack={() => history.push('/search/result')} />
+      <TitleBar title="Payment" backTo="/search/result" />
       <Container maxWidth="md" className={classes.root}>
         {qr ? (
           <>

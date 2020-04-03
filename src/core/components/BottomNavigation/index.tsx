@@ -45,12 +45,14 @@ export const BottomNav: React.FC<BottomNavProps> = observer(() => {
         }}
         icon={<SearchIcon />}
       />
-      <BottomNavigationAction
-        value="qrkey"
-        onClick={() => history.push('/qrkey')}
-        icon={<VpnKeyIcon />}
-        disabled={!authStore.isAuthenticated}
-      />
+      {authStore.isAuthenticated && (
+        <BottomNavigationAction
+          value="qrkey"
+          onClick={() => history.push('/qrkey')}
+          icon={<VpnKeyIcon />}
+          disabled={!authStore.isAuthenticated}
+        />
+      )}
       {authStore.isAuthenticated ? (
         <BottomNavigationAction
           value="profile"
@@ -67,7 +69,7 @@ export const BottomNav: React.FC<BottomNavProps> = observer(() => {
         />
       ) : (
         <BottomNavigationAction
-          value="/login"
+          value="login"
           onClick={() => history.push('/login')}
           icon={<LoginIcon />}
         />
