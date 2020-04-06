@@ -56,6 +56,9 @@ const useStyles = makeStyles((theme: Theme) =>
       marginBottom: theme.spacing(1),
       color: theme.palette.text.primary,
     },
+    noPadding: {
+      padding: 0,
+    },
   })
 );
 
@@ -141,12 +144,15 @@ export const BookingComplete: React.FC = observer(() => {
                     Special Request : {reservationInfo.specialRequests || '-'}
                   </Typography>
                   <Typography variant="h6">Rooms :</Typography>
-                  <List>
+                  <List className={classes.noPadding}>
                     {reservationInfo.rooms.map(c => {
                       return (
-                        <ListItem key={'room-' + c.id}>
+                        <ListItem
+                          key={'room-' + c.id}
+                          className={classes.noPadding}
+                        >
                           <Typography variant="h6">
-                            {c.type} {c.id} : {c.beds}{' '}
+                            - {c.type} (room no. {c.id}) : {c.beds}{' '}
                             {pluralize('bed', c.beds)}
                           </Typography>
                         </ListItem>

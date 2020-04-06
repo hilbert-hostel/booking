@@ -49,7 +49,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export const Home: React.FC = observer(() => {
   const classes = useStyles();
-  const { authStore } = useStores();
+  const { authStore, reservationStore } = useStores();
   return (
     <Box
       style={{
@@ -81,7 +81,11 @@ export const Home: React.FC = observer(() => {
             <Button
               color="primary"
               variant="contained"
-              disabled={!authStore.isAuthenticated}
+              disabled={
+                !authStore.isAuthenticated &&
+                reservationStore.reservations &&
+                !(reservationStore.reservations?.length > 1)
+              }
               className={classes.button}
             >
               Get QR Code key

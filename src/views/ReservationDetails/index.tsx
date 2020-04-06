@@ -68,6 +68,9 @@ const useStyles = makeStyles((theme: Theme) =>
       backgroundColor: theme.palette.error.main,
       padding: theme.spacing(2),
     },
+    noPadding: {
+      padding: 0,
+    },
   })
 );
 
@@ -145,12 +148,15 @@ export const ReservationDetails: React.FC = observer(() => {
                     Special Request : {reservation.specialRequests || '-'}
                   </Typography>
                   <Typography variant="h6">Rooms :</Typography>
-                  <List>
+                  <List className={classes.noPadding}>
                     {reservation.rooms.map(c => {
                       return (
-                        <ListItem key={'room-' + c.id}>
+                        <ListItem
+                          className={classes.noPadding}
+                          key={'room-' + c.id}
+                        >
                           <Typography variant="h6">
-                            {c.type} {c.id} : {c.beds}{' '}
+                            - {c.type} (room no. {c.id}) : {c.beds}{' '}
                             {pluralize('bed', c.beds)}
                           </Typography>
                         </ListItem>
