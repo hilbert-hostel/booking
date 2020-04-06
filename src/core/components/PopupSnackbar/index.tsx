@@ -27,7 +27,7 @@ export const PopupSnackbar: React.FC = observer(() => {
     <Snackbar
       open={!!alert}
       className={classes.root}
-      autoHideDuration={2000}
+      autoHideDuration={3000}
       onClose={removeAlert}
     >
       {!!alert && (

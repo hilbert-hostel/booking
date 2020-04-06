@@ -46,7 +46,7 @@ const useStyles = makeStyles((theme: Theme) =>
 export const Register: React.FC = observer(() => {
   const classes = useStyles();
   const history = useHistory();
-  const { authStore } = useStores();
+  const { authStore, snackbarStore } = useStores();
   const query = useQuery();
   const form = useFormik<RegistrationModel>({
     validationSchema: registrationSchema,
@@ -64,7 +64,39 @@ export const Register: React.FC = observer(() => {
         const res = await BackendAPI.register(values);
         authStore.setToken(res.data.token);
         history.push(query.get('returnTo') || '/');
-      } catch (error) {}
+        snackbarStore.sendMessage({
+          message: 'Registration Successful',
+          type: 'success',
+        });
+      } catch (error) {
+        if (error.response) {
+          switch (error.response.status) {
+            case 500:
+              snackbarStore.sendMessage({
+                type: 'error',
+                message: 'Something went wrong',
+              });
+              break;
+            case 400:
+              snackbarStore.sendMessage({
+                type: 'error',
+                message: error.response.data.message,
+              });
+              break;
+            default:
+              snackbarStore.sendMessage({
+                type: 'error',
+                message: "Can't connect to server",
+              });
+              break;
+          }
+        } else {
+          snackbarStore.sendMessage({
+            type: 'error',
+            message: "Can't connect to server",
+          });
+        }
+      }
     },
   });
 

@@ -61,7 +61,7 @@ export const Payment: React.FC = observer(() => {
   const classes = useStyles();
   const history = useHistory();
   const { id } = useParams();
-  const { themeStore } = useStores();
+  const { themeStore, snackbarStore } = useStores();
   const [reservationInfo, setReservationInfo] = useState<
     ReservationStatusResponse
   >();
@@ -101,6 +101,10 @@ export const Payment: React.FC = observer(() => {
           const { data } = await BackendAPI.paymentStatus(reservationInfo.id);
           if (data.isPaid) {
             history.push('/complete/' + reservationInfo.id);
+            snackbarStore.sendMessage({
+              message: 'Booking Successful',
+              type: 'success',
+            });
             clearTimeout(timer as any);
           } else {
             timer = newTimer();
@@ -113,7 +117,7 @@ export const Payment: React.FC = observer(() => {
         clearTimeout(timer as any);
       };
     }
-  }, [reservationInfo, history]);
+  }, [reservationInfo, history, snackbarStore]);
 
   return (
     <>

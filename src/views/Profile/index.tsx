@@ -66,7 +66,12 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export const Profile: React.FC = observer(() => {
   const classes = useStyles();
-  const { authStore, themeStore, reservationStore } = useStores();
+  const {
+    authStore,
+    themeStore,
+    reservationStore,
+    snackbarStore,
+  } = useStores();
   const history = useHistory();
   const user = authStore.user;
 
@@ -78,6 +83,7 @@ export const Profile: React.FC = observer(() => {
   const logout = () => {
     authStore.logout();
     history.push('/');
+    snackbarStore.sendMessage({ message: 'Logged out', type: 'info' });
   };
   return (
     <>

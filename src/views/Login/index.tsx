@@ -76,7 +76,7 @@ export const Login: React.FC = observer(() => {
           case 400:
             snackbarStore.sendMessage({
               type: 'error',
-              message: 'Username or password is incorrect',
+              message: error.response.data.message,
             });
             break;
           case 500:
