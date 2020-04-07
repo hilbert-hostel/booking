@@ -82,9 +82,9 @@ export const Home: React.FC = observer(() => {
               color="primary"
               variant="contained"
               disabled={
-                !authStore.isAuthenticated &&
-                reservationStore.reservations &&
-                !(reservationStore.reservations?.length > 1)
+                !authStore.isAuthenticated ||
+                (reservationStore.reservations &&
+                  !(reservationStore.reservations?.length > 1))
               }
               className={classes.button}
             >

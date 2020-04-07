@@ -70,6 +70,7 @@ export const Profile: React.FC = observer(() => {
     authStore,
     themeStore,
     reservationStore,
+    bookingStore,
     snackbarStore,
   } = useStores();
   const history = useHistory();
@@ -82,6 +83,8 @@ export const Profile: React.FC = observer(() => {
 
   const logout = () => {
     authStore.logout();
+    bookingStore.clear();
+    reservationStore.clear();
     history.push('/');
     snackbarStore.sendMessage({ message: 'Logged out', type: 'info' });
   };
