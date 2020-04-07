@@ -15,7 +15,7 @@ import { CustomLink } from '../../core/components/CustomLink';
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
-      height: '100%',
+      minHeight: '100%',
       flexGrow: 1,
       backgroundSize: 'cover',
       backgroundPosition: 'center',
