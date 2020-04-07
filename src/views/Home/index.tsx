@@ -25,12 +25,12 @@ const useStyles = makeStyles((theme: Theme) =>
     filter: {
       backdropFilter: 'blur(2px) brightness(0.7)',
       position: 'absolute',
-      height: '100%',
+      minHeight: '100%',
       width: '100%',
       backgroundColor: ' rgba(255,255,255,0.4)',
     },
     box: {
-      height: '100%',
+      minHeight: '100%',
     },
     content: {
       position: 'relative',
