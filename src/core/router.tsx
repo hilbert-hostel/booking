@@ -53,6 +53,10 @@ const useStyles = makeStyles((theme: Theme) =>
         left: 0,
         overflowX: 'hidden',
         paddingBottom: '56px',
+        '@supports (-webkit-appearance:none)': {
+          minHeight: 'calc(100vh - 56px);',
+          paddingBottom: '0',
+        },
       },
     },
   })
