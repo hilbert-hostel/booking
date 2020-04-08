@@ -55,7 +55,7 @@ const useStyles = makeStyles((theme: Theme) =>
         paddingBottom: '56px',
         '@supports (-webkit-appearance:none)': {
           minHeight: 'calc(100vh - 56px);',
-          paddingBottom: '0',
+          paddingBottom: '56px',
         },
       },
     },

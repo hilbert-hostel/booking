@@ -59,7 +59,7 @@ export const BottomNav: React.FC<BottomNavProps> = observer(() => {
           onClick={() => history.push('/profile')}
           icon={
             <Badge
-              badgeContent={reservationStore.unPaid ? 1 : 0}
+              badgeContent={reservationStore.unPaid.length > 1 ? 1 : 0}
               color="error"
               variant="dot"
             >
