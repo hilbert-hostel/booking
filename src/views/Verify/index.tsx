@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 import { observer } from 'mobx-react-lite';
 import {
   createStyles,
@@ -10,7 +10,6 @@ import {
 } from '@material-ui/core';
 import { useHistory, useLocation } from 'react-router-dom';
 import { CustomLink } from '../../core/components/CustomLink';
-import { useQuery } from '../../core/hooks/use-query';
 import { BackendAPI } from '../../core/repository/api/backend';
 import { useStores } from '../../core/hooks/use-stores';
 const useStyles = makeStyles((theme: Theme) =>
@@ -41,7 +40,7 @@ export const Verify: React.FC = observer(() => {
   const classes = useStyles();
   const history = useHistory();
   const { snackbarStore } = useStores();
-  const [verifying, setVerifying] = useState<boolean>(true);
+  const [verifying] = useState<boolean>(true);
   const location = useLocation();
 
   useEffect(() => {
