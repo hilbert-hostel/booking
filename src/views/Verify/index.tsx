@@ -71,6 +71,7 @@ export const Verify: React.FC = observer(() => {
       });
       history.push('/login');
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
