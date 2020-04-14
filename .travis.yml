@@ -8,14 +8,14 @@ services:
         - docker
 
 script:
-  - docker build -t $DOCKER_REPO .
+  - docker build -t frontend-hilbert .
 
 deploy:
         provider: s3
         region: ap-southeast-1
         bucket: frontend-hilbert
         skip_cleanup: true
+        on:
+                branch: master
         access_key_id: $AWS_ACCESS_KEY
-        # AKIA45LCJ3KHNWQW7JRX
         secret_access_key: $AWS_SECRET_KEY 
-        # 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
