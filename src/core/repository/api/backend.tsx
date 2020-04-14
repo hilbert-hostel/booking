@@ -9,6 +9,7 @@ import {
   ReservationStatusResponse,
   ReservationPaymentStatusResponse,
 } from '../../models/reservation';
+import { User } from '../../models/user';
 
 export let client: AxiosClient;
 
@@ -34,6 +35,10 @@ export class BackendAPI {
 
   static searchRooms(data: RoomSearchPayload) {
     return client.get<RoomSearchResults>('/reservation', { params: data });
+  }
+
+  static verifyUser(data: { userID: string; token: string }) {
+    return client.post<User>('/auth/verify', data);
   }
 
   static reservations() {

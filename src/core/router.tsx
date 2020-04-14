@@ -25,6 +25,7 @@ import { Reservations } from '../views/Reservations';
 import { ReservationDetails } from '../views/ReservationDetails';
 import { useStores } from './hooks/use-stores';
 import { observer } from 'mobx-react-lite';
+import { Verify } from '../views/Verify';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -141,6 +142,9 @@ export const AppRouter: React.FC = () => {
           </Route>
           <Route path="/search/rooms/:type">
             <RoomDetails />
+          </Route>
+          <Route path="/verify">
+            <Verify />
           </Route>
           <Route path="/search/result">
             <SearchResult />

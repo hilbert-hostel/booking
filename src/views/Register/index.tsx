@@ -65,7 +65,8 @@ export const Register: React.FC = observer(() => {
         authStore.setToken(res.data.token);
         history.push(query.get('returnTo') || '/');
         snackbarStore.sendMessage({
-          message: 'Registration Successful',
+          message:
+            'Registration Successful, Please check your e-mail for account verification',
           type: 'success',
         });
       } catch (error) {
