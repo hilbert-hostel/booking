@@ -1,0 +1,19 @@
+language: node_js
+node_js:
+        - "node"
+
+cache: yarn
+
+script:
+  - yarn build
+
+deploy:
+        provider: s3
+        region: ap-southeast-1
+        bucket: frontend-hilbert
+        skip_cleanup: true
+        on:
+                branch: master
+        access_key_id: $AWS_ACCESS_KEY_ID
+        secret_access_key: $AWS_SECRET_ACCESS_KEY
+        local_dir: build
