@@ -14,6 +14,7 @@ import { TitleBar } from '../../core/components/TitleBar';
 import { BackendAPI } from '../../core/repository/api/backend';
 import qrcode from 'qrcode';
 import { ReservationStatusResponse } from '../../core/models/reservation';
+import moment from 'moment';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -66,12 +67,19 @@ export const Payment: React.FC = observer(() => {
     ReservationStatusResponse
   >();
   const [qr, setQR] = useState<string>();
+  const days =
+    reservationInfo?.checkIn && reservationInfo?.checkOut
+      ? moment(reservationInfo?.checkOut).diff(
+          moment(reservationInfo?.checkIn),
+          'days'
+        )
+      : 1;
+
   useEffect(() => {
     if (id) {
       try {
         BackendAPI.reservationStatus(id).then(async res => {
           setReservationInfo(res.data);
-          console.log(res.data);
           setQR(
             await qrcode.toDataURL('paymeplease', {
               errorCorrectionLevel: 'H',
@@ -142,7 +150,13 @@ export const Payment: React.FC = observer(() => {
               Scan QR code to pay
             </Typography>
             <Typography variant="h4" className={classes.priceText}>
-              {reservationInfo?.rooms.reduce((p, r) => p + r.price * r.beds, 0)}{' '}
+              {(reservationInfo &&
+                days *
+                  reservationInfo?.rooms.reduce(
+                    (p, c) => p + c.price * c.beds,
+                    0
+                  )) ??
+                0}{' '}
               <small>THB (tax included)</small>
             </Typography>
           </>

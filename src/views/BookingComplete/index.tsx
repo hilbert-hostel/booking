@@ -22,6 +22,8 @@ import { Reservation } from '../../core/models/reservation';
 import moment from 'moment';
 import { pluralize } from '../../core/utils/text-formatting';
 import { CustomLink } from '../../core/components/CustomLink';
+import { useStores } from '../../core/hooks/use-stores';
+import { handleServerError } from '../../core/utils/handleServerError';
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
@@ -66,6 +68,7 @@ export const BookingComplete: React.FC = observer(() => {
   const classes = useStyles();
   const history = useHistory();
   const { id } = useParams();
+  const { snackbarStore } = useStores();
   const [reservationInfo, setReservationInfo] = useState<Reservation>();
 
   useEffect(() => {
@@ -78,9 +81,11 @@ export const BookingComplete: React.FC = observer(() => {
             checkOut: new Date(res.data.checkOut),
           });
         });
-      } catch (error) {}
+      } catch (error) {
+        handleServerError(error, snackbarStore);
+      }
     }
-  }, [id]);
+  }, [id, snackbarStore]);
   useEffect(() => {
     if (reservationInfo) {
       BackendAPI.paymentStatus(reservationInfo.id).then(res => {

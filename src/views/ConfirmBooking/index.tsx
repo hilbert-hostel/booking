@@ -21,6 +21,7 @@ import { RoomAmountPair } from '../../core/stores/booking';
 import { BackendAPI } from '../../core/repository/api/backend';
 import { pluralize } from '../../core/utils/text-formatting';
 import { CustomLink } from '../../core/components/CustomLink';
+import { handleServerError } from '../../core/utils/handleServerError';
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
@@ -111,33 +112,7 @@ export const ConfirmBooking: React.FC = observer(() => {
       bookingStore.clear();
       history.push('/payment/' + res.data.id);
     } catch (error) {
-      if (error.response) {
-        switch (error.response.status) {
-          case 500:
-            snackbarStore.sendMessage({
-              type: 'error',
-              message: 'Something went wrong',
-            });
-            break;
-          case 400:
-            snackbarStore.sendMessage({
-              type: 'error',
-              message: error.response.data.message,
-            });
-            break;
-          default:
-            snackbarStore.sendMessage({
-              type: 'error',
-              message: "Can't connect to server",
-            });
-            break;
-        }
-      } else {
-        snackbarStore.sendMessage({
-          type: 'error',
-          message: "Can't connect to server",
-        });
-      }
+      handleServerError(error, snackbarStore);
     }
   };
   return (

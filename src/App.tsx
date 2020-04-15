@@ -7,9 +7,15 @@ import { observer } from 'mobx-react-lite';
 import MomentUtils from '@date-io/moment';
 import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 import { useLocalStorage } from './core/hooks/use-localStorage';
+import { handleServerError } from './core/utils/handleServerError';
 
 export const App: React.FC<AppProps> = observer(() => {
-  const { themeStore, authStore, reservationStore } = useStores();
+  const {
+    themeStore,
+    authStore,
+    reservationStore,
+    snackbarStore,
+  } = useStores();
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
   const [localDarkMode] = useLocalStorage<boolean>('dark', prefersDarkMode);
 
@@ -19,16 +25,18 @@ export const App: React.FC<AppProps> = observer(() => {
         await authStore.init();
         await reservationStore.fetchReservations();
       } catch (error) {
-        if (error.response) {
-          switch (error.response.status) {
-            case 401:
-              break;
-          }
-        }
+        handleServerError(error, snackbarStore, {
+          401: {
+            message: {
+              message: 'You are not logged In',
+              type: 'error',
+            },
+          },
+        });
       }
     };
     initStores();
-  }, [authStore, reservationStore]);
+  }, [authStore, reservationStore, snackbarStore]);
 
   useEffect(() => {
     const isDark = localDarkMode !== null ? localDarkMode : prefersDarkMode;

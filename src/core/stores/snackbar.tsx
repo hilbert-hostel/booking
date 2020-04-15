@@ -15,5 +15,13 @@ export function createSnackbarStore() {
     },
   };
 }
+export const noConnection: SnackbarMessage = {
+  message: 'Cannot conect to the server',
+  type: 'error',
+};
+export const somethingWentWrong: SnackbarMessage = {
+  message: 'Something went wrong',
+  type: 'error',
+};
 
 export type SnackbarStore = ReturnType<typeof createSnackbarStore>;

@@ -26,6 +26,7 @@ import { ReservationDetails } from '../views/ReservationDetails';
 import { useStores } from './hooks/use-stores';
 import { observer } from 'mobx-react-lite';
 import { Verify } from '../views/Verify';
+import { handleServerError } from './utils/handleServerError';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -180,17 +181,15 @@ export const MainRoute = observer<MainRouteProps>(
             await authStore.init();
           }
         } catch (error) {
-          if (error.response) {
-            switch (error.response.status) {
-              case 401:
-                snackbarStore.sendMessage({
-                  message: 'You are not logged In',
-                  type: 'error',
-                });
-                history.push('/login');
-                break;
-            }
-          }
+          handleServerError(error, snackbarStore, {
+            401: {
+              message: {
+                message: 'You are not logged In',
+                type: 'error',
+              },
+              callback: () => history.push('/login'),
+            },
+          });
         }
       };
       initStores();

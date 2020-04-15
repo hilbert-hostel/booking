@@ -35,6 +35,7 @@ export function createAuthStore() {
               this.logout();
           }
         }
+        throw error;
       }
     },
     get isAuthenticated() {
