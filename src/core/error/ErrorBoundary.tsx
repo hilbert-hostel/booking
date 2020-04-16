@@ -15,13 +15,14 @@ export class ErrorBoundary extends React.Component<{}> {
     if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
       // console.log('error', error.name, error.stack);
     } else {
-      toElasticSearch({
-        from: 'booking',
-        error: error.name,
-        stack: error.stack,
-      }).then(() => {
-        console.log('logged');
-      });
+      process.env.REACT_APP_ELASTIC_SEARCH_URL &&
+        toElasticSearch({
+          from: 'booking',
+          error: error.name,
+          stack: error.stack,
+        }).then(() => {
+          console.log('logged');
+        });
     }
   }
 

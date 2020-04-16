@@ -1,6 +1,8 @@
 import Axios from 'axios';
-import config from './elasticsearch.config';
 
 export const toElasticSearch = (data: any) => {
-  return Axios.post(config.url, data);
+  return Axios.post(
+    process.env.REACT_APP_ELASTIC_SEARCH_URL + 'hilbert/_doc' || ' ',
+    data
+  );
 };
