@@ -114,10 +114,7 @@ export const QRKey: React.FC = observer(() => {
             <Button
               color="primary"
               variant="contained"
-              onClick={() => {
-                door(false);
-                throw new Error('Bye');
-              }}
+              onClick={() => door(false)}
             >
               Unlock
             </Button>
