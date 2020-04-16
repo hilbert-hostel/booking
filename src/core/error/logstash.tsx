@@ -1,15 +1,6 @@
-import * as Logstash from 'logstash-client';
+import Axios from 'axios';
+import config from './elasticsearch.config';
 
-const config = {
-  type: 'tcp',
-  host: '1.1.1.1',
-  port: 5000,
+export const toElasticSearch = (data: any) => {
+  return Axios.post(config.url, data);
 };
-const createLogstash = () => {
-  try {
-    return new Logstash(config);
-  } catch (error) {
-    return null;
-  }
-};
-export const logstash = createLogstash();

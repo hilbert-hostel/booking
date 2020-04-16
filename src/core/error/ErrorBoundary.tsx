@@ -1,5 +1,5 @@
 import React from 'react';
-import { logstash } from './logstash';
+import { toElasticSearch } from './logstash';
 
 export class ErrorBoundary extends React.Component<{}> {
   //   constructor(props) {
@@ -13,12 +13,14 @@ export class ErrorBoundary extends React.Component<{}> {
 
   componentDidCatch(error: any, errorInfo: any) {
     if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
-      console.log('error', error.name, error.stack);
+      // console.log('error', error.name, error.stack);
     } else {
-      logstash.send({
-        '@timestamp': new Date(),
-        level: 'error',
-        message: `main | booking | ${error.name} | ${error.stack}`,
+      toElasticSearch({
+        from: 'booking',
+        error: error.name,
+        stack: error.stack,
+      }).then(() => {
+        console.log('logged');
       });
     }
   }
