@@ -58,6 +58,8 @@ export const QRKey: React.FC = observer(() => {
   const classes = useStyles();
   const history = useHistory();
 
+  throw new Error('Bye2');
+
   useEffect(() => {
     BackendAPI.rooms().then(console.log);
   }, []);
