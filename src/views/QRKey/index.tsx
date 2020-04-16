@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { observer } from 'mobx-react-lite';
 import {
   createStyles,
@@ -58,6 +58,9 @@ export const QRKey: React.FC = observer(() => {
   const classes = useStyles();
   const history = useHistory();
 
+  useEffect(() => {
+    BackendAPI.rooms().then(console.log);
+  }, []);
   const door = async (isLocked: boolean) => {
     if (isLocked) {
       await BackendAPI.openDoor();

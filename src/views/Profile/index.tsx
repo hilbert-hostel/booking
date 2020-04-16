@@ -117,7 +117,7 @@ export const Profile: React.FC = observer(() => {
           >
             <Box width="100%" flexGrow="1" height="100%">
               <List className={classes.listItem}>
-                <CustomLink>
+                <CustomLink to="/profile">
                   <ListItem disabled>
                     <ListItemIcon>
                       <PeopleIcon />

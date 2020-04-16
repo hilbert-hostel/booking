@@ -27,7 +27,10 @@ export function createAuthStore() {
     },
     async init() {
       try {
-        await this.fetchUserData();
+        const user = await this.fetchUserData();
+        if (!user.id) {
+          throw new Error('No User Info');
+        }
       } catch (error) {
         if (error.response) {
           switch (error.response.status) {

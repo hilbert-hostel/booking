@@ -187,7 +187,10 @@ export const MainRoute = observer<MainRouteProps>(
                 message: 'You are not logged In',
                 type: 'error',
               },
-              callback: () => history.push('/login'),
+              callback: () => {
+                authStore.logout();
+                history.push('/login');
+              },
             },
           });
         }

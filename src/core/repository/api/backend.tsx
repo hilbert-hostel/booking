@@ -59,6 +59,10 @@ export class BackendAPI {
     );
   }
 
+  static rooms() {
+    return client.get('/rooms');
+  }
+
   static openDoor() {
     return client.post('/door/lock', {});
   }

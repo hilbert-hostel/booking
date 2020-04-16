@@ -11,13 +11,10 @@ export const handleServerError = (
   snackbarStore: SnackbarStore,
   custom: {
     [key: number]: { message?: SnackbarMessage; callback?: () => void };
-  } = {}
+  } = { 500: { message: somethingWentWrong } }
 ) => {
   if (error.response) {
     switch (error.response.status) {
-      case 500:
-        snackbarStore.sendMessage(somethingWentWrong);
-        break;
       case 400:
         snackbarStore.sendMessage({
           type: 'error',

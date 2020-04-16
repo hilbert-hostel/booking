@@ -7,36 +7,12 @@ import { observer } from 'mobx-react-lite';
 import MomentUtils from '@date-io/moment';
 import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 import { useLocalStorage } from './core/hooks/use-localStorage';
-import { handleServerError } from './core/utils/handleServerError';
+import { ErrorBoundary } from './core/error/ErrorBoundary';
 
 export const App: React.FC<AppProps> = observer(() => {
-  const {
-    themeStore,
-    authStore,
-    reservationStore,
-    snackbarStore,
-  } = useStores();
+  const { themeStore } = useStores();
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
   const [localDarkMode] = useLocalStorage<boolean>('dark', prefersDarkMode);
-
-  useEffect(() => {
-    const initStores = async () => {
-      try {
-        await authStore.init();
-        await reservationStore.fetchReservations();
-      } catch (error) {
-        handleServerError(error, snackbarStore, {
-          401: {
-            message: {
-              message: 'You are not logged In',
-              type: 'error',
-            },
-          },
-        });
-      }
-    };
-    initStores();
-  }, [authStore, reservationStore, snackbarStore]);
 
   useEffect(() => {
     const isDark = localDarkMode !== null ? localDarkMode : prefersDarkMode;
@@ -46,7 +22,9 @@ export const App: React.FC<AppProps> = observer(() => {
   return (
     <MuiPickersUtilsProvider utils={MomentUtils}>
       <ThemeProvider theme={themeStore.theme}>
-        <AppRouter />
+        <ErrorBoundary>
+          <AppRouter />
+        </ErrorBoundary>
       </ThemeProvider>
     </MuiPickersUtilsProvider>
   );
