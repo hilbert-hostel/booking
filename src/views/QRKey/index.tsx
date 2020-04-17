@@ -233,7 +233,12 @@ export const QRKey: React.FC = observer(() => {
                     );
                   })
                 ) : (
-                  <Box>
+                  <Box
+                    flexDirection="column"
+                    justifyContent="center"
+                    display="flex"
+                    alignItems="center"
+                  >
                     <CircularProgress />
                   </Box>
                 )}
