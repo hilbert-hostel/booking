@@ -17,7 +17,6 @@ import {
   IconButton,
   Paper,
 } from '@material-ui/core';
-import FilterIcon from '@material-ui/icons/FilterList';
 import SortIcon from '@material-ui/icons/Sort';
 import { useHistory } from 'react-router-dom';
 import { RoomTypeCard } from './components/RoomTypeCard';
