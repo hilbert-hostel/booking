@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { observer } from 'mobx-react-lite';
 import {
   createStyles,
@@ -8,10 +8,15 @@ import {
   Typography,
   Button,
   Box,
+  CircularProgress,
 } from '@material-ui/core';
 import { useHistory } from 'react-router-dom';
-import qr from '../../assets/qr.png';
 import { BackendAPI } from '../../core/repository/api/backend';
+import { Room } from '../../core/models/room';
+import qrcode from 'qrcode';
+import { useStores } from '../../core/hooks/use-stores';
+import { handleServerError } from '../../core/utils/handleServerError';
+import { CustomLink } from '../../core/components/CustomLink';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -37,7 +42,7 @@ const useStyles = makeStyles((theme: Theme) =>
       zIndex: 4,
     },
     title: {
-      marginBottom: theme.spacing(6),
+      marginBottom: theme.spacing(3),
       textAlign: 'center',
     },
     button: {
@@ -57,19 +62,69 @@ const useStyles = makeStyles((theme: Theme) =>
 export const QRKey: React.FC = observer(() => {
   const classes = useStyles();
   const history = useHistory();
+  const { themeStore, snackbarStore } = useStores();
+  const [room, setRoom] = useState<number>();
+  const [rooms, setRooms] = useState<number[]>();
+  const [error, setError] = useState<string>();
+  const [qr, setQR] = useState<string>();
 
   useEffect(() => {
-    BackendAPI.rooms().then(console.log);
+    BackendAPI.rooms()
+      .then(({ data }) => {
+        setRooms(data.rooms);
+      })
+      .catch(error => {
+        handleServerError(error, snackbarStore, {
+          400: {
+            callback: () =>
+              setError(
+                "You haven't checked in yet, please check in at the kiosk at the hostel"
+              ),
+          },
+        });
+      });
   }, []);
-  const door = async (isLocked: boolean) => {
-    if (isLocked) {
-      await BackendAPI.openDoor();
-    } else {
-      await BackendAPI.closeDoor();
+
+  useEffect(() => {
+    if (room) {
+      BackendAPI.generateQR(room).then(async res => {
+        setQR(
+          await qrcode.toDataURL(res.data.code, {
+            errorCorrectionLevel: 'M',
+            color: themeStore.dark
+              ? {
+                  dark: '#FFF', // Blue dots
+                  light: '#0000', // Transparent background
+                }
+              : {
+                  dark: '#000', // Blue dots
+                  light: '#0000', // Transparent background
+                },
+          })
+        );
+      });
     }
-  };
-  const makeSound = async () => {
-    await BackendAPI.sound();
+  }, [room, themeStore]);
+
+  const getQRCode = () => {
+    if (room) {
+      BackendAPI.generateQR(room).then(async res => {
+        setQR(
+          await qrcode.toDataURL(res.data.code, {
+            errorCorrectionLevel: 'M',
+            color: themeStore.dark
+              ? {
+                  dark: '#FFF', // Blue dots
+                  light: '#0000', // Transparent background
+                }
+              : {
+                  dark: '#000', // Blue dots
+                  light: '#0000', // Transparent background
+                },
+          })
+        );
+      });
+    }
   };
 
   return (
@@ -83,50 +138,109 @@ export const QRKey: React.FC = observer(() => {
         <></>
       </Container>
       <Container maxWidth="xs" className={classes.content}>
-        <Box flexDirection="column" justifyContent="center" display="flex">
-          <Typography variant="h4" gutterBottom className={classes.title}>
-            Your QR Code Key
-          </Typography>
-          <div>
-            <img src={qr} className={classes.image} alt="qrcode" />
-          </div>
-          <Button
-            color="primary"
-            variant="contained"
-            disabled
-            onClick={() => history.push('/search')}
-            className={classes.button}
-          >
-            Generate Again
-          </Button>
-          <Box
-            flexDirection="row"
-            justifyContent="space-between"
-            display="flex"
-          >
+        {room ? (
+          <Box flexDirection="column" justifyContent="center" display="flex">
+            <Typography variant="h4" gutterBottom align="center">
+              Your QR code key
+            </Typography>
+            <Typography variant="h5" gutterBottom align="center">
+              Room {room}
+            </Typography>
+            <div>
+              {qr ? (
+                <img src={qr} className={classes.image} alt="qrcode" />
+              ) : (
+                <CircularProgress className={classes.image} />
+              )}
+            </div>
             <Button
               color="primary"
               variant="contained"
-              onClick={() => door(true)}
+              onClick={() => {
+                setQR(undefined);
+                getQRCode();
+              }}
+              className={classes.button}
             >
-              Lock
+              Generate Again
             </Button>
-            <Button
-              color="primary"
-              variant="contained"
-              onClick={() => door(false)}
+            <Box
+              flexDirection="row"
+              justifyContent="space-between"
+              alignItems="flex-end"
+              display="flex"
             >
-              Unlock
-            </Button>
-            <Button
-              color="primary"
-              variant="contained"
-              onClick={() => makeSound()}
-            >
-              Make Sound
-            </Button>
+              <Button
+                color="primary"
+                variant="contained"
+                onClick={() => {
+                  setRoom(undefined);
+                  setQR(undefined);
+                }}
+              >
+                Back
+              </Button>
+            </Box>
           </Box>
-        </Box>
+        ) : (
+          <Box
+            flexDirection="column"
+            justifyContent="center"
+            display="flex"
+            alignItems="stretch"
+          >
+            {error ? (
+              <>
+                <Typography
+                  variant="h4"
+                  gutterBottom
+                  align="center"
+                  className={classes.title}
+                >
+                  {error}
+                </Typography>
+                <CustomLink to="/">
+                  <Button
+                    color="primary"
+                    variant="contained"
+                    className={classes.button}
+                  >
+                    Home
+                  </Button>
+                </CustomLink>
+              </>
+            ) : (
+              <>
+                <Typography
+                  variant="h4"
+                  gutterBottom
+                  align="center"
+                  className={classes.title}
+                >
+                  Please Select Room
+                </Typography>
+                {rooms ? (
+                  rooms?.map(e => {
+                    return (
+                      <Button
+                        color="primary"
+                        variant="contained"
+                        onClick={() => setRoom(e)}
+                        className={classes.button}
+                      >
+                        Room {e}
+                      </Button>
+                    );
+                  })
+                ) : (
+                  <Box>
+                    <CircularProgress />
+                  </Box>
+                )}
+              </>
+            )}
+          </Box>
+        )}
       </Container>
     </Box>
   );

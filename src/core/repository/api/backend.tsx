@@ -60,11 +60,13 @@ export class BackendAPI {
   }
 
   static rooms() {
-    return client.get('/rooms');
+    return client.get<{ rooms: number[] }>('/door/room');
   }
 
-  static openDoor() {
-    return client.post('/door/lock', {});
+  static generateQR(roomid: number) {
+    return client.get<{ code: string }>('/door/generate', {
+      params: { roomID: roomid },
+    });
   }
   static closeDoor() {
     return client.post('/door/unlock', {});

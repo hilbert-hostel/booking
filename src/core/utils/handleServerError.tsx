@@ -5,6 +5,7 @@ import {
   SnackbarMessage,
 } from '../stores/snackbar';
 import { AxiosError } from 'axios';
+import { isBuffer } from 'util';
 
 export const handleServerError = (
   error: AxiosError,
@@ -16,10 +17,14 @@ export const handleServerError = (
   if (error.response) {
     switch (error.response.status) {
       case 400:
-        snackbarStore.sendMessage({
-          type: 'error',
-          message: error.response.data.message,
-        });
+        if (custom[400]) {
+          if (custom[400].callback) custom[400].callback();
+        } else {
+          snackbarStore.sendMessage({
+            type: 'error',
+            message: error.response.data.message,
+          });
+        }
         break;
       default:
         if (error.response.status in custom) {
