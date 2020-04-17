@@ -43,6 +43,10 @@ const useStyles = makeStyles((theme: Theme) =>
     title: {
       marginBottom: theme.spacing(3),
       textAlign: 'center',
+      color: theme.palette.text.primary,
+    },
+    text: {
+      color: theme.palette.text.primary,
     },
     button: {
       marginBottom: theme.spacing(2),
@@ -91,12 +95,12 @@ export const QRKey: React.FC = observer(() => {
             errorCorrectionLevel: 'M',
             color: themeStore.dark
               ? {
-                  dark: '#FFF', // Blue dots
-                  light: '#0000', // Transparent background
+                  dark: '#FFF',
+                  light: '#0000',
                 }
               : {
-                  dark: '#000', // Blue dots
-                  light: '#0000', // Transparent background
+                  dark: '#000',
+                  light: '#0000',
                 },
           })
         );
@@ -112,12 +116,12 @@ export const QRKey: React.FC = observer(() => {
             errorCorrectionLevel: 'M',
             color: themeStore.dark
               ? {
-                  dark: '#FFF', // Blue dots
-                  light: '#0000', // Transparent background
+                  dark: '#FFF',
+                  light: '#0000',
                 }
               : {
-                  dark: '#000', // Blue dots
-                  light: '#0000', // Transparent background
+                  dark: '#000',
+                  light: '#0000',
                 },
           })
         );
@@ -138,10 +142,20 @@ export const QRKey: React.FC = observer(() => {
       <Container maxWidth="xs" className={classes.content}>
         {room ? (
           <Box flexDirection="column" justifyContent="center" display="flex">
-            <Typography variant="h4" gutterBottom align="center">
+            <Typography
+              variant="h4"
+              gutterBottom
+              align="center"
+              className={classes.text}
+            >
               Your QR code key
             </Typography>
-            <Typography variant="h5" gutterBottom align="center">
+            <Typography
+              variant="h5"
+              gutterBottom
+              align="center"
+              className={classes.text}
+            >
               Room {room.id}
             </Typography>
             <div>
