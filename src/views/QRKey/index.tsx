@@ -15,6 +15,7 @@ import qrcode from 'qrcode';
 import { useStores } from '../../core/hooks/use-stores';
 import { handleServerError } from '../../core/utils/handleServerError';
 import { CustomLink } from '../../core/components/CustomLink';
+import { Room } from '../../core/models/room';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -60,8 +61,8 @@ const useStyles = makeStyles((theme: Theme) =>
 export const QRKey: React.FC = observer(() => {
   const classes = useStyles();
   const { themeStore, snackbarStore } = useStores();
-  const [room, setRoom] = useState<number>();
-  const [rooms, setRooms] = useState<number[]>();
+  const [room, setRoom] = useState<Room>();
+  const [rooms, setRooms] = useState<Room[]>();
   const [error, setError] = useState<string>();
   const [qr, setQR] = useState<string>();
 
@@ -84,7 +85,7 @@ export const QRKey: React.FC = observer(() => {
 
   useEffect(() => {
     if (room) {
-      BackendAPI.generateQR(room).then(async res => {
+      BackendAPI.generateQR(room.id).then(async res => {
         setQR(
           await qrcode.toDataURL(res.data.code, {
             errorCorrectionLevel: 'M',
@@ -105,7 +106,7 @@ export const QRKey: React.FC = observer(() => {
 
   const getQRCode = () => {
     if (room) {
-      BackendAPI.generateQR(room).then(async res => {
+      BackendAPI.generateQR(room.id).then(async res => {
         setQR(
           await qrcode.toDataURL(res.data.code, {
             errorCorrectionLevel: 'M',
@@ -141,7 +142,7 @@ export const QRKey: React.FC = observer(() => {
               Your QR code key
             </Typography>
             <Typography variant="h5" gutterBottom align="center">
-              Room {room}
+              Room {room.id}
             </Typography>
             <div>
               {qr ? (
@@ -225,7 +226,7 @@ export const QRKey: React.FC = observer(() => {
                         onClick={() => setRoom(e)}
                         className={classes.button}
                       >
-                        Room {e}
+                        Room {e.id}
                       </Button>
                     );
                   })

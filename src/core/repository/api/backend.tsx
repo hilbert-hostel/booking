@@ -2,7 +2,7 @@ import { AxiosClient } from './axios';
 import { RegistrationModel } from '../../models/registration';
 import { AuthPayload, LoginModel } from '../../models/auth';
 import { RoomSearchPayload } from '../../models/search';
-import { RoomSearchResults } from '../../models/room';
+import { RoomSearchResults, Room } from '../../models/room';
 import {
   ReservationPayload,
   ReservationResponse,
@@ -60,7 +60,7 @@ export class BackendAPI {
   }
 
   static rooms() {
-    return client.get<{ rooms: number[] }>('/door/room');
+    return client.get<{ rooms: Room[] }>('/door/room');
   }
 
   static generateQR(roomid: number) {
