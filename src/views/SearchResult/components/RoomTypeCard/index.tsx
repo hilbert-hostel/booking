@@ -94,10 +94,12 @@ export const RoomTypeCard: React.FC<RoomCardProps> = observer(
               fontSize={24}
               width="fit-content"
               whiteSpace="nowrap"
-              padding={1}
               alignSelf="flex-end"
             >
               {roomType.price} THB
+              <Typography variant="body2">
+                <small>per bed per night</small>
+              </Typography>
             </Box>
           </Box>
         </CardContent>

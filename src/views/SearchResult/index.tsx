@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { observer } from 'mobx-react-lite';
 // import { useStores } from '../../core/hooks/use-stores';
 import {
@@ -12,6 +12,10 @@ import {
   Box,
   Button,
   withStyles,
+  Menu,
+  MenuItem,
+  IconButton,
+  Paper,
 } from '@material-ui/core';
 import FilterIcon from '@material-ui/icons/FilterList';
 import SortIcon from '@material-ui/icons/Sort';
@@ -23,6 +27,8 @@ import MuiExpansionPanel from '@material-ui/core/ExpansionPanel';
 import { useStores } from '../../core/hooks/use-stores';
 import { SearchInfo } from './components/SearchInfo';
 import { reaction } from 'mobx';
+import { pluralize } from '../../core/utils/text-formatting';
+import { handleServerError } from '../../core/utils/handleServerError';
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
@@ -56,6 +62,15 @@ const useStyles = makeStyles((theme: Theme) =>
       borderTopLeftRadius: '0 !important',
       borderTopRightRadius: '0 !important',
     },
+    ascendingButton: {
+      padding: theme.spacing(1),
+    },
+    divider: {
+      margin: theme.spacing(2),
+    },
+    danger: {
+      color: theme.palette.error.main,
+    },
   })
 );
 
@@ -79,12 +94,20 @@ const ExpansionPanel = withStyles({
 
 export const SearchResult: React.FC = observer(() => {
   const classes = useStyles();
-  const { bookingStore } = useStores();
+  const { bookingStore, snackbarStore } = useStores();
   const history = useHistory();
-  const searchResults = bookingStore.searchResults;
+  const { searchResults, suggestions } = bookingStore;
+  const [anchorEl, setAnchorEl] = useState<HTMLElement>();
+  const [sort, setSort] = useState<{ by?: string; descending: boolean }>({
+    descending: false,
+  });
 
   useEffect(() => {
-    bookingStore.fetchSearchResults();
+    try {
+      bookingStore.fetchSearchResults();
+    } catch (error) {
+      handleServerError(error, snackbarStore);
+    }
     const dispose = reaction(
       () => {
         return bookingStore.roomSearchInfo;
@@ -97,7 +120,12 @@ export const SearchResult: React.FC = observer(() => {
       }
     );
     return () => dispose();
-  }, [bookingStore]);
+  }, [bookingStore, snackbarStore]);
+
+  const handleClose = (by?: string) => {
+    setSort(sort => ({ ...sort, by }));
+    setAnchorEl(undefined);
+  };
 
   return (
     <>
@@ -117,26 +145,177 @@ export const SearchResult: React.FC = observer(() => {
       <SearchInfo />
       <Container maxWidth="xl" className={classes.menu}>
         <Box display="flex" justifyContent="space-between">
-          <Button>
-            Sort　
-            <SortIcon />
-          </Button>
-          <Button>
-            Filter <FilterIcon />
+          <div>
+            <Button onClick={e => setAnchorEl(e.currentTarget)}>
+              Sort By {sort.by && ' : ' + sort.by}
+            </Button>
+            <IconButton
+              onClick={() =>
+                setSort(sort => ({ ...sort, descending: !sort.descending }))
+              }
+            >
+              <SortIcon
+                style={{
+                  transform: sort.descending ? 'scaleY(-1)' : 'scaleY(1)',
+                }}
+              />
+            </IconButton>
+            <Menu
+              id="simple-menu"
+              anchorEl={anchorEl}
+              keepMounted
+              open={Boolean(anchorEl)}
+              onClose={() => setAnchorEl(undefined)}
+            >
+              <MenuItem onClick={() => handleClose('Type')}>Type</MenuItem>
+              <MenuItem onClick={() => handleClose('Price')}>Price</MenuItem>
+              <MenuItem onClick={() => handleClose()}>None</MenuItem>
+            </Menu>
+          </div>
+          <Button
+            onClick={() => bookingStore.setSelectedRooms([])}
+            className={classes.danger}
+          >
+            Clear Selection
           </Button>
         </Box>
       </Container>
       <Divider />
+      {suggestions && (
+        <Container maxWidth="md" className={classes.root}>
+          <Typography variant="h5" gutterBottom className={classes.text}>
+            Suggestions
+          </Typography>
+          <Paper>
+            <Box display="flex" padding={1}>
+              <Box
+                width="100%"
+                display="flex"
+                flexDirection="column"
+                alignItems="flex-start"
+              >
+                <Typography variant="h6" className={classes.text}>
+                  Lowest Price
+                </Typography>
+                <ul style={{ flexGrow: 1 }}>
+                  {suggestions?.lowestPrice[0].roomConfig.map(e => {
+                    return (
+                      <li key={'room-lowest-price-' + e.id}>
+                        <Typography
+                          variant="body2"
+                          gutterBottom
+                          className={classes.text}
+                        >
+                          {e.type} Room {e.id} x {e.guests}
+                        </Typography>
+                      </li>
+                    );
+                  })}
+                </ul>
+                <div>
+                  <Typography variant="h6" className={classes.text}>
+                    Total : {suggestions?.lowestPrice[0].totalPrice} THB{' '}
+                    <small>per night</small>
+                  </Typography>
+                </div>
+                <Button
+                  color="primary"
+                  onClick={() =>
+                    bookingStore.setSelectedRooms(
+                      suggestions.lowestPrice[0].roomConfig.map(e => ({
+                        room: e.id,
+                        amount: e.guests,
+                      }))
+                    )
+                  }
+                >
+                  Select Rooms
+                </Button>
+              </Box>
+              <Divider
+                orientation="vertical"
+                flexItem
+                className={classes.divider}
+              />
+              <Box
+                width="100%"
+                display="flex"
+                flexDirection="column"
+                alignItems="flex-start"
+              >
+                <Typography variant="h6" className={classes.text}>
+                  Least amount of rooms
+                </Typography>
+                <ul style={{ flexGrow: 1 }}>
+                  {suggestions?.lowestNumberOfRooms[0].roomConfig.map(e => {
+                    return (
+                      <li key={'room-lowest-rooms-' + e.id}>
+                        <Typography
+                          variant="body2"
+                          gutterBottom
+                          className={classes.text}
+                        >
+                          {e.type} Room {e.id} x {e.guests}
+                        </Typography>
+                      </li>
+                    );
+                  })}
+                </ul>
+                <Typography variant="h6" className={classes.text}>
+                  Total :{' '}
+                  {suggestions?.lowestNumberOfRooms[0].roomConfig.length}{' '}
+                  {pluralize(
+                    'Room',
+                    suggestions?.lowestNumberOfRooms[0].roomConfig.length || 1
+                  )}
+                </Typography>
+                <Button
+                  color="primary"
+                  onClick={() =>
+                    bookingStore.setSelectedRooms(
+                      suggestions.lowestNumberOfRooms[0].roomConfig.map(e => ({
+                        room: e.id,
+                        amount: e.guests,
+                      }))
+                    )
+                  }
+                >
+                  Select Rooms
+                </Button>
+              </Box>
+            </Box>
+          </Paper>
+        </Container>
+      )}
+      <Divider />
       <Container maxWidth="md" className={classes.root}>
         {searchResults ? (
-          searchResults.map(room => {
-            return (
-              <RoomTypeCard
-                key={'room-result-' + room.type}
-                roomType={room}
-              ></RoomTypeCard>
-            );
-          })
+          searchResults
+            .slice()
+            .sort((a, b) => {
+              if (sort.by) {
+                const keys: { [key: string]: 'type' | 'price' } = {
+                  Type: 'type',
+                  Price: 'price',
+                };
+                const key = keys[sort.by] || '';
+                if (sort.descending) {
+                  return (a[key] as any) > (b[key] as any) ? 1 : -1;
+                } else {
+                  return (b[key] as any) > (a[key] as any) ? 1 : -1;
+                }
+              } else {
+                return 0;
+              }
+            })
+            .map(room => {
+              return (
+                <RoomTypeCard
+                  key={'room-result-' + room.type}
+                  roomType={room}
+                ></RoomTypeCard>
+              );
+            })
         ) : (
           <></>
         )}

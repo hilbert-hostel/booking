@@ -18,5 +18,6 @@ export const roomSearchFormSchema = Yup.object<RoomSearchFormInput>({
   guests: Yup.number()
     .integer()
     .required('Please enter number of guests')
-    .min(1, 'Guests must be more than 0'),
+    .min(1, 'Guests must be more than 0')
+    .max(36, 'Guests must be less than 36'),
 });

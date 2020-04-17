@@ -13,8 +13,14 @@ export interface Room {
 export interface RoomSearchResults {
   rooms: RoomTypeResult[];
   suggestions: {
-    lowestPrice: { totalPrice: number; roomConfig: Room[] }[];
-    lowestNumberOfRooms: { totalPrice: number; roomConfig: Room[] }[];
+    lowestPrice: {
+      totalPrice: number;
+      roomConfig: (Room & { guests: number })[];
+    }[];
+    lowestNumberOfRooms: {
+      totalPrice: number;
+      roomConfig: (Room & { guests: number })[];
+    }[];
   };
 }
 

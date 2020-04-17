@@ -1,7 +1,7 @@
 import { RoomSearchFormInput } from '../models/search';
 import { LocalStorage } from '../repository/localStorage';
 import { convertDateObject } from '../utils/convertDateObject';
-import { RoomTypeResult } from '../models/room';
+import { RoomTypeResult, RoomSearchResults } from '../models/room';
 import { BackendAPI } from '../repository/api/backend';
 import moment from 'moment';
 import deepEqual from 'deep-equal';
@@ -18,16 +18,17 @@ export const timedOut = () => {
 export function createBookingStore(): BookingStore {
   // note the use of this which refers to observable instance of the store
   return {
-    roomSearchInfo: timedOut()
+    roomSearchInfo: !timedOut()
       ? convertDateObject(new LocalStorage('roomSearchInfo').value)
       : undefined,
-    selectedRooms: timedOut()
+    selectedRooms: !timedOut()
       ? new LocalStorage('selectedRooms').value || []
       : [],
-    specialRequests: timedOut()
+    specialRequests: !timedOut()
       ? new LocalStorage('specialRequests').value || ''
       : '',
     searchResults: null,
+    suggestions: undefined,
     setRoomSearchInfo(data: RoomSearchFormInput) {
       if (!deepEqual(data, toJS(this.roomSearchInfo))) {
         this.roomSearchInfo = data;
@@ -39,6 +40,10 @@ export function createBookingStore(): BookingStore {
       this.specialRequests = req;
       new LocalStorage('specialRequests').value = req;
       new LocalStorage('lastUpdated').value = moment().toDate();
+    },
+    setSelectedRooms(data: RoomAmountPair[]) {
+      this.selectedRooms = data;
+      new LocalStorage('selectedRooms').value = data;
     },
     selectRooms(room: number, amount: number) {
       if (amount < 1) {
@@ -86,6 +91,7 @@ export function createBookingStore(): BookingStore {
     },
     async fetchSearchResults() {
       this.searchResults = [];
+      this.suggestions = undefined;
       if (this.roomSearchInfo) {
         const res = await BackendAPI.searchRooms({
           checkIn: moment(this.roomSearchInfo.checkIn).format('YYYY-MM-DD'),
@@ -93,6 +99,7 @@ export function createBookingStore(): BookingStore {
           guests: this.roomSearchInfo.guests,
         });
         this.setSearchResults(res.data.rooms);
+        this.suggestions = res.data.suggestions;
       }
     },
     getCurrentRoomType(type: string) {
@@ -118,6 +125,7 @@ export interface BookingStore {
   searchResults: RoomTypeResult[] | null;
   setRoomSearchInfo: (data: RoomSearchFormInput) => void;
   setSearchResults: (data: RoomTypeResult[]) => void;
+  setSelectedRooms: (data: RoomAmountPair[]) => void;
   selectRooms: (room: number, amount: number) => void;
   getSelectRoomAmount: (room: number) => number | undefined;
   fetchSearchResults: () => Promise<void>;
@@ -129,4 +137,5 @@ export interface BookingStore {
   invalid: boolean;
   validInfo: boolean;
   selected: number;
+  suggestions?: RoomSearchResults['suggestions'];
 }
