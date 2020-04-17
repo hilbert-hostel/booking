@@ -8,22 +8,37 @@ import deepEqual from 'deep-equal';
 import { toJS } from 'mobx';
 import { roomSearchFormSchema } from '../components/RoomSearchForm/schema';
 
+export const timedOut = () => {
+  return new LocalStorage('lastUpdated').value
+    ? moment().diff(moment(new LocalStorage('lastUpdated').value), 'minutes') >
+        1
+    : false;
+};
+
 export function createBookingStore(): BookingStore {
   // note the use of this which refers to observable instance of the store
   return {
-    roomSearchInfo: convertDateObject(new LocalStorage('roomSearchInfo').value),
-    selectedRooms: new LocalStorage('selectedRooms').value || [],
-    specialRequests: new LocalStorage('specialRequests').value || '',
+    roomSearchInfo: timedOut()
+      ? convertDateObject(new LocalStorage('roomSearchInfo').value)
+      : undefined,
+    selectedRooms: timedOut()
+      ? new LocalStorage('selectedRooms').value || []
+      : [],
+    specialRequests: timedOut()
+      ? new LocalStorage('specialRequests').value || ''
+      : '',
     searchResults: null,
     setRoomSearchInfo(data: RoomSearchFormInput) {
       if (!deepEqual(data, toJS(this.roomSearchInfo))) {
         this.roomSearchInfo = data;
         new LocalStorage('roomSearchInfo').value = data;
+        new LocalStorage('lastUpdated').value = moment().toDate();
       }
     },
     setSpecialRequests(req: string) {
       this.specialRequests = req;
       new LocalStorage('specialRequests').value = req;
+      new LocalStorage('lastUpdated').value = moment().toDate();
     },
     selectRooms(room: number, amount: number) {
       if (amount < 1) {
@@ -36,6 +51,7 @@ export function createBookingStore(): BookingStore {
         this.selectedRooms = [...this.selectedRooms, { room, amount }];
       }
       new LocalStorage('selectedRooms').value = this.selectedRooms;
+      new LocalStorage('lastUpdated').value = moment().toDate();
     },
     getSelectRoomAmount(room: number) {
       return this.selectedRooms.find(r => r.room === room)?.amount;
@@ -90,6 +106,7 @@ export function createBookingStore(): BookingStore {
       this.searchResults = null;
       this.specialRequests = '';
       new LocalStorage('specialRequests').clear();
+      new LocalStorage('lastUpdated').clear();
     },
   };
 }

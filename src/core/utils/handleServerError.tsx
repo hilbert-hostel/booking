@@ -5,7 +5,6 @@ import {
   SnackbarMessage,
 } from '../stores/snackbar';
 import { AxiosError } from 'axios';
-import { isBuffer } from 'util';
 
 export const handleServerError = (
   error: AxiosError,

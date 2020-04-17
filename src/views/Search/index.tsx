@@ -3,6 +3,7 @@ import { observer } from 'mobx-react-lite';
 import { useStores } from '../../core/hooks/use-stores';
 import { makeStyles, Theme, createStyles } from '@material-ui/core';
 import { Hero } from './components/Hero';
+import { timedOut } from '../../core/stores/booking';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -20,11 +21,14 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export const Search: React.FC = observer(() => {
   const classes = useStyles();
-  const { authStore } = useStores();
+  const { authStore, bookingStore } = useStores();
 
   useEffect(() => {
     authStore.fetchUserData();
-  }, [authStore]);
+    if (timedOut()) {
+      bookingStore.clear();
+    }
+  }, [authStore, bookingStore]);
 
   return (
     <>

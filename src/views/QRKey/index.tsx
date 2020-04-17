@@ -10,9 +10,7 @@ import {
   Box,
   CircularProgress,
 } from '@material-ui/core';
-import { useHistory } from 'react-router-dom';
 import { BackendAPI } from '../../core/repository/api/backend';
-import { Room } from '../../core/models/room';
 import qrcode from 'qrcode';
 import { useStores } from '../../core/hooks/use-stores';
 import { handleServerError } from '../../core/utils/handleServerError';
@@ -61,7 +59,6 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export const QRKey: React.FC = observer(() => {
   const classes = useStyles();
-  const history = useHistory();
   const { themeStore, snackbarStore } = useStores();
   const [room, setRoom] = useState<number>();
   const [rooms, setRooms] = useState<number[]>();
@@ -83,7 +80,7 @@ export const QRKey: React.FC = observer(() => {
           },
         });
       });
-  }, []);
+  }, [snackbarStore]);
 
   useEffect(() => {
     if (room) {
