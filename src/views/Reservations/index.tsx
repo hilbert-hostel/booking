@@ -10,11 +10,8 @@ import {
   ExpansionPanelSummary,
   Divider,
   Box,
-  Button,
   withStyles,
 } from '@material-ui/core';
-import FilterIcon from '@material-ui/icons/FilterList';
-import SortIcon from '@material-ui/icons/Sort';
 import { useHistory } from 'react-router-dom';
 import BackArrow from '@material-ui/icons/ArrowBackIos';
 import MuiExpansionPanel from '@material-ui/core/ExpansionPanel';

@@ -64,7 +64,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export const QRKey: React.FC = observer(() => {
   const classes = useStyles();
-  const { themeStore, snackbarStore } = useStores();
+  const { snackbarStore } = useStores();
   const [room, setRoom] = useState<Room>();
   const [rooms, setRooms] = useState<Room[]>();
   const [error, setError] = useState<string>();
@@ -93,20 +93,15 @@ export const QRKey: React.FC = observer(() => {
         setQR(
           await qrcode.toDataURL(res.data.code, {
             errorCorrectionLevel: 'M',
-            color: themeStore.dark
-              ? {
-                  dark: '#FFF',
-                  light: '#0000',
-                }
-              : {
-                  dark: '#000',
-                  light: '#0000',
-                },
+            color: {
+              dark: '#000',
+              light: '#FFF',
+            },
           })
         );
       });
     }
-  }, [room, themeStore]);
+  }, [room]);
 
   const getQRCode = () => {
     if (room) {
@@ -114,15 +109,10 @@ export const QRKey: React.FC = observer(() => {
         setQR(
           await qrcode.toDataURL(res.data.code, {
             errorCorrectionLevel: 'M',
-            color: themeStore.dark
-              ? {
-                  dark: '#FFF',
-                  light: '#0000',
-                }
-              : {
-                  dark: '#000',
-                  light: '#0000',
-                },
+            color: {
+              dark: '#000',
+              light: '#FFF',
+            },
           })
         );
       });
@@ -239,6 +229,7 @@ export const QRKey: React.FC = observer(() => {
                         variant="contained"
                         onClick={() => setRoom(e)}
                         className={classes.button}
+                        key={'room-' + e.id}
                       >
                         Room {e.id}
                       </Button>
