@@ -92,7 +92,7 @@ export const Reservations: React.FC = observer(() => {
           id="top-panel-header"
         >
           <Box className={classes.topPanel}>
-            <BackArrow onClick={() => history.push('/profile')} />
+            <BackArrow onClick={() => history.push('/dashboard')} />
             <Typography variant="h4" className={classes.text}>
               Reservations
             </Typography>
