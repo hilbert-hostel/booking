@@ -56,7 +56,7 @@ export const BottomNav: React.FC<BottomNavProps> = observer(() => {
       {authStore.isAuthenticated ? (
         <BottomNavigationAction
           value="profile"
-          onClick={() => history.push('/profile')}
+          onClick={() => history.push('/dashboard')}
           icon={
             <Badge
               badgeContent={reservationStore.unPaid.length > 1 ? 1 : 0}

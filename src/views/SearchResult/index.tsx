@@ -152,6 +152,7 @@ export const SearchResult: React.FC = observer(() => {
               onClick={() =>
                 setSort(sort => ({ ...sort, descending: !sort.descending }))
               }
+              disabled={!sort.by}
             >
               <SortIcon
                 style={{
@@ -168,7 +169,7 @@ export const SearchResult: React.FC = observer(() => {
             >
               <MenuItem onClick={() => handleClose('Type')}>Type</MenuItem>
               <MenuItem onClick={() => handleClose('Price')}>Price</MenuItem>
-              <MenuItem onClick={() => handleClose()}>None</MenuItem>
+              <MenuItem onClick={() => handleClose()}>Default</MenuItem>
             </Menu>
           </div>
           <Button
@@ -289,32 +290,54 @@ export const SearchResult: React.FC = observer(() => {
       <Divider />
       <Container maxWidth="md" className={classes.root}>
         {searchResults ? (
-          searchResults
-            .slice()
-            .sort((a, b) => {
-              if (sort.by) {
-                const keys: { [key: string]: 'type' | 'price' } = {
-                  Type: 'type',
-                  Price: 'price',
-                };
-                const key = keys[sort.by] || '';
-                if (sort.descending) {
-                  return (a[key] as any) > (b[key] as any) ? 1 : -1;
-                } else {
+          sort.descending ? (
+            searchResults
+              .slice()
+              .sort((a, b) => {
+                if (sort.by) {
+                  const keys: { [key: string]: 'type' | 'price' } = {
+                    Type: 'type',
+                    Price: 'price',
+                  };
+                  const key = keys[sort.by] || '';
                   return (b[key] as any) > (a[key] as any) ? 1 : -1;
+                } else {
+                  return 0;
                 }
-              } else {
-                return 0;
-              }
-            })
-            .map(room => {
-              return (
-                <RoomTypeCard
-                  key={'room-result-' + room.type}
-                  roomType={room}
-                ></RoomTypeCard>
-              );
-            })
+              })
+              .reverse()
+              .map(room => {
+                return (
+                  <RoomTypeCard
+                    key={'room-result-' + room.type}
+                    roomType={room}
+                  ></RoomTypeCard>
+                );
+              })
+          ) : (
+            searchResults
+              .slice()
+              .sort((a, b) => {
+                if (sort.by) {
+                  const keys: { [key: string]: 'type' | 'price' } = {
+                    Type: 'type',
+                    Price: 'price',
+                  };
+                  const key = keys[sort.by] || '';
+                  return (b[key] as any) > (a[key] as any) ? 1 : -1;
+                } else {
+                  return 0;
+                }
+              })
+              .map(room => {
+                return (
+                  <RoomTypeCard
+                    key={'room-result-' + room.type}
+                    roomType={room}
+                  ></RoomTypeCard>
+                );
+              })
+          )
         ) : (
           <></>
         )}

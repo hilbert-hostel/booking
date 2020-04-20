@@ -99,17 +99,6 @@ export const Reservations: React.FC = observer(() => {
           </Box>
         </ExpansionPanelSummary>
       </ExpansionPanel>
-      <Container maxWidth="xl" className={classes.menu}>
-        <Box display="flex" justifyContent="space-between">
-          <Button>
-            Sort　
-            <SortIcon />
-          </Button>
-          <Button>
-            Filter <FilterIcon />
-          </Button>
-        </Box>
-      </Container>
       <Divider />
       <Container maxWidth="md" className={classes.root}>
         {reservations ? (

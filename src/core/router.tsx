@@ -11,7 +11,7 @@ import { Login } from '../views/Login';
 import { makeStyles, Theme, createStyles } from '@material-ui/core';
 import { BottomNav } from './components/BottomNavigation';
 import { SearchResult } from '../views/SearchResult';
-import { Profile } from '../views/Profile';
+import { Dashboard } from '../views/Dashboard';
 import { Register } from '../views/Register';
 import { Home } from '../views/Home';
 import { QRKey } from '../views/QRKey';
@@ -27,6 +27,7 @@ import { useStores } from './hooks/use-stores';
 import { observer } from 'mobx-react-lite';
 import { Verify } from '../views/Verify';
 import { handleServerError } from './utils/handleServerError';
+import { Profile } from '../views/Profile';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -120,9 +121,12 @@ export const AppRouter: React.FC = () => {
           <Route path="/register">
             <Register />
           </Route>
-          <Route path="/profile">
+          <MainRoute path="/dashboard">
+            <Dashboard />
+          </MainRoute>
+          <MainRoute path="/profile">
             <Profile />
-          </Route>
+          </MainRoute>
           <MainRoute path="/qrkey">
             <QRKey />
           </MainRoute>
@@ -156,7 +160,7 @@ export const AppRouter: React.FC = () => {
           <Route path="/login">
             <Login />
           </Route>
-          <Route>
+          <Route path="/">
             <Home />
           </Route>
           {/* </Switch> */}
