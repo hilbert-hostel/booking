@@ -83,15 +83,10 @@ export const Payment: React.FC = observer(() => {
           setQR(
             await qrcode.toDataURL('paymeplease', {
               errorCorrectionLevel: 'H',
-              color: themeStore.dark
-                ? {
-                    dark: '#FFF', // Blue dots
-                    light: '#0000', // Transparent background
-                  }
-                : {
-                    dark: '#000', // Blue dots
-                    light: '#0000', // Transparent background
-                  },
+              color: {
+                dark: '#000', // Blue dots
+                light: '#FFF', // Transparent background
+              },
             })
           );
         });

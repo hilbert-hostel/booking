@@ -8,6 +8,8 @@ export interface Room {
   price: number;
   photo?: string;
   facilities: string[];
+  follower?: string[];
+  beds?: { bed_id: string }[];
 }
 
 export interface RoomSearchResults {
@@ -28,6 +30,7 @@ export interface RoomTypeResult {
   price: number;
   description: string;
   photos: RoomPhoto[];
+  follower?: string[];
   facilities: { name: string; description?: string; count: number }[];
   availability: { id: number; available: number }[];
   type: string;
@@ -37,6 +40,12 @@ export interface SelectedRoomType {
   price: number;
   selected: RoomAmountPair[];
   type: string;
+}
+
+export interface RoomSharePayload {
+  reservationID: string;
+  email: string;
+  roomID: Room['id'];
 }
 
 export interface RoomPhoto {

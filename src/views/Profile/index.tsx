@@ -83,7 +83,7 @@ export const Profile: React.FC = observer(() => {
       >
         <Container maxWidth="md" className={classes.content}>
           <Paper>
-            <Box padding={2}>
+            <Box padding={2} fontWeight="300">
               <Typography variant="h6" className={classes.text}>
                 Fullname : {authStore.user?.firstname}{' '}
                 {authStore.user?.lastname}
