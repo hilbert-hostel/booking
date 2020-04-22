@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   createStyles,
   makeStyles,
@@ -14,6 +14,10 @@ import {
   List,
   ListItem,
   CardMedia,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
 } from '@material-ui/core';
 import { useParams } from 'react-router-dom';
 import { useStores } from '../../core/hooks/use-stores';
@@ -22,6 +26,9 @@ import { TitleBar } from '../../core/components/TitleBar';
 import moment from 'moment';
 import { pluralize } from '../../core/utils/text-formatting';
 import { CustomLink } from '../../core/components/CustomLink';
+import { FormText } from '../../core/components/Forms/FormText';
+import { BackendAPI } from '../../core/repository/api/backend';
+import { handleServerError } from '../../core/utils/handleServerError';
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     container: {
@@ -77,10 +84,12 @@ const useStyles = makeStyles((theme: Theme) =>
 export const ReservationDetails: React.FC = observer(() => {
   const classes = useStyles();
   const { id } = useParams();
-  const { reservationStore } = useStores();
+  const { reservationStore, snackbarStore } = useStores();
   const reservation = id
     ? reservationStore.findReservation(id || '')
     : undefined;
+  const [editRequests, setEditRequests] = useState(false);
+  const [newRequest, setNewRequest] = useState('');
 
   useEffect(() => {
     if (id) {
@@ -89,6 +98,20 @@ export const ReservationDetails: React.FC = observer(() => {
       } catch (error) {}
     }
   }, [id, reservationStore]);
+
+  const editRequest = async () => {
+    if (reservation) {
+      try {
+        await BackendAPI.editReservation(reservation.id, {
+          specialRequests: newRequest,
+        });
+        setNewRequest('');
+        setEditRequests(false);
+      } catch (error) {
+        handleServerError(error, snackbarStore);
+      }
+    }
+  };
 
   return (
     <>
@@ -122,11 +145,11 @@ export const ReservationDetails: React.FC = observer(() => {
                     {moment(reservation.checkOut).format('DD MMMM YYYY')}
                   </Typography>
                   <Divider className={classes.divider} />
-                  <Typography variant="h6">
+                  <Typography variant="body1">
                     Booking ID : {reservation.id}
                   </Typography>
                   {/* <Typography variant="h6">Transaction ID : asdf</Typograsphy> */}
-                  <Typography variant="h6">
+                  <Typography variant="body1">
                     {moment(reservation.checkOut).diff(
                       moment(reservation.checkIn),
                       'd'
@@ -144,10 +167,10 @@ export const ReservationDetails: React.FC = observer(() => {
                       reservation.rooms.reduce((p, c) => p + c.beds, 0)
                     )}
                   </Typography>
-                  <Typography variant="h6">
+                  <Typography variant="body1">
                     Special Request : {reservation.specialRequests || '-'}
                   </Typography>
-                  <Typography variant="h6">Rooms :</Typography>
+                  <Typography variant="body1">Rooms :</Typography>
                   <List className={classes.noPadding}>
                     {reservation.rooms.map(c => {
                       return (
@@ -155,7 +178,7 @@ export const ReservationDetails: React.FC = observer(() => {
                           className={classes.noPadding}
                           key={'room-' + c.id}
                         >
-                          <Typography variant="h6">
+                          <Typography variant="body1">
                             - {c.type} (room no. {c.id}) : {c.beds}{' '}
                             {pluralize('bed', c.beds)}
                           </Typography>
@@ -165,6 +188,36 @@ export const ReservationDetails: React.FC = observer(() => {
                   </List>
                 </CardContent>
               </Card>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={() => {
+                  setEditRequests(true);
+                  setNewRequest(reservation.specialRequests);
+                }}
+              >
+                Edit Special Requests
+              </Button>
+              <Dialog
+                onClose={() => setEditRequests(false)}
+                open={editRequests}
+              >
+                <DialogTitle>Edit special requests</DialogTitle>
+                <DialogContent>
+                  <FormText
+                    id="request"
+                    label="Special Requests"
+                    name="request"
+                    value={newRequest}
+                    onChange={(v: any) => setNewRequest(v.target.value)}
+                  />
+                </DialogContent>
+                <DialogActions>
+                  <Button color="primary" onClick={() => editRequest()}>
+                    Edit Special Request
+                  </Button>
+                </DialogActions>
+              </Dialog>
             </>
           )}
         </Container>

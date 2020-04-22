@@ -50,7 +50,12 @@ export const ShareDialog: React.FC<ShareDialogProps> = ({
     initialValues: {
       email: '',
     },
-    onSubmit: v => onAddFollower && room && onAddFollower(room, v.email),
+    onSubmit: async v => {
+      try {
+        onAddFollower && room && (await onAddFollower(room, v.email));
+        setAddFollower(false);
+      } catch {}
+    },
   });
   const removeFollower = (follower: string) => {
     return '';
@@ -63,7 +68,7 @@ export const ShareDialog: React.FC<ShareDialogProps> = ({
           <Typography>Maximum : {room?.beds?.length} person</Typography>
         </DialogContent>
         <List>
-          {(room?.follower ?? []).map(follower => (
+          {(room?.followers ?? []).map(follower => (
             <ListItem
               button
               onClick={() => removeFollower(follower)}
@@ -77,7 +82,12 @@ export const ShareDialog: React.FC<ShareDialogProps> = ({
               <ListItemText primary={follower} />
             </ListItem>
           ))}
-          <ListItem autoFocus button onClick={() => setAddFollower(true)}>
+          <ListItem
+            autoFocus
+            button
+            disabled={room?.beds?.length === room?.followers?.length ?? false}
+            onClick={() => setAddFollower(true)}
+          >
             <ListItemAvatar>
               <Avatar>
                 <AddIcon />
@@ -102,11 +112,7 @@ export const ShareDialog: React.FC<ShareDialogProps> = ({
           </ListItem>
         </List>
         <DialogActions>
-          <Button
-            color="primary"
-            disabled={room?.beds?.length === room?.follower?.length ?? false}
-            onClick={() => form.submitForm()}
-          >
+          <Button color="primary" onClick={() => form.submitForm()}>
             Add Follower
           </Button>
         </DialogActions>

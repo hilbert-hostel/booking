@@ -8,7 +8,7 @@ export interface Room {
   price: number;
   photo?: string;
   facilities: string[];
-  follower?: string[];
+  followers?: string[];
   beds?: { bed_id: string }[];
 }
 

@@ -8,6 +8,8 @@ import {
   ReservationResponse,
   ReservationStatusResponse,
   ReservationPaymentStatusResponse,
+  Reservation,
+  EditReservationPayload,
 } from '../../models/reservation';
 import { User } from '../../models/user';
 
@@ -45,6 +47,10 @@ export class BackendAPI {
     return client.get<ReservationStatusResponse[]>('/reservation/all');
   }
 
+  static editReservation(id: Reservation['id'], data: EditReservationPayload) {
+    return client.patch('/reservation', id, data);
+  }
+
   static reserve(data: ReservationPayload) {
     return client.post<ReservationResponse>('/reservation', data);
   }
@@ -60,7 +66,7 @@ export class BackendAPI {
   }
 
   static rooms() {
-    return client.get<{ rooms: Room[] }>('/door/room');
+    return client.get<{ rooms: Room[]; reservationID: string }>('/door/room');
   }
 
   static share(data: RoomSharePayload) {

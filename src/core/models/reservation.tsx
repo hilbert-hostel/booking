@@ -20,6 +20,9 @@ export type ReservationStatusResponse = Reservation & {
   checkOut: string;
 };
 
+export type EditReservationPayload = {
+  specialRequests: Reservation['specialRequests'];
+};
 export interface ReservationPaymentStatusResponse {
   isPaid: boolean;
 }

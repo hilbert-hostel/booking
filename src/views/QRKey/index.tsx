@@ -70,6 +70,7 @@ export const QRKey: React.FC = observer(() => {
   const [rooms, setRooms] = useState<Room[]>();
   const [error, setError] = useState<string>();
   const [share, setShare] = useState<Room>();
+  const [reservationID, setReservationID] = useState<string>();
   const [qr, setQR] = useState<string>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -77,6 +78,7 @@ export const QRKey: React.FC = observer(() => {
     BackendAPI.rooms()
       .then(({ data }) => {
         setRooms(data.rooms);
+        setReservationID(data.reservationID);
       })
       .catch(error => {
         handleServerError(error, snackbarStore, {
@@ -90,18 +92,32 @@ export const QRKey: React.FC = observer(() => {
       });
   }, [snackbarStore]);
 
+  const updateData = async () => {
+    BackendAPI.rooms().then(({ data }) => {
+      setRooms(data.rooms);
+      setReservationID(data.reservationID);
+      setShare(old => {
+        if (old?.id) {
+          return data.rooms.find(r => r.id === old.id);
+        }
+      });
+    });
+  };
+
   const addFollower = async (room: Room, email: string) => {
-    if (!isLoading) {
+    if (!isLoading && reservationID) {
       try {
         setIsLoading(true);
         await BackendAPI.share({
           roomID: room.id,
           email,
-          reservationID: '',
+          reservationID: reservationID || '',
         });
+        updateData();
         setIsLoading(false);
       } catch (error) {
         handleServerError(error, snackbarStore);
+        setIsLoading(false);
       }
     }
   };
@@ -192,7 +208,7 @@ export const QRKey: React.FC = observer(() => {
                 onClick={() => {
                   setShare(room);
                 }}
-                disabled={room.follower !== undefined}
+                disabled={room.followers === undefined}
                 className={classes.button}
               >
                 Share Access
