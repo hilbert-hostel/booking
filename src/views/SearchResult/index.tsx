@@ -26,7 +26,6 @@ import MuiExpansionPanel from '@material-ui/core/ExpansionPanel';
 import { useStores } from '../../core/hooks/use-stores';
 import { SearchInfo } from './components/SearchInfo';
 import { reaction } from 'mobx';
-import { pluralize } from '../../core/utils/text-formatting';
 import { handleServerError } from '../../core/utils/handleServerError';
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -262,12 +261,8 @@ export const SearchResult: React.FC = observer(() => {
                   })}
                 </ul>
                 <Typography variant="h6" className={classes.text}>
-                  Total :{' '}
-                  {suggestions?.lowestNumberOfRooms[0].roomConfig.length}{' '}
-                  {pluralize(
-                    'Room',
-                    suggestions?.lowestNumberOfRooms[0].roomConfig.length || 1
-                  )}
+                  Total : {suggestions?.lowestPrice[0].totalPrice} THB{' '}
+                  <small>per night</small>
                 </Typography>
                 <Button
                   color="primary"
