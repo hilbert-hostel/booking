@@ -24,7 +24,6 @@ import ReservationIcon from '@material-ui/icons/CardTravel';
 import PeopleIcon from '@material-ui/icons/People';
 import { useHistory } from 'react-router-dom';
 import { orange } from '@material-ui/core/colors';
-import { BackendAPI } from '../../core/repository/api/backend';
 import Alert from '@material-ui/lab/Alert';
 import { CustomLink } from '../../core/components/CustomLink';
 

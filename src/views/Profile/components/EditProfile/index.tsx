@@ -15,7 +15,6 @@ import { FormText } from '../../../../core/components/Forms/FormText';
 import { TitleBar } from '../../../../core/components/TitleBar';
 import { BackendAPI } from '../../../../core/repository/api/backend';
 import { useStores } from '../../../../core/hooks/use-stores';
-import { useQuery } from '../../../../core/hooks/use-query';
 import * as Yup from 'yup';
 import { handleServerError } from '../../../../core/utils/handleServerError';
 import { autorun } from 'mobx';
@@ -64,7 +63,6 @@ export const EditProfile: React.FC = observer(() => {
   const classes = useStyles();
   const history = useHistory();
   const { authStore, snackbarStore } = useStores();
-  const query = useQuery();
   const [init, setInit] = useState(false);
   const form = useFormik<EditProfileModel>({
     validationSchema: editProfileSchema,

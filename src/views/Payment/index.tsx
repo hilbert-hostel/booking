@@ -8,15 +8,13 @@ import {
   Button,
   Box,
 } from '@material-ui/core';
-import { useHistory, useParams, useLocation } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 import { useStores } from '../../core/hooks/use-stores';
 import { observer } from 'mobx-react-lite';
 import { TitleBar } from '../../core/components/TitleBar';
 import { BackendAPI } from '../../core/repository/api/backend';
 import qrcode from 'qrcode';
 import { ReservationStatusResponse } from '../../core/models/reservation';
-import moment from 'moment';
-import { CustomLink } from '../../core/components/CustomLink';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -65,7 +63,6 @@ const useStyles = makeStyles((theme: Theme) =>
 export const Payment: React.FC = observer(() => {
   const classes = useStyles();
   const history = useHistory();
-  const location = useLocation();
   const { id } = useParams();
   const { themeStore, snackbarStore } = useStores();
   const [reservationInfo, setReservationInfo] = useState<
@@ -74,13 +71,6 @@ export const Payment: React.FC = observer(() => {
   const [qr, setQR] = useState<string>();
   const [amount, setAmount] = useState<number>();
   const [url, setUrl] = useState<string>();
-  const days =
-    reservationInfo?.checkIn && reservationInfo?.checkOut
-      ? moment(reservationInfo?.checkOut).diff(
-          moment(reservationInfo?.checkIn),
-          'days'
-        )
-      : 1;
 
   useEffect(() => {
     if (id) {
