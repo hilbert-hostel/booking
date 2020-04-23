@@ -8,7 +8,7 @@ import {
   Button,
   Box,
 } from '@material-ui/core';
-import { useHistory, useParams } from 'react-router-dom';
+import { useHistory, useParams, useLocation } from 'react-router-dom';
 import { useStores } from '../../core/hooks/use-stores';
 import { observer } from 'mobx-react-lite';
 import { TitleBar } from '../../core/components/TitleBar';
@@ -65,6 +65,7 @@ const useStyles = makeStyles((theme: Theme) =>
 export const Payment: React.FC = observer(() => {
   const classes = useStyles();
   const history = useHistory();
+  const location = useLocation();
   const { id } = useParams();
   const { themeStore, snackbarStore } = useStores();
   const [reservationInfo, setReservationInfo] = useState<
@@ -90,7 +91,7 @@ export const Payment: React.FC = observer(() => {
         BackendAPI.paymentInfo(id).then(async ({ data }) => {
           const { url, amount } = data;
           setAmount(amount);
-          setUrl(url);
+          setUrl(url + '?callback_url=' + window.location.href);
           setQR(
             await qrcode.toDataURL(url, {
               errorCorrectionLevel: 'H',
