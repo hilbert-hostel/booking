@@ -28,6 +28,7 @@ import { observer } from 'mobx-react-lite';
 import { Verify } from '../views/Verify';
 import { handleServerError } from './utils/handleServerError';
 import { Profile } from '../views/Profile';
+import { EditProfile } from '../views/Profile/components/EditProfile';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -123,6 +124,9 @@ export const AppRouter: React.FC = () => {
           </Route>
           <MainRoute path="/dashboard">
             <Dashboard />
+          </MainRoute>
+          <MainRoute path="/profile/edit">
+            <EditProfile />
           </MainRoute>
           <MainRoute path="/profile">
             <Profile />

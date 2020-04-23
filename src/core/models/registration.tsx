@@ -7,3 +7,11 @@ export interface RegistrationModel {
   nationalID: string;
   phone: string;
 }
+
+export interface EditProfileModel {
+  firstname: string;
+  lastname: string;
+  address: string;
+  nationalID: string;
+  phone: string;
+}

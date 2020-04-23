@@ -78,8 +78,8 @@ export const Dashboard: React.FC = observer(() => {
 
   useEffect(() => {
     authStore.fetchUserData();
-    BackendAPI.reservations().then(console.log);
-  }, [authStore]);
+    reservationStore.fetchReservations();
+  }, [authStore, reservationStore]);
 
   const logout = () => {
     authStore.logout();

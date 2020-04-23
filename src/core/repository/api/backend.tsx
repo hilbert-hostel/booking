@@ -1,5 +1,5 @@
 import { AxiosClient } from './axios';
-import { RegistrationModel } from '../../models/registration';
+import { RegistrationModel, EditProfileModel } from '../../models/registration';
 import { AuthPayload, LoginModel } from '../../models/auth';
 import { RoomSearchPayload } from '../../models/search';
 import { RoomSearchResults, Room, RoomSharePayload } from '../../models/room';
@@ -15,7 +15,7 @@ import { User } from '../../models/user';
 
 export let client: AxiosClient;
 
-if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
+if (!!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
   client = new AxiosClient('/');
 } else {
   client = new AxiosClient('https://hilbert.himkwtn.me/');
@@ -33,6 +33,10 @@ export class BackendAPI {
   }
   static register(data: RegistrationModel) {
     return client.post<AuthPayload>('/auth/register', data);
+  }
+
+  static editProfile(data: EditProfileModel) {
+    return client.patch<{}>('/guest', '', data);
   }
 
   static searchRooms(data: RoomSearchPayload) {

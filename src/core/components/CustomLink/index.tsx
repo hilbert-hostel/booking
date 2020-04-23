@@ -7,7 +7,6 @@ const useStyles = makeStyles((theme: Theme) =>
     root: {
       display: 'flex',
       width: '100%',
-      height: '100%',
       alignItems: 'stretch',
       justifyContent: 'stretch',
       textDecoration: 'none',

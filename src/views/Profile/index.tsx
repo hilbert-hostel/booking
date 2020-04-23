@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { observer } from 'mobx-react-lite';
 import {
   createStyles,
@@ -8,9 +8,11 @@ import {
   Typography,
   Paper,
   Box,
+  Button,
 } from '@material-ui/core';
 import { useStores } from '../../core/hooks/use-stores';
 import { TitleBar } from '../../core/components/TitleBar';
+import { CustomLink } from '../../core/components/CustomLink';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -52,6 +54,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     content: {
       paddingTop: theme.spacing(3),
+      marginBottom: theme.spacing(1),
     },
   })
 );
@@ -59,6 +62,10 @@ const useStyles = makeStyles((theme: Theme) =>
 export const Profile: React.FC = observer(() => {
   const classes = useStyles();
   const { authStore } = useStores();
+
+  useEffect(() => {
+    authStore.fetchUserData();
+  }, [authStore]);
 
   return (
     <>
@@ -72,7 +79,7 @@ export const Profile: React.FC = observer(() => {
       >
         <Container maxWidth="md" className={classes.content}>
           <Paper>
-            <Box padding={2} fontWeight="300">
+            <Box padding={2} marginBottom={2} fontWeight="300">
               <Typography variant="h6" className={classes.text}>
                 Fullname : {authStore.user?.firstname}{' '}
                 {authStore.user?.lastname}
@@ -91,6 +98,11 @@ export const Profile: React.FC = observer(() => {
               </Typography>
             </Box>
           </Paper>
+          <CustomLink to="/profile/edit">
+            <Button color="primary" variant="contained">
+              Edit Profile
+            </Button>
+          </CustomLink>
         </Container>
       </Box>
     </>
