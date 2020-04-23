@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { observer } from 'mobx-react-lite';
 import {
   createStyles,
@@ -6,17 +6,10 @@ import {
   Theme,
   Container,
   Typography,
-  Button,
   Paper,
   Box,
-  CircularProgress,
 } from '@material-ui/core';
-import { BackendAPI } from '../../core/repository/api/backend';
-import qrcode from 'qrcode';
 import { useStores } from '../../core/hooks/use-stores';
-import { handleServerError } from '../../core/utils/handleServerError';
-import { CustomLink } from '../../core/components/CustomLink';
-import { Room } from '../../core/models/room';
 import { TitleBar } from '../../core/components/TitleBar';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -65,11 +58,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export const Profile: React.FC = observer(() => {
   const classes = useStyles();
-  const { themeStore, snackbarStore, authStore } = useStores();
-  const [room, setRoom] = useState<Room>();
-  const [qr, setQR] = useState<string>();
-
-  console.log(authStore.user);
+  const { authStore } = useStores();
 
   return (
     <>

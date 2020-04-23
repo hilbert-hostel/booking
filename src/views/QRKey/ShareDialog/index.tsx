@@ -18,7 +18,6 @@ import { DialogActions, DialogContent } from '@material-ui/core';
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
 
-const emails = ['username@gmail.com', 'user02@gmail.com'];
 const useStyles = makeStyles({
   avatar: {
     backgroundColor: blue[100],

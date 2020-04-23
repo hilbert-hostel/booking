@@ -95,9 +95,11 @@ export const ReservationDetails: React.FC = observer(() => {
     if (id) {
       try {
         reservationStore.fetchReservations();
-      } catch (error) {}
+      } catch (error) {
+        handleServerError(error, snackbarStore);
+      }
     }
-  }, [id, reservationStore]);
+  }, [id, reservationStore, snackbarStore]);
 
   const editRequest = async () => {
     if (reservation) {
@@ -106,6 +108,7 @@ export const ReservationDetails: React.FC = observer(() => {
           specialRequests: newRequest,
         });
         setNewRequest('');
+        await reservationStore.fetchReservations();
         setEditRequests(false);
       } catch (error) {
         handleServerError(error, snackbarStore);

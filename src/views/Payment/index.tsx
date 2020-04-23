@@ -5,6 +5,7 @@ import {
   Theme,
   Container,
   Typography,
+  Button,
   Box,
 } from '@material-ui/core';
 import { useHistory, useParams } from 'react-router-dom';
@@ -15,6 +16,7 @@ import { BackendAPI } from '../../core/repository/api/backend';
 import qrcode from 'qrcode';
 import { ReservationStatusResponse } from '../../core/models/reservation';
 import moment from 'moment';
+import { CustomLink } from '../../core/components/CustomLink';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -46,8 +48,10 @@ const useStyles = makeStyles((theme: Theme) =>
     text: {
       color: theme.palette.text.primary,
     },
+    buttonLink: {
+      textDecoration: 'none',
+    },
     button: {
-      width: '100%',
       padding: theme.spacing(2),
     },
     priceText: {
@@ -67,6 +71,8 @@ export const Payment: React.FC = observer(() => {
     ReservationStatusResponse
   >();
   const [qr, setQR] = useState<string>();
+  const [amount, setAmount] = useState<number>();
+  const [url, setUrl] = useState<string>();
   const days =
     reservationInfo?.checkIn && reservationInfo?.checkOut
       ? moment(reservationInfo?.checkOut).diff(
@@ -80,8 +86,13 @@ export const Payment: React.FC = observer(() => {
       try {
         BackendAPI.reservationStatus(id).then(async res => {
           setReservationInfo(res.data);
+        });
+        BackendAPI.paymentInfo(id).then(async ({ data }) => {
+          const { url, amount } = data;
+          setAmount(amount);
+          setUrl(url);
           setQR(
-            await qrcode.toDataURL('paymeplease', {
+            await qrcode.toDataURL(url, {
               errorCorrectionLevel: 'H',
               color: {
                 dark: '#000', // Blue dots
@@ -145,15 +156,20 @@ export const Payment: React.FC = observer(() => {
               Scan QR code to pay
             </Typography>
             <Typography variant="h4" className={classes.priceText}>
-              {(reservationInfo &&
-                days *
-                  reservationInfo?.rooms.reduce(
-                    (p, c) => p + c.price * c.beds,
-                    0
-                  )) ??
-                0}{' '}
-              <small>THB (tax included)</small>
+              {amount} <small>THB (tax included)</small>
             </Typography>
+            <Typography variant="body1" gutterBottom className={classes.text}>
+              or
+            </Typography>
+            <a href={url} className={classes.buttonLink}>
+              <Button
+                variant="contained"
+                color="primary"
+                className={classes.button}
+              >
+                Pay with SCB App
+              </Button>
+            </a>
           </>
         ) : (
           <></>

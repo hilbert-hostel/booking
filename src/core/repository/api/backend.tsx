@@ -65,6 +65,13 @@ export class BackendAPI {
     );
   }
 
+  static paymentInfo(id: string) {
+    return client.post<{ url: string; amount: number }>(
+      '/reservation/' + id + '/payment',
+      {}
+    );
+  }
+
   static rooms() {
     return client.get<{ rooms: Room[]; reservationID: string }>('/door/room');
   }
