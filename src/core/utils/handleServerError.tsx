@@ -5,6 +5,7 @@ import {
   SnackbarMessage,
 } from '../stores/snackbar';
 import { AxiosError } from 'axios';
+import { toElasticSearch } from '../error/logstash';
 
 export const handleServerError = (
   error: AxiosError,
@@ -39,4 +40,12 @@ export const handleServerError = (
         break;
     }
   }
+  toElasticSearch({
+    level: 'error',
+    type: 'api_error',
+    time: new Date().toISOString(),
+    url: window.location.href,
+    request: error.request,
+    response: error.response,
+  });
 };

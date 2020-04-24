@@ -20,13 +20,13 @@ export const App: React.FC<AppProps> = observer(() => {
   }, [prefersDarkMode, themeStore, localDarkMode]);
 
   return (
-    <MuiPickersUtilsProvider utils={MomentUtils}>
-      <ThemeProvider theme={themeStore.theme}>
-        <ErrorBoundary>
+    <ErrorBoundary>
+      <MuiPickersUtilsProvider utils={MomentUtils}>
+        <ThemeProvider theme={themeStore.theme}>
           <AppRouter />
-        </ErrorBoundary>
-      </ThemeProvider>
-    </MuiPickersUtilsProvider>
+        </ThemeProvider>
+      </MuiPickersUtilsProvider>
+    </ErrorBoundary>
   );
 });
 

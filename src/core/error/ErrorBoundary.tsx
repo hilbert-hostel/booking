@@ -6,10 +6,9 @@ export class ErrorBoundary extends React.Component<{}> {
   //     super(props);
   //   }
 
-  //   static getDerivedStateFromError(error) {
-  //     // Update state so the next render will show the fallback UI.
-  //     return { hasError: true };
-  //   }
+  static getDerivedStateFromError(_: any) {
+    return {};
+  }
 
   componentDidCatch(error: any, errorInfo: any) {
     if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
@@ -17,10 +16,11 @@ export class ErrorBoundary extends React.Component<{}> {
     } else {
       process.env.REACT_APP_ELASTIC_SEARCH_URL &&
         toElasticSearch({
-          from: 'booking',
+          level: 'error',
+          type: 'app-error',
           error: error.name,
           stack: error.stack,
-          timemstamp: Date.now,
+          timemstamp: Date.now(),
         }).then(() => {
           console.log('logged');
         });
