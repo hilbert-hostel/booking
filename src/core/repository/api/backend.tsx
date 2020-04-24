@@ -15,7 +15,9 @@ import { User } from '../../models/user';
 
 export let client: AxiosClient;
 
-if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
+if (process.env.REACT_APP_API_URL) {
+  client = new AxiosClient(process.env.REACT_APP_API_URL);
+} else if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
   client = new AxiosClient('/');
 } else {
   client = new AxiosClient('https://hilbert.himkwtn.me/');
