@@ -261,7 +261,7 @@ export const SearchResult: React.FC = observer(() => {
                   })}
                 </ul>
                 <Typography variant="h6" className={classes.text}>
-                  Total : {suggestions?.lowestPrice[0].totalPrice} THB{' '}
+                  Total : {suggestions?.lowestNumberOfRooms[0].totalPrice} THB{' '}
                   <small>per night</small>
                 </Typography>
                 <Button
