@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import {
   BrowserRouter as Router,
   Route,
+  Switch,
   Redirect,
   useHistory,
   RouteProps,
@@ -15,7 +16,6 @@ import { Dashboard } from '../views/Dashboard';
 import { Register } from '../views/Register';
 import { Home } from '../views/Home';
 import { QRKey } from '../views/QRKey';
-import { AnimatedSwitch, spring } from 'react-router-transition';
 import { RoomDetails } from '../views/RoomDetails';
 import { ConfirmBooking } from '../views/ConfirmBooking';
 import { PopupSnackbar } from './components/PopupSnackbar';
@@ -66,44 +66,6 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-// we need to map the `scale` prop we define below
-// to the transform style property
-function mapStyles(styles: any) {
-  return {
-    opacity: styles.opacity,
-    // transform: `translate(${styles.translateX}%, 0)`,
-  };
-}
-
-// wrap the `spring` helper to use a bouncy config
-function bounce(val: any) {
-  return spring(val, {
-    stiffness: 330,
-    damping: 22,
-  });
-}
-
-const transition = {
-  // start in a transparent, upscaled state
-  atEnter: {
-    opacity: 0,
-    // scale: 1.2,
-    translateX: -100,
-    // translate: `translateX()`'-100%',
-  },
-  // leave in a transparent, downscaled state
-  atLeave: {
-    opacity: bounce(0),
-    // scale: bounce(0.8),
-    translateX: 100,
-  },
-  // and rest at an opaque, normally-scaled state
-  atActive: {
-    opacity: bounce(1),
-    // scale: bounce(1),
-    translateX: 0,
-  },
-};
 export const AppRouter: React.FC = () => {
   const classes = useStyles();
 
@@ -111,64 +73,60 @@ export const AppRouter: React.FC = () => {
     <Router>
       <div className={classes.root}>
         {/* <Navigation /> */}
-        <AnimatedSwitch
-          atEnter={transition.atEnter}
-          atLeave={transition.atLeave}
-          atActive={transition.atActive}
-          mapStyles={mapStyles}
-          className={classes.content}
-        >
-          {/* <Switch> */}
-          <Route path="/register">
-            <Register />
-          </Route>
-          <MainRoute path="/dashboard">
-            <Dashboard />
-          </MainRoute>
-          <MainRoute path="/profile/edit">
-            <EditProfile />
-          </MainRoute>
-          <MainRoute path="/profile">
-            <Profile />
-          </MainRoute>
-          <MainRoute path="/qrkey">
-            <QRKey />
-          </MainRoute>
-          <MainRoute path="/payment/:id">
-            <Payment />
-          </MainRoute>
-          <MainRoute path="/reservation/:id">
-            <ReservationDetails />
-          </MainRoute>
-          <MainRoute path="/reservation">
-            <Reservations />
-          </MainRoute>
-          <MainRoute path="/complete/:id">
-            <BookingComplete />
-          </MainRoute>
-          <Route path="/confirm">
-            <ConfirmBooking />
-          </Route>
-          <Route path="/search/rooms/:type">
-            <RoomDetails />
-          </Route>
-          <Route path="/verify">
-            <Verify />
-          </Route>
-          <Route path="/search/result">
-            <SearchResult />
-          </Route>
-          <Route path="/search">
-            <Search />
-          </Route>
-          <Route path="/login">
-            <Login />
-          </Route>
-          <Route path="/">
-            <Home />
-          </Route>
-          {/* </Switch> */}
-        </AnimatedSwitch>
+        <div className={classes.content}>
+          <div>
+            <Switch>
+              <Route path="/register">
+                <Register />
+              </Route>
+              <MainRoute path="/dashboard">
+                <Dashboard />
+              </MainRoute>
+              <MainRoute path="/profile/edit">
+                <EditProfile />
+              </MainRoute>
+              <MainRoute path="/profile">
+                <Profile />
+              </MainRoute>
+              <MainRoute path="/qrkey">
+                <QRKey />
+              </MainRoute>
+              <MainRoute path="/payment/:id">
+                <Payment />
+              </MainRoute>
+              <MainRoute path="/reservation/:id">
+                <ReservationDetails />
+              </MainRoute>
+              <MainRoute path="/reservation">
+                <Reservations />
+              </MainRoute>
+              <MainRoute path="/complete/:id">
+                <BookingComplete />
+              </MainRoute>
+              <Route path="/confirm">
+                <ConfirmBooking />
+              </Route>
+              <Route path="/search/rooms/:type">
+                <RoomDetails />
+              </Route>
+              <Route path="/verify">
+                <Verify />
+              </Route>
+              <Route path="/search/result">
+                <SearchResult />
+              </Route>
+              <Route path="/search">
+                <Search />
+              </Route>
+              <Route path="/login">
+                <Login />
+              </Route>
+              <Route path="/">
+                <Home />
+              </Route>
+            </Switch>
+          </div>
+        </div>
         <BottomNav />
         <PopupSnackbar />
         {/* <Footer /> */}
