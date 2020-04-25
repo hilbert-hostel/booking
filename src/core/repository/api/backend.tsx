@@ -78,6 +78,10 @@ export class BackendAPI {
     );
   }
 
+  static checkOut() {
+    return client.get<{ code: string }>('/checkOut');
+  }
+
   static rooms() {
     return client.get<{ rooms: Room[]; reservationID: string }>('/door/room');
   }

@@ -70,11 +70,14 @@ export const QRKey: React.FC = observer(() => {
   const [rooms, setRooms] = useState<Room[]>();
   const [error, setError] = useState<string>();
   const [share, setShare] = useState<Room>();
+  const [checkOutKey, setCheckOutKey] = useState<string>();
   const [reservationID, setReservationID] = useState<string>();
   const [qr, setQR] = useState<string>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [checkOutQR, setCheckOutQR] = useState<string>();
 
   useEffect(() => {
+    getCheckOutKey();
     BackendAPI.rooms()
       .then(({ data }) => {
         setRooms(data.rooms);
@@ -115,6 +118,11 @@ export const QRKey: React.FC = observer(() => {
         });
         updateData();
         setIsLoading(false);
+        snackbarStore.sendMessage({
+          message:
+            'Room access shared succesfully, E-mail has been sent to the follower',
+          type: 'success',
+        });
       } catch (error) {
         handleServerError(error, snackbarStore);
         setIsLoading(false);
@@ -138,12 +146,34 @@ export const QRKey: React.FC = observer(() => {
     }
   }, [room]);
 
+  const getCheckOutKey = () => {
+    BackendAPI.checkOut()
+      .then(res => {
+        setCheckOutKey(res.data.code);
+      })
+      .catch();
+  };
+
+  const getCheckOutQR = async () => {
+    if (checkOutKey) {
+      setCheckOutQR(
+        await qrcode.toDataURL(checkOutKey, {
+          errorCorrectionLevel: 'M',
+          color: {
+            dark: '#000',
+            light: '#FFF',
+          },
+        })
+      );
+    }
+  };
+
   const getQRCode = () => {
     if (room) {
       BackendAPI.generateQR(room.id).then(async res => {
         setQR(
           await qrcode.toDataURL(res.data.code, {
-            errorCorrectionLevel: 'M',
+            errorCorrectionLevel: 'H',
             color: {
               dark: '#000',
               light: '#FFF',
@@ -183,6 +213,14 @@ export const QRKey: React.FC = observer(() => {
                 className={classes.text}
               >
                 Room {room.id}
+              </Typography>
+              <Typography
+                variant="h5"
+                gutterBottom
+                align="center"
+                className={classes.text}
+              >
+                Bed {room.beds?.map(e => e.bed_id).join(', ')}
               </Typography>
               <div>
                 {qr ? (
@@ -225,6 +263,52 @@ export const QRKey: React.FC = observer(() => {
                   onClick={() => {
                     setRoom(undefined);
                     setQR(undefined);
+                  }}
+                >
+                  Back
+                </Button>
+              </Box>
+            </Box>
+          ) : checkOutQR ? (
+            <Box flexDirection="column" justifyContent="center" display="flex">
+              <Typography
+                variant="h4"
+                gutterBottom
+                align="center"
+                className={classes.text}
+              >
+                Your Check out key
+              </Typography>
+              <Typography
+                variant="h5"
+                gutterBottom
+                align="center"
+                className={classes.text}
+              >
+                Please scan wtth the kiosk at front desk to Check Out.
+              </Typography>
+              <div>
+                {checkOutQR ? (
+                  <img
+                    src={checkOutQR}
+                    className={classes.image}
+                    alt="qrcode"
+                  />
+                ) : (
+                  <CircularProgress className={classes.image} />
+                )}
+              </div>
+              <Box
+                flexDirection="row"
+                justifyContent="space-between"
+                alignItems="flex-end"
+                display="flex"
+              >
+                <Button
+                  color="primary"
+                  variant="contained"
+                  onClick={() => {
+                    setCheckOutQR(undefined);
                   }}
                 >
                   Back
@@ -291,6 +375,26 @@ export const QRKey: React.FC = observer(() => {
                     >
                       <CircularProgress />
                     </Box>
+                  )}
+                  {checkOutKey && (
+                    <>
+                      <Typography
+                        variant="h4"
+                        gutterBottom
+                        align="center"
+                        className={classes.title}
+                      >
+                        Check Out
+                      </Typography>
+                      <Button
+                        color="primary"
+                        variant="contained"
+                        onClick={() => getCheckOutQR()}
+                        className={classes.button}
+                      >
+                        Get Check Out Key
+                      </Button>
+                    </>
                   )}
                 </>
               )}
