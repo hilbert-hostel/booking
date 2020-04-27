@@ -9,7 +9,7 @@ export interface Room {
   photo?: string;
   facilities: string[];
   followers?: string[];
-  beds?: { bed_id: string }[];
+  beds?: { id: string; room_id?: string; bed_id: string }[];
 }
 
 export interface RoomSearchResults {

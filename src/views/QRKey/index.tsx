@@ -220,7 +220,7 @@ export const QRKey: React.FC = observer(() => {
                 align="center"
                 className={classes.text}
               >
-                Bed {room.beds?.map(e => e.bed_id).join(', ')}
+                Bed {room.beds?.map(e => e.id).join(', ')}
               </Typography>
               <div>
                 {qr ? (
