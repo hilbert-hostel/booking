@@ -15,6 +15,7 @@ import { TitleBar } from '../../core/components/TitleBar';
 import { BackendAPI } from '../../core/repository/api/backend';
 import qrcode from 'qrcode';
 import { ReservationStatusResponse } from '../../core/models/reservation';
+import { handleServerError } from '../../core/utils/handleServerError';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -82,19 +83,23 @@ export const Payment: React.FC = observer(() => {
           const { url, amount } = data;
           setAmount(amount);
           setUrl(url + '?callback_url=' + window.location.href);
-          setQR(
-            await qrcode.toDataURL(url, {
-              errorCorrectionLevel: 'H',
-              color: {
-                dark: '#000', // Blue dots
-                light: '#FFF', // Transparent background
-              },
-            })
-          );
+          if (url) {
+            setQR(
+              await qrcode.toDataURL(url, {
+                errorCorrectionLevel: 'H',
+                color: {
+                  dark: '#000', // Blue dots
+                  light: '#FFF', // Transparent background
+                },
+              })
+            );
+          }
         });
-      } catch (error) {}
+      } catch (error) {
+        handleServerError(error, snackbarStore);
+      }
     }
-  }, [id, themeStore.dark]);
+  }, [id, themeStore.dark, snackbarStore]);
 
   useEffect(() => {
     if (reservationInfo) {
