@@ -18,7 +18,6 @@ export const mockAdapter: AxiosAdapter = (config: AxiosRequestConfig) => {
                 return url.match(e.regex);
               })?.key;
       const urlObject = currentMethod[urlKey ?? ''];
-      console.log(method, url, urlKey);
       const defaultHandler = () => {};
       const handler = currentMethod[urlKey ?? ''].handle || defaultHandler;
       const res = urlObject.justReturn || handler(config).data;
