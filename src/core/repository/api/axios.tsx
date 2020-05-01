@@ -1,17 +1,21 @@
 import { HttpClient } from './model';
-import axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
+import axios, { AxiosInstance, AxiosRequestConfig, AxiosAdapter } from 'axios';
 import { LocalStorage } from '../localStorage';
 
 export class AxiosClient implements HttpClient {
   instance: AxiosInstance;
 
-  constructor(baseUrl: string = '') {
+  constructor(
+    baseUrl: string = '',
+    adapter: AxiosAdapter | undefined = undefined
+  ) {
     const token = new LocalStorage<string>('token').value;
     this.instance = axios.create({
       baseURL: baseUrl,
       headers: {
         Authorization: token ? `Bearer ${token}` : undefined,
       },
+      adapter: adapter || undefined,
     });
 
     this.instance.interceptors.request.use(

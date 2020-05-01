@@ -12,10 +12,12 @@ import {
   EditReservationPayload,
 } from '../../models/reservation';
 import { User } from '../../models/user';
+import { mockAdapter } from './mockAdapter';
 
 export let client: AxiosClient;
-
-if (process.env.REACT_APP_API_URL) {
+if (process.env.REACT_APP_MOCK_MODE) {
+  client = new AxiosClient('/', mockAdapter);
+} else if (process.env.REACT_APP_API_URL) {
   client = new AxiosClient(process.env.REACT_APP_API_URL);
 } else if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
   client = new AxiosClient('/');
